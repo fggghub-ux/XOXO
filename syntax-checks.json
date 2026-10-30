@@ -1,0 +1,357 @@
+[
+  {
+    "file": "_tonghuaji_gate/guard.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "fullscreen.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/access-auth-admin-v2.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/anonymous-feedback.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/backup-codec.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/beta-usage-tracker.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/business.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/call.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/character-record-cleanup.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/charphone-forum.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/charphone.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/chat-temporal-context.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/contacts.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/couple-avatar-context.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/db.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/desktop.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/dynamic-island.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/emergency-rescue.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/fanfiction-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/game-center-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/icity.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/mcp-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/meeting-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/meeting-document.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/meeting-immersive-preset.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/meeting-invitations.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/memory-v2.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/memory.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/message-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/message-wechat-bridge.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/music-app-shell.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/music-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/photos-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/proactive-message-settings.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/proactive-push-patch.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/proactive-push.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/qq-character-bridge.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/readen-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/runtime-hot-loader.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/runtime-loader.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/search.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/semantic-memory.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/settings-app-admin-v2.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/store.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/sw-register.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/swipe-back.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/telegram-character-bridge.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/theme-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/today-app.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/twitter.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/universal-select.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/utils.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/vendor/jsQR.min.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/vendor/pako_inflate.min.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/voice-imggen.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-auth.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-chat.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-emoji.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-group-games.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-group.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-link-parser.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-mahjong-rules.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-moments.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-settings.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-template.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat-wallet.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/wechat.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/weixin-cloud.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/widget.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "js/worldbook.js",
+    "pass": true,
+    "error": ""
+  },
+  {
+    "file": "sw.js",
+    "pass": true,
+    "error": ""
+  }
+]
