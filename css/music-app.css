@@ -1,0 +1,3729 @@
+/* 引入行书飘逸字体 */
+@import url('https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap');
+
+/* 引入自定义字体 */
+@font-face {
+    font-family: 'CustomAppleFont';
+    src: url('https://nos.netease.com/ysf/260de1ccc0fffea1b1af12b7f5b50c3c.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 作用域限制在 applemusic 容器内，防止污染全局 */
+.applemusic-app-container {
+    --bg-color: #ffffff;
+    --text-main: #000000;
+    --text-secondary: #8e8e93;
+    --theme-active: #fa243c; /* Apple Music 经典红 */
+
+    /* 极致纯净透明白液态玻璃变量 */
+    --glass-bg: rgba(255, 255, 255, 0.01);
+    --glass-border: rgba(0, 0, 0, 0.03);
+    --glass-shadow: rgba(0, 0, 0, 0.04);
+
+    font-family: 'CustomAppleFont', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    -webkit-font-smoothing: antialiased;
+    color: var(--text-main);
+    padding-bottom: 200px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.applemusic-app-container * {
+    box-sizing: border-box;
+}
+
+/* 防止底层滚动 */
+body.applemusic-no-scroll {
+    overflow: hidden;
+}
+
+/* 页面视图容器 */
+.applemusic-view-container {
+    display: none;
+    animation: applemusicFadeIn 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.applemusic-view-container.applemusic-active {
+    display: block;
+}
+
+@keyframes applemusicFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 顶部 Header */
+.applemusic-header {
+    padding: 50px 20px 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.applemusic-header h1 {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.applemusic-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 白色半透明磨砂按钮 (通用) */
+.applemusic-glass-btn {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.applemusic-glass-btn.applemusic-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.applemusic-glass-btn.applemusic-circle svg {
+    width: 28px;
+    height: 28px;
+    fill: #000;
+}
+.applemusic-glass-btn.applemusic-pill {
+    height: 40px;
+    border-radius: 20px;
+    padding: 0 16px;
+    gap: 18px;
+}
+.applemusic-glass-btn.applemusic-pill svg {
+    width: 24px;
+    height: 24px;
+    fill: #000;
+}
+
+/* 右上角头像 */
+.applemusic-profile-pic {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #98989d;
+    cursor: pointer;
+}
+.applemusic-profile-pic svg {
+    width: 40px;
+    height: 40px;
+}
+
+/* 内容区块 */
+.applemusic-section {
+    padding: 20px 0 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.applemusic-section-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.applemusic-section-title svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--text-secondary);
+    margin-left: 4px;
+}
+
+/* 横向滚动容器 */
+.applemusic-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    padding-right: 20px;
+    scrollbar-width: none;
+}
+.applemusic-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* 专属精选推荐卡片 */
+.applemusic-featured-card {
+    flex: 0 0 300px;
+    height: 380px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #9b6a53 0%, #7a4f3c 100%);
+    margin-right: 15px;
+    position: relative;
+    padding: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.applemusic-card-text-bottom {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    color: #fff;
+}
+.applemusic-card-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 4px;
+}
+.applemusic-card-title {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+/* 最近播放 (横向滑动) */
+.applemusic-song-list {
+    gap: 15px;
+}
+
+.applemusic-song-item {
+    flex: 0 0 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.applemusic-song-cover {
+    width: 110px;
+    height: 110px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background-size: cover;
+    background-position: center;
+}
+
+.applemusic-song-info {
+    width: 100%;
+}
+
+.applemusic-song-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    /* 移除单行限制，改为最多显示两行 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word; /* 允许长单词换行 */
+    width: 100%;
+}
+
+.applemusic-song-artist {
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%; /* 确保宽度被限制，防止撑开 */
+}
+
+/* ================= Library 页面专属样式 ================= */
+.applemusic-lib-list {
+    padding: 10px 0 0 20px;
+    margin-top: 10px;
+}
+.applemusic-lib-list-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    cursor: pointer;
+}
+.applemusic-lib-list-item:last-child {
+    border-bottom: none;
+}
+.applemusic-lib-list-icon {
+    width: 24px;
+    height: 24px;
+    fill: var(--theme-active);
+    margin-right: 15px;
+}
+.applemusic-lib-list-text {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 600;
+}
+.applemusic-lib-list-chevron {
+    width: 16px;
+    height: 16px;
+    fill: #c7c7cc;
+}
+
+/* ================= Playlists 播放列表页面专属样式 ================= */
+.applemusic-playlist-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px 20px 10px 20px;
+}
+
+.applemusic-playlist-title {
+    font-size: 34px;
+    font-weight: 800;
+    padding: 5px 20px 15px 20px;
+    margin: 0;
+}
+
+.applemusic-pl-list {
+    padding-left: 20px;
+}
+.applemusic-pl-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    cursor: pointer;
+}
+.applemusic-pl-item:last-child {
+    border-bottom: none;
+}
+
+.applemusic-tiny-star {
+    width: 12px;
+    height: 12px;
+    fill: var(--theme-active);
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+.applemusic-tiny-star-placeholder {
+    width: 12px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.applemusic-pl-cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    background: #f2f2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+.applemusic-pl-cover.applemusic-custom {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.06);
+    font-size: 28px;
+}
+.applemusic-pl-cover svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--theme-active);
+}
+
+.applemusic-pl-info {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+/* 播放列表网格视图样式 */
+.applemusic-pl-list.applemusic-grid-view {
+    display: grid;
+    /* 使用 minmax(0, 1fr) 强制等宽，防止大图片撑开网格 */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    padding: 0 20px;
+}
+.applemusic-pl-list.applemusic-grid-view .applemusic-pl-item {
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    border-bottom: none;
+    text-align: center;
+    min-width: 0; /* 配合 minmax 限制最大宽度 */
+}
+.applemusic-pl-list.applemusic-grid-view .applemusic-tiny-star,
+.applemusic-pl-list.applemusic-grid-view .applemusic-tiny-star-placeholder,
+.applemusic-pl-list.applemusic-grid-view .applemusic-lib-list-chevron {
+    display: none;
+}
+.applemusic-pl-list.applemusic-grid-view .applemusic-pl-cover {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin-right: 0;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.applemusic-pl-list.applemusic-grid-view .applemusic-pl-info {
+    font-size: 14px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================= 歌单详情页面专属样式 ================= */
+#applemusic-view-playlist-detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    z-index: 40;
+    background-color: var(--bg-color);
+    padding-bottom: 120px;
+}
+#applemusic-view-playlist-detail.applemusic-active {
+    animation: applemusicFadeInDetail 0.35s forwards;
+}
+@keyframes applemusicFadeInDetail {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#applemusic-view-playlist-detail .applemusic-nav-btn-fixed {
+    position: fixed;
+    top: 50px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+    cursor: pointer;
+}
+#applemusic-view-playlist-detail .applemusic-nav-btn-fixed.applemusic-left { left: 20px; }
+#applemusic-view-playlist-detail .applemusic-nav-btn-fixed.applemusic-right { right: 20px; }
+#applemusic-view-playlist-detail .applemusic-nav-btn-fixed.applemusic-circle { width: 40px; height: 40px; border-radius: 50%; }
+#applemusic-view-playlist-detail .applemusic-nav-btn-fixed.applemusic-pill { height: 40px; border-radius: 20px; padding: 0 16px; gap: 18px; }
+#applemusic-view-playlist-detail .applemusic-nav-btn-fixed svg { width: 24px; height: 24px; fill: currentColor; }
+
+.applemusic-playlist-detail-cover-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px;
+}
+.applemusic-playlist-detail-cover {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    object-fit: cover;
+    background: #f2f2f7;
+}
+.applemusic-playlist-detail-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+.applemusic-playlist-detail-meta svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    margin-bottom: 5px;
+}
+.applemusic-playlist-detail-controls {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+}
+.applemusic-playlist-detail-btn {
+    flex: 1;
+    height: 48px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.applemusic-playlist-detail-btn:active {
+    transform: scale(0.96);
+}
+.applemusic-playlist-detail-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    margin-right: 8px;
+}
+.applemusic-playlist-detail-songs {
+    padding: 0 20px;
+}
+.applemusic-playlist-detail-song-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, padding 0.2s ease;
+}
+.applemusic-playlist-detail-song-item.menu-active {
+    background-color: #f2f2f7 !important;
+    border-radius: 12px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    transform: scale(1.02) !important;
+    border-bottom-color: transparent !important;
+}
+.applemusic-playlist-detail-song-item:last-child {
+    border-bottom: none;
+}
+.applemusic-playlist-detail-song-star {
+    width: 12px;
+    height: 12px;
+    fill: var(--theme-active);
+    margin-right: 10px;
+}
+.applemusic-playlist-detail-song-cover {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    margin-right: 12px;
+    object-fit: cover;
+}
+.applemusic-playlist-detail-song-info {
+    flex: 1;
+    overflow: hidden;
+}
+.applemusic-playlist-detail-song-name {
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.applemusic-playlist-detail-song-artist {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+.applemusic-playlist-detail-song-more {
+    width: 24px;
+    height: 24px;
+    fill: #000;
+    cursor: pointer;
+}
+
+/* 歌单详情页专属底部悬浮栏 */
+.applemusic-playlist-bottom-container {
+    position: fixed; bottom: 25px; left: 20px; right: 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 100;
+}
+.applemusic-playlist-bottom-btn {
+    width: 50px; height: 50px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;
+    background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 0.5px solid rgba(0, 0, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.applemusic-playlist-bottom-btn svg { width: 24px; height: 24px; fill: #000; }
+
+.applemusic-playlist-bottom-player-pill {
+    flex: 1; height: 50px; border-radius: 25px;
+    display: flex; align-items: center; padding: 0 16px 0 6px; cursor: pointer; overflow: hidden;
+    background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 0.5px solid rgba(0, 0, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.applemusic-playlist-bottom-cover { width: 38px; height: 38px; border-radius: 50%; margin-right: 10px; object-fit: cover; background: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.applemusic-playlist-bottom-cover svg { width: 18px; height: 18px; fill: #555; }
+.applemusic-playlist-bottom-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+.applemusic-playlist-bottom-title { font-size: 14px; font-weight: 700; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.applemusic-playlist-bottom-artist { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.applemusic-playlist-bottom-controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.applemusic-playlist-bottom-controls svg { width: 20px; height: 20px; fill: #000; }
+
+/* ================= Search 页面专属样式 ================= */
+.applemusic-search-bar-container {
+    padding: 0 20px 15px 20px;
+}
+.applemusic-search-bar {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 8px 12px;
+    height: 36px;
+}
+.applemusic-search-bar .applemusic-search-icon {
+    width: 18px;
+    height: 18px;
+    fill: var(--text-secondary);
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+.applemusic-search-bar .applemusic-mic-icon {
+    width: 18px;
+    height: 18px;
+    fill: var(--text-secondary);
+    margin-left: 8px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.applemusic-search-bar input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 17px;
+    color: var(--text-main);
+    outline: none;
+    font-family: inherit;
+    min-width: 0;
+}
+.applemusic-search-bar input::placeholder {
+    color: var(--text-secondary);
+}
+
+/* 最近搜索 */
+.applemusic-recent-search-list {
+    padding-right: 20px;
+}
+.applemusic-recent-search-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: background-color 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+.applemusic-recent-search-item:last-child {
+    border-bottom: none;
+}
+.applemusic-recent-search-icon {
+    width: 16px;
+    height: 16px;
+    fill: var(--text-secondary);
+    margin-right: 12px;
+}
+.applemusic-recent-search-text {
+    flex: 1;
+    font-size: 17px;
+    color: var(--text-main);
+}
+.applemusic-recent-search-delete {
+    display: none;
+    width: 24px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.applemusic-recent-search-delete svg {
+    width: 20px;
+    height: 20px;
+    fill: #c7c7cc;
+}
+.applemusic-recent-search-item.applemusic-edit-mode .applemusic-recent-search-delete {
+    display: flex;
+    animation: applemusicPopIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes applemusicPopIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 音乐排行榜 */
+.applemusic-chart-list {
+    padding-right: 20px;
+}
+.applemusic-chart-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.applemusic-chart-item:last-child {
+    border-bottom: none;
+}
+.applemusic-chart-rank {
+    width: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-align: left;
+}
+.applemusic-chart-name {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================= 底部悬浮 UI ================= */
+.applemusic-floating-ui {
+    position: fixed;
+    bottom: 25px;
+    left: 24px;
+    right: 24px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.applemusic-liquid-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+    border: 0.5px solid var(--glass-border);
+    box-shadow:
+        0 10px 30px var(--glass-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* 迷你播放器 */
+.applemusic-mini-player {
+    height: 48px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px 0 6px;
+    cursor: pointer;
+}
+
+.applemusic-player-cover-empty {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.applemusic-player-cover-empty svg {
+    width: 16px;
+    height: 16px;
+    fill: #555;
+}
+
+.applemusic-player-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.applemusic-player-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.applemusic-player-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.applemusic-player-controls .applemusic-ctrl-playpause {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.applemusic-player-controls .applemusic-ctrl-playpause svg {
+    width: 100%;
+    height: 100%;
+    fill: #000;
+}
+
+.applemusic-player-controls .applemusic-ctrl-next {
+    width: 25px;
+    height: 25px;
+    fill: #000;
+    cursor: pointer;
+}
+
+/* 底部导航栏 */
+.applemusic-nav-bar {
+    display: flex;
+    align-items: center;
+    height: 62px;
+    border-radius: 999px;
+    padding: 0 6px;
+    gap: 4px;
+}
+
+.applemusic-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    color: var(--text-main);
+    font-size: 10px;
+    font-weight: 800;
+    border-radius: 999px;
+    transition: flex 0.35s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, color 0.2s ease;
+    will-change: flex, background-color;
+    cursor: pointer;
+}
+
+.applemusic-nav-item svg {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 2px;
+    fill: currentColor;
+}
+
+.applemusic-nav-item.applemusic-nav-active {
+    background: rgba(250, 36, 60, 0.12);
+    color: var(--theme-active);
+    flex: 1.4;
+}
+
+/* ================= 全屏音乐播放页面 ================= */
+.applemusic-full-player {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-color: #000;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    overflow: hidden;
+}
+
+.applemusic-full-player.applemusic-active {
+    transform: translateY(0);
+}
+
+/* 背景模糊层 */
+.applemusic-player-bg {
+    position: absolute;
+    top: -10%; left: -10%; right: -10%; bottom: -10%;
+    background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px);
+    z-index: -2;
+}
+.applemusic-player-bg-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+.applemusic-player-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* 大屏自适应下移、小屏保持紧凑不溢出 */
+    padding: calc(clamp(12px, 3.5vh, 45px) + env(safe-area-inset-top)) 28px calc(clamp(15px, 2.5vh, 30px) + env(safe-area-inset-bottom)) 28px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* 顶部下拉指示条 */
+.applemusic-player-drag-handle {
+    width: 100%;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: clamp(0px, 1vh, 10px);
+    margin-bottom: clamp(4px, 1.5vh, 16px);
+}
+.applemusic-drag-bar {
+    width: 40px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+}
+
+/* 专辑封面 */
+.applemusic-player-cover-large {
+    width: 100% !important; /* 彻底保持 100% 宽度 */
+    max-width: none !important;
+    max-height: none !important;
+    margin: clamp(8px, 2.5vh, 28px) auto clamp(12px, 3vh, 30px) auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: none;
+    cursor: pointer;
+    flex-shrink: 1;
+}
+
+.applemusic-player-cover-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 歌曲信息区 */
+.applemusic-player-info-large {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0; /* 移除底部多余间距，防止出现内部滚动条 */
+}
+.applemusic-player-text-large {
+    flex: 1;
+    overflow: hidden;
+}
+.applemusic-player-title-large {
+    font-size: 22px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+.applemusic-player-artist-large {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.applemusic-player-actions-large {
+    display: flex;
+    gap: 15px;
+}
+.applemusic-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.applemusic-action-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+}
+/* 单独放大三个点的图标 */
+.applemusic-player-actions-large .applemusic-action-btn:last-child svg,
+.applemusic-lyrics-actions .applemusic-action-btn:last-child svg,
+.applemusic-current-actions .applemusic-action-btn:last-child svg {
+    width: 24px;
+    height: 24px;
+}
+/* 针对空心星的特殊处理 */
+.applemusic-action-btn .applemusic-star-outline {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2.8;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+/* 进度条 */
+.applemusic-player-progress {
+    margin-top: 20px; /* 减小顶部间距 */
+    margin-bottom: 30px; /* 减小底部间距 */
+}
+.applemusic-progress-bar {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    margin-bottom: 10px;
+    position: relative;
+    cursor: pointer;
+    touch-action: none;
+}
+.applemusic-progress-bar::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    bottom: -12px;
+    left: 0;
+    right: 0;
+}
+.applemusic-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #fff;
+    border-radius: 3px;
+}
+.applemusic-progress-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+}
+.applemusic-dolby-icon {
+    font-size: 12px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.5px;
+}
+
+/* 控制按钮 */
+.applemusic-player-controls-large {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 55px;
+    margin-bottom: 30px; /* 减小底部间距 */
+}
+.applemusic-player-controls-large svg {
+    fill: #fff;
+    cursor: pointer;
+}
+.applemusic-player-controls-large .applemusic-ctrl-prev,
+.applemusic-player-controls-large .applemusic-ctrl-next {
+    width: 50px;
+    height: 50px;
+}
+.applemusic-player-controls-large .applemusic-ctrl-playpause {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.applemusic-player-controls-large .applemusic-ctrl-playpause svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* 音量条 */
+.applemusic-player-volume {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* 移除 margin-bottom: auto; 让上方容器把下半部分整体往下推 */
+}
+
+.applemusic-player-volume svg {
+    width: 16px;
+    height: 16px;
+    color: #8e8e93;
+}
+
+.applemusic-volume-bar {
+    flex: 1;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    touch-action: none;
+}
+.applemusic-volume-fill {
+    width: 30%;
+    height: 100%;
+    background: #fff;
+    border-radius: 3px;
+}
+
+/* 底部图标 */
+.applemusic-player-bottom-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin-top: 30px;
+}
+.applemusic-player-bottom-actions svg {
+    width: 28px;
+    height: 28px;
+    fill: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+}
+.applemusic-player-bottom-actions .applemusic-active-icon {
+    color: #fff !important;
+}
+
+/* 播放列表按钮包裹层与角标 */
+.applemusic-list-btn-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; /* 强制固定宽高，防止被 flex 挤压变形 */
+    height: 28px;
+    cursor: pointer;
+}
+
+/* 确保包裹层内的列表 SVG 填满容器 */
+.applemusic-list-btn-wrapper > svg#applemusic-toggle-list-btn {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+}
+
+.applemusic-playmode-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    width: 18px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    pointer-events: none; /* 防止阻挡点击事件 */
+    opacity: 1;
+    transition: opacity 0.4s ease; /* 添加淡出动画 */
+}
+
+/* 用于 JS 控制隐藏的类名 */
+.applemusic-playmode-badge.hidden {
+    opacity: 0;
+}
+
+.applemusic-playmode-badge svg {
+    width: 12px !important;
+    height: 12px !important;
+    fill: currentColor;
+}
+
+/* ================= 播放列表视图 (Up Next) ================= */
+#applemusic-player-main-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+#applemusic-player-main-view::-webkit-scrollbar {
+    display: none;
+}
+#applemusic-player-list-view {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    margin-bottom: 20px;
+    flex-direction: column;
+    min-height: 0;
+}
+#applemusic-player-list-view::-webkit-scrollbar {
+    display: none;
+}
+.applemusic-current-playing-header { display: flex; align-items: center; margin-bottom: 35px; }
+.applemusic-current-cover { width: 64px; height: 64px; border-radius: 8px; margin-right: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.applemusic-current-info { flex: 1; overflow: hidden; }
+.applemusic-current-title { font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+.applemusic-current-artist { font-size: 15px; color: rgba(255, 255, 255, 0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.applemusic-current-actions { display: flex; gap: 12px; }
+.applemusic-up-next-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+.applemusic-up-next-title-area { display: flex; flex-direction: column; }
+.applemusic-up-next-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.applemusic-up-next-subtitle { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+.applemusic-up-next-controls { display: flex; gap: 8px; }
+.applemusic-control-pill { width: 42px; height: 32px; border-radius: 8px; background: transparent; display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.6); cursor: pointer; transition: all 0.2s ease; }
+.applemusic-control-pill.applemusic-active { background: rgba(255, 255, 255, 0.15); color: #fff; }
+.applemusic-control-pill svg { width: 18px; height: 18px; }
+.applemusic-list-item { display: flex; align-items: center; margin-bottom: 16px; cursor: pointer; }
+.applemusic-list-cover { width: 50px; height: 50px; border-radius: 6px; margin-right: 15px; background: #333; }
+.applemusic-list-info { flex: 1; overflow: hidden; }
+.applemusic-list-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.applemusic-list-artist { font-size: 14px; color: rgba(255, 255, 255, 0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.applemusic-list-drag { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-left: 10px; }
+.applemusic-list-drag svg { width: 20px; height: 20px; fill: rgba(255, 255, 255, 0.4); }
+
+/* ================= 歌词视图 ================= */
+#applemusic-player-lyrics-view {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 20px;
+    min-height: 0;
+}
+.applemusic-lyrics-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-shrink: 0;
+}
+
+.applemusic-lyrics-cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-right: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.applemusic-lyrics-info {
+    flex: 1;
+    overflow: hidden;
+}
+.applemusic-lyrics-title {
+    font-size: 18px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+.applemusic-lyrics-artist {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.applemusic-lyrics-container {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    padding-top: 40%; /* 新增：让首行歌词也能居中往下移 */
+    padding-bottom: 60%;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%);
+    min-height: 0;
+    position: relative; /* 确保 offsetTop 计算准确 */
+}
+
+.applemusic-lyrics-container::-webkit-scrollbar {
+    display: none;
+}
+.applemusic-lyric-line {
+    font-size: 26px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 24px;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: left center;
+    line-height: 1.3;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+.applemusic-lyric-line.applemusic-active {
+    color: #fff;
+    transform: scale(1.05);
+    text-shadow: 0 2px 10px rgba(255,255,255,0.2);
+}
+
+/* ================= 歌手主页专属样式 ================= */
+#applemusic-view-artist {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    z-index: 40;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding-bottom: 120px;
+    transition: background-color 0.6s ease;
+}
+#applemusic-view-artist.applemusic-active {
+    animation: applemusicFadeInArtist 0.35s forwards;
+}
+@keyframes applemusicFadeInArtist {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+#applemusic-view-artist .applemusic-header-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 65vh;
+    background: url('https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center 20%/cover no-repeat;
+    z-index: -1;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+}
+#applemusic-view-artist .applemusic-nav-btn-fixed {
+    position: fixed; top: 50px; z-index: 100; display: flex; align-items: center; justify-content: center; color: #fff;
+    background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(8px) saturate(150%); -webkit-backdrop-filter: blur(8px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2); cursor: pointer;
+}
+#applemusic-view-artist .applemusic-nav-btn-fixed.applemusic-left { left: 20px; }
+#applemusic-view-artist .applemusic-nav-btn-fixed.applemusic-right { right: 20px; }
+#applemusic-view-artist .applemusic-nav-btn-fixed.applemusic-circle { width: 40px; height: 40px; border-radius: 50%; }
+#applemusic-view-artist .applemusic-nav-btn-fixed.applemusic-pill { height: 40px; border-radius: 20px; padding: 0 16px; gap: 18px; }
+#applemusic-view-artist .applemusic-nav-btn-fixed svg { width: 24px; height: 24px; fill: currentColor; }
+#applemusic-view-artist .applemusic-artist-info { margin-top: 22vh; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 10; }
+#applemusic-view-artist .applemusic-artist-name { font-size: 42px; font-weight: 800; letter-spacing: 2px; margin-bottom: 20px; text-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+#applemusic-view-artist .applemusic-artist-actions { display: flex; align-items: center; gap: 20px; }
+#applemusic-view-artist .applemusic-glass-btn { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
+#applemusic-view-artist .applemusic-glass-btn.applemusic-circle { width: 36px; height: 36px; border-radius: 50%; }
+#applemusic-view-artist .applemusic-glass-btn svg { width: 20px; height: 20px; fill: currentColor; }
+#applemusic-view-artist .applemusic-btn-play-large { width: 64px; height: 64px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); cursor: pointer; }
+#applemusic-view-artist .applemusic-btn-play-large svg { width: 32px; height: 32px; fill: #000000; margin-left: 4px; }
+/* 修改背景为白色半透明磨砂，透出底层颜色 */
+#applemusic-view-artist .applemusic-latest-release { margin: 30px 20px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 24px; padding: 16px; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.08); }
+#applemusic-view-artist .applemusic-release-cover { width: 80px; height: 80px; border-radius: 12px; margin-right: 16px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+#applemusic-view-artist .applemusic-release-info { flex: 1; }
+#applemusic-view-artist .applemusic-release-date { font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-bottom: 4px; }
+#applemusic-view-artist .applemusic-release-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+#applemusic-view-artist .applemusic-release-count { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
+/* 删除了 btn-download 相关的 CSS */
+#applemusic-view-artist .applemusic-top-songs { padding: 0 20px; }
+#applemusic-view-artist .applemusic-section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; color: #fff; }
+#applemusic-view-artist .applemusic-section-title svg { width: 16px; height: 16px; fill: rgba(255, 255, 255, 0.6); margin-left: 4px; }
+#applemusic-view-artist .applemusic-song-item { display: flex; flex-direction: row; width: 100%; flex: initial; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+#applemusic-view-artist .applemusic-song-item:last-child { border-bottom: none; }
+#applemusic-view-artist .applemusic-song-cover { width: 50px; height: 50px; border-radius: 8px; margin-right: 15px; object-fit: cover; }
+#applemusic-view-artist .applemusic-song-details { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+#applemusic-view-artist .applemusic-song-name { font-size: 16px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+#applemusic-view-artist .applemusic-song-album { font-size: 13px; color: rgba(255, 255, 255, 0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#applemusic-view-artist .applemusic-btn-more { padding: 0 0 0 15px; color: rgba(255, 255, 255, 0.6); display: flex; align-items: center; }
+#applemusic-view-artist .applemusic-btn-more svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* 歌手页专属底部悬浮栏 */
+.applemusic-artist-bottom-container {
+    position: fixed; bottom: 25px; left: 20px; right: 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 100;
+}
+.applemusic-artist-bottom-btn {
+    width: 50px; height: 50px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;
+    background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px) saturate(150%); -webkit-backdrop-filter: blur(15px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.applemusic-artist-bottom-btn svg { width: 24px; height: 24px; fill: #fff; }
+
+.applemusic-artist-bottom-player-pill {
+    flex: 1; height: 50px; border-radius: 25px;
+    display: flex; align-items: center; padding: 0 16px 0 6px; cursor: pointer; overflow: hidden;
+    background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px) saturate(150%); -webkit-backdrop-filter: blur(15px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.applemusic-artist-bottom-cover { width: 38px; height: 38px; border-radius: 50%; margin-right: 10px; object-fit: cover; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.applemusic-artist-bottom-cover svg { width: 18px; height: 18px; fill: rgba(255,255,255,0.5); }
+.applemusic-artist-bottom-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+.applemusic-artist-bottom-title { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.applemusic-artist-bottom-artist { font-size: 12px; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.applemusic-artist-bottom-controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.applemusic-artist-bottom-controls svg { width: 20px; height: 20px; fill: #fff; }
+
+/* ================= 创建歌单弹窗样式 ================= */
+.applemusic-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4); z-index: 99999;
+    display: none; flex-direction: column; justify-content: flex-end;
+    opacity: 0; transition: opacity 0.3s ease;
+}
+.applemusic-modal-overlay.applemusic-active { display: flex; opacity: 1; }
+.applemusic-modal-content {
+    background: #ffffff; width: 100%; height: 65vh;
+    border-radius: 20px 20px 0 0; display: flex; flex-direction: column;
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    color: #000;
+}
+.applemusic-modal-overlay.applemusic-active .applemusic-modal-content { transform: translateY(0); }
+
+/* 创建歌单改为居中弹窗 */
+#applemusic-modal-create-playlist.applemusic-modal-overlay {
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+#applemusic-modal-create-playlist .applemusic-modal-content {
+    width: 86%;
+    max-width: 320px;
+    height: auto;
+    border-radius: 26px;
+    transform: scale(0.9);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+    padding: 16px 18px 24px;
+}
+#applemusic-modal-create-playlist.applemusic-active .applemusic-modal-content {
+    transform: scale(1);
+}
+#applemusic-btn-submit-playlist.applemusic-active {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+.applemusic-drawer-handle-bar {
+    width: 36px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    margin: 10px auto 0 auto;
+    flex-shrink: 0;
+}
+.applemusic-modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px 16px 20px; border-bottom: none;
+}
+.applemusic-modal-btn { font-size: 16px; font-weight: 600; cursor: pointer; }
+.applemusic-modal-btn.applemusic-cancel { color: #8e8e93; }
+.applemusic-modal-btn.applemusic-create { color: #c7c7cc; pointer-events: none; transition: color 0.2s; }
+.applemusic-modal-btn.applemusic-create.applemusic-active { color: #000000; font-weight: 600; pointer-events: auto; }
+.applemusic-modal-title { font-size: 17px; font-weight: 700; }
+.applemusic-modal-body { flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: 40px; }
+.applemusic-cover-upload-area {
+    width: 200px; height: 200px; background: #f2f2f7; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; cursor: pointer; margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+.applemusic-cover-upload-area img { width: 100%; height: 100%; object-fit: cover; display: none; }
+.applemusic-camera-icon-wrapper {
+    width: 60px; height: 60px; border-radius: 50%; background: #fa243c;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(250, 36, 60, 0.3); position: absolute;
+}
+.applemusic-camera-icon-wrapper svg { width: 30px; height: 30px; fill: #fff; }
+.applemusic-title-input-wrapper { width: 80%; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; }
+.applemusic-title-input-wrapper input {
+    width: 100%; border: none; outline: none; text-align: center;
+    font-size: 22px; font-weight: 600; color: #000; background: transparent;
+    caret-color: #fa243c;
+}
+.applemusic-title-input-wrapper input::placeholder { color: #c7c7cc; }
+/* ================= 歌单详情右上角更多菜单 ================= */
+.applemusic-playlist-more-menu {
+    position: absolute;
+    width: 220px;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border-radius: 18px;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    border: 0.5px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+    transform-origin: top right;
+    animation: applemusicMenuPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.applemusic-playlist-more-menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 16px;
+    color: #000;
+    border-bottom: none;
+    cursor: pointer;
+}
+.applemusic-playlist-more-menu-item.submenu {
+    padding: 10px 16px;
+    font-size: 15px;
+}
+.applemusic-playlist-more-menu-item:active {
+    background: rgba(0,0,0,0.05);
+}
+.applemusic-playlist-more-menu-item.danger {
+    color: #48484a;
+}
+.applemusic-playlist-more-menu-item svg {
+    width: 20px;
+    height: 20px;
+    fill: #48484a !important;
+    color: #48484a !important;
+}
+
+/* ================= 更多操作菜单 (三个点) ================= */
+.applemusic-more-menu-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 100000;
+    display: none;
+    background: transparent;
+}
+
+.applemusic-more-menu {
+    position: absolute;
+    width: 220px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border-radius: 18px;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    border: 0.5px solid rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    z-index: 100002;
+    transform-origin: top right;
+    animation: applemusicMenuPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes applemusicMenuPop {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+.applemusic-more-menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 16px;
+    color: #000;
+    border-bottom: none;
+    cursor: pointer;
+}
+.applemusic-more-menu-item:active {
+    background: rgba(0,0,0,0.05);
+}
+.applemusic-more-menu-item.danger {
+    color: #48484a;
+}
+.applemusic-more-menu-item svg {
+    width: 20px;
+    height: 20px;
+    fill: #48484a !important;
+    color: #48484a !important;
+}
+
+/* ================= 悬浮卡片抽屉专属系统 (全屏播放器与歌单歌曲) ================= */
+.applemusic-drawer-menu-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 100000;
+    display: none;
+    background: rgba(0, 0, 0, 0.48);
+    opacity: 0;
+    transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: opacity;
+}
+.applemusic-drawer-menu-overlay.applemusic-active {
+    opacity: 1;
+}
+
+.applemusic-card-drawer {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    z-index: 100002;
+    transform: translate3d(0, 115%, 0);
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.applemusic-drawer-menu-overlay.applemusic-active .applemusic-card-drawer {
+    transform: translate3d(0, 0, 0);
+}
+
+.applemusic-card-drawer .applemusic-drawer-handle-bar {
+    width: 36px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    margin: 12px auto 4px auto;
+    flex-shrink: 0;
+}
+
+.applemusic-card-drawer .song-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px 16px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+.applemusic-card-drawer .song-cover {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    margin-right: 14px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #eee;
+}
+.applemusic-card-drawer .song-info {
+    flex: 1;
+    overflow: hidden;
+}
+.applemusic-card-drawer .song-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1c1e;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.applemusic-card-drawer .song-artist {
+    font-size: 13px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.applemusic-song-menu-play-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+}
+.applemusic-song-menu-play-btn:active {
+    transform: scale(0.88);
+}
+.applemusic-song-menu-play-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #48484a;
+}
+
+.applemusic-card-drawer .menu-list {
+    padding: 8px 0;
+    overflow-y: auto;
+}
+.applemusic-card-drawer .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    font-size: 16px;
+    color: #1c1c1e;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.applemusic-card-drawer .menu-item:active {
+    background: rgba(0, 0, 0, 0.05);
+}
+.applemusic-card-drawer .menu-item svg {
+    width: 22px;
+    height: 22px;
+    margin-right: 16px;
+    fill: #48484a;
+    flex-shrink: 0;
+}
+.applemusic-card-drawer .menu-item.danger {
+    color: #48484a;
+}
+.applemusic-card-drawer .menu-item.danger svg {
+    fill: #48484a !important;
+    stroke: none !important;
+}
+
+/* 邀请一起听歌双头像结构 (尺寸精准统一为22px，虚线框与User头像完美等大) */
+.applemusic-card-drawer .invite-avatars {
+    position: relative;
+    width: 35px;
+    height: 22px;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.applemusic-card-drawer .invite-avatars img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    z-index: 2;
+    border: 1.5px solid #ffffff;
+    box-sizing: border-box;
+}
+.applemusic-card-drawer .invite-avatars .avatar-add {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #f2f2f7;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #a1a1aa;
+    box-sizing: border-box;
+}
+.applemusic-card-drawer .invite-avatars .avatar-add svg {
+    width: 11px;
+    height: 11px;
+    margin: 0;
+    stroke: #71717a;
+    stroke-width: 2.2;
+    fill: none !important;
+}
+
+/* ================= 添加至歌单抽屉 (弹性高度 · 方案3无发光) ================= */
+.applemusic-playlist-drawer-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4); z-index: 100001;
+    display: none; flex-direction: column; justify-content: flex-end;
+    opacity: 0; transition: opacity 0.3s ease;
+}
+.applemusic-playlist-drawer-overlay.applemusic-active { display: flex; opacity: 1; }
+.applemusic-playlist-drawer {
+    background: #ffffff; width: 100%;
+    height: auto; /* 关键：改为弹性自适应高度，按内容紧凑包裹 */
+    max-height: 80vh; /* 避免歌单过多时超出屏幕 */
+    min-height: 0;
+    border-radius: 26px 26px 0 0; display: flex; flex-direction: column;
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    color: #000000; position: relative; overflow: hidden;
+}
+.applemusic-playlist-drawer-overlay.applemusic-active .applemusic-playlist-drawer { transform: translateY(0); }
+
+.applemusic-drawer-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px 6px; border-bottom: none; flex-shrink: 0;
+}
+.applemusic-drawer-title { font-size: 17px; font-weight: 700; color: #1c1c1e; }
+.applemusic-drawer-btn.cancel { font-size: 15px; cursor: pointer; font-weight: 600; color: #8e8e93; }
+
+.applemusic-drawer-list {
+    flex: 1 1 auto; overflow-y: auto; min-height: 0;
+    padding: 6px 14px 10px;
+    display: flex; flex-direction: column; gap: 4px;
+}
+
+/* 歌单项：无边框、无卡片包裹、无分割横线 */
+.applemusic-drawer-item {
+    display: flex; align-items: center; padding: 8px 12px;
+    border-radius: 14px; cursor: pointer; border: 1px solid transparent;
+    background: transparent; transition: all 0.2s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.applemusic-drawer-item:active {
+    background: rgba(0, 0, 0, 0.03);
+}
+/* 选中状态：轻柔灰底胶囊并增加一层细边框 */
+.applemusic-drawer-item.selected {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.applemusic-drawer-cover {
+    width: 48px; height: 48px; border-radius: 10px;
+    background: #f2f2f7; margin-right: 14px; object-fit: cover;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    flex-shrink: 0; border: none;
+}
+.applemusic-drawer-cover img { width: 100%; height: 100%; object-fit: cover; }
+.applemusic-drawer-cover svg { width: 24px; height: 24px; fill: #fa243c; }
+
+.applemusic-drawer-info {
+    flex: 1; font-size: 15px; font-weight: 600; color: #1c1c1e;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    transition: color 0.2s, font-weight 0.2s;
+}
+.applemusic-drawer-item.selected .applemusic-drawer-info {
+    color: #fa243c;
+    font-weight: 700;
+}
+.applemusic-drawer-check { display: none; }
+
+/* 底部操作条 (融入弹性容器中，自动贴在列表下方，不留空隙) */
+.applemusic-drawer-bottom-bar {
+    flex-shrink: 0;
+    padding: 8px 20px calc(14px + env(safe-area-inset-bottom));
+    background: #ffffff;
+    display: flex; justify-content: center;
+}
+.applemusic-drawer-bottom-btn {
+    width: 100%; height: 46px; border-radius: 23px;
+    background: #fa243c; color: #ffffff;
+    font-size: 15px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer;
+    box-shadow: none; /* 无发光 */
+    opacity: 0.35; pointer-events: none;
+    transition: opacity 0.2s, transform 0.15s;
+}
+.applemusic-drawer-bottom-btn.active {
+    opacity: 1; pointer-events: auto;
+}
+.applemusic-drawer-bottom-btn:active {
+    transform: scale(0.98);
+}
+
+/* ================= 编辑歌单列表样式 ================= */
+.applemusic-edit-song-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.applemusic-edit-song-item.dragging {
+    opacity: 0.5;
+    background: #f9f9f9;
+}
+.applemusic-edit-checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid #c7c7cc;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+.applemusic-edit-checkbox.selected {
+    background: #fa243c;
+    border-color: #fa243c;
+}
+.applemusic-edit-checkbox svg {
+    width: 14px;
+    height: 14px;
+    stroke: #fff;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: block;
+}
+.applemusic-edit-checkbox.selected svg {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 拖拽排序专属样式 */
+.applemusic-edit-song-item {
+    position: relative;
+    background: #fff;
+    z-index: 1;
+}
+.applemusic-edit-song-item.is-ghost {
+    opacity: 0; /* 原节点变透明作为占位符 */
+}
+.applemusic-edit-song-item.is-dragged {
+    position: fixed;
+    z-index: 100000;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    pointer-events: none; /* 让事件穿透到下方元素 */
+    transition: none;
+    border-bottom: none;
+}
+
+.applemusic-edit-song-cover {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    margin-right: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.applemusic-edit-song-info {
+    flex: 1;
+    overflow: hidden;
+}
+.applemusic-edit-song-name {
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000;
+}
+.applemusic-edit-song-artist {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+.applemusic-edit-drag-handle {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    flex-shrink: 0;
+}
+.applemusic-edit-drag-handle:active {
+    cursor: grabbing;
+}
+/* ================= 置顶区域样式 ================= */
+.applemusic-pinned-container {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+.applemusic-pinned-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.applemusic-pinned-item {
+    width: calc((100vw - 70px) / 3); /* 减去左右padding 40px 和 两个gap 30px */
+    max-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+.applemusic-pinned-item:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+}
+.applemusic-pinned-cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+    background: #f2f2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0.5px solid rgba(0,0,0,0.05);
+}
+.applemusic-pinned-cover svg {
+    width: 40%;
+    height: 40%;
+    fill: #c7c7cc;
+}
+.applemusic-pinned-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================= Settings 页面专属样式 ================= */
+.applemusic-settings-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+.applemusic-settings-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: #f2f2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #98989d;
+    margin: 0;
+    box-shadow: none;
+}
+.applemusic-settings-avatar svg {
+    width: 50px;
+    height: 50px;
+}
+.applemusic-settings-name {
+    font-size: 20px;
+    font-weight: 700;
+}
+.applemusic-settings-group {
+    margin: 0 20px 24px 20px;
+    background: #f2f2f7;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.applemusic-settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 16px;
+    cursor: pointer;
+}
+.applemusic-settings-item:last-child {
+    border-bottom: none;
+}
+.applemusic-settings-item:active {
+    background: rgba(0,0,0,0.03);
+}
+.applemusic-settings-label {
+    font-weight: 600;
+}
+.applemusic-settings-value {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+.applemusic-settings-danger {
+    color: #fa243c;
+    justify-content: center;
+    font-weight: 600;
+}
+/* Apple Music 风格 Toggle */
+.applemusic-toggle {
+    width: 50px;
+    height: 30px;
+    border-radius: 15px;
+    background: #e5e5ea;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.applemusic-toggle.active {
+    background: #34c759; /* iOS Green */
+}
+.applemusic-toggle-thumb {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+.applemusic-toggle.active .applemusic-toggle-thumb {
+    transform: translateX(20px);
+}
+/* ================= 本地音乐导入弹窗专属样式 ================= */
+.applemusic-local-carousel-wrapper {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    position: relative;
+}
+.applemusic-local-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    height: 100%;
+    align-items: center;
+    /* 保证第一个和最后一个卡片能居中，120px是卡片宽度，20px是margin */
+    padding: 0 calc(50vw - 70px);
+}
+.applemusic-local-carousel::-webkit-scrollbar {
+    display: none;
+}
+.applemusic-local-carousel-card {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    margin: 0 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0.4;
+    transform: scale(0.8);
+    /* 去除背景和边框 */
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.applemusic-local-carousel-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+.applemusic-local-carousel-card svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--theme-active);
+    background: #f2f2f7; /* 如果是SVG图标，给它一个底色 */
+    border-radius: 12px;
+}
+.applemusic-local-carousel-card.active {
+    opacity: 1;
+    transform: scale(1);
+    /* 去除阴影，保持纯白背景下的干净视觉 */
+    box-shadow: none;
+}
+.applemusic-local-playlist-name {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 15px;
+    color: var(--text-main);
+    transition: opacity 0.2s;
+}
+
+/* 滑动指示器 (小圆点) */
+.applemusic-carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+.applemusic-carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.15);
+    transition: background 0.3s, transform 0.3s;
+}
+.applemusic-carousel-dot.active {
+    background: var(--theme-active);
+    transform: scale(1.2);
+}
+
+/* 美化文件上传按钮 (低饱和灰色小圆角风格) */
+.applemusic-file-upload-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px dashed rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 12px 18px;
+    color: #1c1c1e;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.applemusic-file-upload-btn:active {
+    background: #f2f2f7;
+    transform: scale(0.99);
+}
+.applemusic-file-upload-btn input[type="file"] {
+    display: none;
+}
+
+/* ================= 导入歌单教程轮播与输入框样式 ================= */
+.applemusic-tutorial-carousel-wrapper {
+    width: 100%;
+    height: 360px;
+    overflow: hidden;
+    position: relative;
+}
+.applemusic-tutorial-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    height: 100%;
+    align-items: center;
+    /* 卡片宽160 + margin 10*2 = 180，一半是90，这样左右两侧能露出相邻卡片 */
+    padding: 0 calc(50vw - 90px);
+}
+.applemusic-tutorial-carousel::-webkit-scrollbar {
+    display: none;
+}
+.applemusic-tutorial-card {
+    width: 160px;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    margin: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.5;
+    transform: scale(0.85);
+}
+.applemusic-tutorial-card.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 手机边框 Mockup */
+.applemusic-phone-mockup {
+    width: 160px;
+    height: 320px;
+    border: 6px solid #1c1c1e;
+    border-radius: 24px;
+    background: #ffffff;
+    position: relative;
+    box-shadow: none; /* 去除阴影 */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.applemusic-phone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 12px;
+    background: #1c1c1e;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    z-index: 10;
+}
+.applemusic-phone-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f2f2f7;
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* 教程内部排版 (模仿网易云) */
+.mock-ui-bg {
+    background: linear-gradient(to bottom, #d1d1d6 0%, #f2f2f7 40%);
+}
+.mock-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 12px 10px;
+}
+.mock-back, .mock-more {
+    width: 16px;
+    height: 16px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+}
+.mock-center-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+}
+.mock-big-cover {
+    width: 80px;
+    height: 80px;
+    background: #a1a1aa;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+.mock-title-text {
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+}
+.mock-author-text {
+    font-size: 9px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 12px;
+}
+.mock-action-row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 16px;
+    padding: 0 10px;
+}
+.mock-action-btn {
+    background: rgba(255,255,255,0.5);
+    color: #000;
+    font-size: 8px;
+    padding: 3px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.mock-action-btn svg {
+    width: 9px;
+    height: 9px;
+    fill: currentColor;
+}
+.mock-action-btn.active-btn {
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.mock-list-area {
+    flex: 1;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.mock-play-all {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #000;
+}
+.mock-play-icon {
+    width: 16px;
+    height: 16px;
+    background: var(--theme-active);
+    border-radius: 50%;
+}
+.mock-song-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.mock-song-title {
+    width: 80%;
+    height: 8px;
+    background: #e5e5ea;
+    border-radius: 4px;
+}
+.mock-song-sub {
+    width: 50%;
+    height: 6px;
+    background: #f2f2f7;
+    border-radius: 3px;
+}
+
+/* 气泡提示样式 (集中在一个屏幕内) */
+.applemusic-tutorial-bubble {
+    position: absolute;
+    background: #fa243c;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 6px 10px;
+    border-radius: 8px;
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(250, 36, 60, 0.3);
+    white-space: nowrap;
+}
+.bubble-step1 {
+    top: 45px;
+    left: 15px;
+}
+.bubble-step2 {
+    top: 155px;
+    left: 15px;
+}
+.bubble-step3 {
+    bottom: 55px;
+    left: 55px;
+}
+
+/* 分享面板 */
+.mock-share-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 15;
+}
+.mock-share-panel-v2 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #f2f2f7;
+    border-radius: 12px 12px 0 0;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.mock-share-title {
+    font-size: 8px;
+    font-weight: 800;
+    color: #000;
+    text-align: left;
+    margin-bottom: 2px;
+}
+.mock-share-row-v2 {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+}
+.mock-share-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.mock-share-icon-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mock-share-icon-circle svg {
+    width: 8px;
+    height: 8px;
+    stroke: #333;
+}
+.mock-share-item.active .mock-share-icon-circle {
+    background: #fa243c;
+    border-color: #fa243c;
+}
+.mock-share-item.active .mock-share-icon-circle svg {
+    stroke: #fff;
+}
+.mock-share-text {
+    width: 14px;
+    height: 3px;
+    background: #d1d1d6;
+    border-radius: 1.5px;
+}
+
+/* 导入歌单预览列表样式 */
+.applemusic-import-preview-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #f2f2f7;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.applemusic-import-preview-item:active {
+    background: #e5e5ea;
+}
+.applemusic-import-preview-cover {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    margin-right: 12px;
+    object-fit: cover;
+    background: #d1d1d6;
+}
+.applemusic-import-preview-info {
+    flex: 1;
+    overflow: hidden;
+}
+.applemusic-import-preview-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+.applemusic-import-preview-count {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 粘贴框 */
+.mock-input-capsule {
+    width: 80%;
+    height: 32px;
+    background: #e5e5ea;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #8e8e93;
+    font-weight: 600;
+    margin: 0 auto;
+}
+
+/* 胶囊输入框与解析按钮 (低饱和小圆角细边框风格) */
+.applemusic-capsule-input-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: #f7f7f8;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    padding: 4px 4px 4px 14px;
+    transition: all 0.2s;
+}
+.applemusic-capsule-input-wrapper:focus-within {
+    border-color: #000000;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.applemusic-capsule-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-align: left;
+    outline: none;
+    padding: 10px 0;
+    min-width: 0;
+    width: 100%;
+}
+.applemusic-capsule-input::placeholder {
+    color: #8e8e93;
+}
+.applemusic-parse-btn {
+    background: #1c1c1e;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.1s;
+}
+.applemusic-parse-btn:active {
+    transform: scale(0.96);
+}
+
+/* ================= 邀请一起听歌居中毛玻璃弹窗 ================= */
+.applemusic-invite-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.applemusic-invite-overlay.applemusic-active {
+    display: flex;
+    opacity: 1;
+}
+.applemusic-invite-glass-panel {
+    width: 310px;
+    border-radius: 28px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.applemusic-invite-overlay.applemusic-active .applemusic-invite-glass-panel {
+    transform: scale(1);
+}
+.applemusic-invite-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
+    justify-content: center; color: #333; font-size: 14px; font-weight: 600;
+}
+.applemusic-invite-header svg { width: 16px; height: 16px; }
+.applemusic-invite-info { text-align: center; margin-bottom: 24px; }
+.applemusic-invite-name { font-size: 20px; font-weight: 800; color: #000; margin-bottom: 4px; }
+.applemusic-invite-actions { display: flex; gap: 12px; }
+.applemusic-invite-btn { flex: 1; padding: 12px 0; border-radius: 16px; font-size: 16px; font-weight: 600; cursor: pointer; text-align: center; transition: transform 0.1s; }
+.applemusic-invite-btn:active { transform: scale(0.95); }
+.applemusic-invite-btn.cancel { background: rgba(0,0,0,0.08); color: #000; }
+.applemusic-invite-btn.confirm { background: #FF3B30; color: #fff; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3); }
+
+/* 轮播图样式 */
+.applemusic-invite-carousel-container {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 16px;
+}
+.applemusic-invite-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    height: 100%;
+    align-items: center;
+    padding: 0 calc(50% - 70px); /* 140px / 2 = 70px，保证居中 */
+}
+.applemusic-invite-carousel::-webkit-scrollbar {
+    display: none;
+}
+.applemusic-invite-carousel-card {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    margin: 0 10px;
+    border-radius: 24px;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0.4;
+    transform: scale(0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+}
+.applemusic-invite-carousel-card.active {
+    opacity: 1;
+    transform: scale(1);
+}
+.applemusic-invite-carousel-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.applemusic-invite-carousel-card svg {
+    width: 50%;
+    height: 50%;
+    fill: #c7c7cc;
+}
+
+/* ================= 悬浮音乐条 (全新白灰虚实双弦轨 · 精简紧凑宽度 · 支持动态尺寸与配色) ================= */
+#applemusic-dynamic-island {
+    position: fixed;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%) scale(var(--am-island-scale, 1));
+    transform-origin: center center;
+    width: 230px;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    cursor: grab;
+    z-index: 2147483646 !important;
+    user-select: none;
+    -webkit-user-select: none;
+}
+#applemusic-dynamic-island:active {
+    cursor: grabbing;
+}
+
+.am-track-main-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0 2px;
+    position: relative;
+    z-index: 2;
+}
+
+.applemusic-island-cover-wrapper {
+    width: 34px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.applemusic-island-cover {
+    display: block;
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    animation: applemusicSpin 6s linear infinite;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+    background-color: #2d3139;
+}
+.applemusic-island-cover.paused {
+    animation-play-state: paused;
+}
+@keyframes applemusicSpin {
+    100% { transform: rotate(360deg); }
+}
+
+.applemusic-island-lyric-container {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    position: relative;
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    font-family: "Songti SC", "Source Han Serif SC", "STSong", "Noto Serif SC", "SimSun", serif;
+}
+
+.applemusic-island-lyric-text {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 3px;
+    white-space: nowrap;
+    line-height: 1.2;
+    will-change: transform;
+}
+
+/* 仅在文字超长时激活的高级平滑往返滚动动画 */
+.applemusic-island-lyric-text.is-scrolling {
+    animation: amIslandLyricScroll var(--marquee-duration, 6s) ease-in-out infinite alternate;
+}
+
+.applemusic-island-lyric-text.paused {
+    animation-play-state: paused;
+}
+
+@keyframes amIslandLyricScroll {
+    0%, 20% {
+        transform: translateX(0);
+    }
+    80%, 100% {
+        transform: translateX(var(--overflow-dist, -30px));
+    }
+}
+
+.am-lyric-first {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--am-island-color, #ffffff);
+    opacity: 0.95;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
+    flex-shrink: 0;
+}
+
+.am-lyric-rest {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--am-island-color, rgba(248, 250, 252, 0.7));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.lyric-text-fade {
+    animation: amLyricFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes amLyricFadeIn {
+    0% { opacity: 0; transform: translateY(3px); filter: blur(2px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.am-island-play-btn {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    border-radius: 50%;
+    opacity: 0.85;
+    transition: transform 0.15s, opacity 0.15s;
+}
+.am-island-play-btn:hover { opacity: 1; }
+.am-island-play-btn:active { transform: scale(0.9); }
+.am-island-play-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--am-island-color, #ffffff);
+}
+
+/* 底部虚实双弦微几何线条 (间距为 0px) */
+.am-bottom-rail {
+    width: calc(100% - 20px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5px;
+    margin-top: 0px !important;
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.am-rail-top {
+    width: 58%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--am-island-color, #ffffff) 80%, rgba(255,255,255,0.2) 100%);
+    box-shadow: 0 0 3px rgba(255,255,255,0.5);
+    transition: width 0.3s ease;
+}
+
+.am-rail-bottom {
+    width: 100%;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent 0%, var(--am-island-color, rgba(255, 255, 255, 0.5)) 15%, var(--am-island-color, rgba(255, 255, 255, 0.5)) 85%, transparent 100%);
+}
+
+/* 一起听歌时的同频共振发光效果 */
+#applemusic-dynamic-island.together-mode .am-rail-top {
+    width: 75%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.9) 50%, rgba(250, 36, 60, 0.8) 100%);
+    box-shadow: 0 0 4px rgba(250, 36, 60, 0.6);
+}
+
+/* ================= 展开的音乐弹窗 ================= */
+#applemusic-island-popup-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 2147483647 !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease; /* 仅保留 overlay 的透明度动画 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#applemusic-island-popup-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.applemusic-island-popup {
+    width: 310px;
+    background: rgba(255, 255, 255, 0.85); /* 增加清透感 */
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.15);
+    border-radius: 36px;
+    padding: 20px;
+    /* 彻底修复闪烁：移除 transform 动画，固定在中心，依靠外层 overlay 淡入淡出 */
+    transform: translateZ(0);
+    color: #000;
+}
+.applemusic-popup-cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 16px;
+}
+.applemusic-popup-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.applemusic-popup-text {
+    flex: 1;
+    overflow: hidden;
+}
+.applemusic-popup-title {
+    font-size: 18px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+.applemusic-popup-artist {
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.applemusic-popup-waveform {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 20px;
+    padding-bottom: 2px;
+}
+.applemusic-popup-waveform div {
+    width: 3px;
+    background-color: #000;
+    border-radius: 2px;
+    animation: applemusicWave 1s infinite ease-in-out alternate;
+}
+.applemusic-popup-waveform div:nth-child(1) { height: 60%; animation-delay: 0.0s; }
+.applemusic-popup-waveform div:nth-child(2) { height: 100%; animation-delay: 0.2s; }
+.applemusic-popup-waveform div:nth-child(3) { height: 40%; animation-delay: 0.4s; }
+.applemusic-popup-waveform div:nth-child(4) { height: 80%; animation-delay: 0.1s; }
+@keyframes applemusicWave {
+    0% { transform: scaleY(0.5); }
+    100% { transform: scaleY(1); }
+}
+.applemusic-popup-progress-container {
+    margin-bottom: 20px;
+}
+.applemusic-popup-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    margin-bottom: 8px;
+    position: relative;
+}
+.applemusic-popup-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #000;
+    border-radius: 3px;
+    position: relative;
+}
+.applemusic-popup-progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    background: #000;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.applemusic-popup-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+}
+.applemusic-popup-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+.applemusic-popup-ctrl-left {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+}
+.applemusic-popup-ctrl-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0px; /* 极小化控件间距 */
+}
+.applemusic-popup-ctrl-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.applemusic-popup-ctrl-list {
+    width: 42px !important; /* 放大图标 */
+    height: 42px !important;
+    color: #8E8E93 !important; /* 设置为浅灰色 */
+    cursor: pointer;
+}
+/* 隐藏弹窗内部列表的滚动条 */
+#applemusic-popup-list-container::-webkit-scrollbar {
+    display: none;
+}
+.applemusic-popup-controls svg {
+    fill: #000;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.applemusic-popup-controls svg:active {
+    opacity: 0.5;
+}
+/* 强制提升权重，确保星星放大 */
+svg.applemusic-popup-ctrl-star { width: 40px !important; height: 40px !important; }
+.applemusic-popup-ctrl-icon { width: 48px; height: 58px; } /* 放大上一首/下一首 */
+.applemusic-popup-ctrl-play { width: 64px; height: 64px; } /* 放大播放/暂停 */
+.applemusic-popup-volume {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.applemusic-popup-volume svg {
+    width: 14px;
+    height: 14px;
+    fill: rgba(0, 0, 0, 0.5);
+}
+.applemusic-popup-volume-bar {
+    flex: 1;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+.applemusic-popup-volume-fill {
+    width: 66%;
+    height: 100%;
+    background: #000;
+    border-radius: 3px;
+}
+.applemusic-popup-airplay {
+    display: flex;
+    justify-content: center;
+}
+.applemusic-popup-airplay-btn {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.applemusic-popup-airplay-btn:active {
+    background: rgba(0, 0, 0, 0.1);
+}
+.applemusic-popup-airplay-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: #000;
+}
+
+/* ================= 独立悬浮歌词容器 (纯装饰，绝对穿透不遮挡按键) ================= */
+#applemusic-floating-lyrics-window {
+    position: fixed;
+    top: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2147483645 !important;
+    pointer-events: none !important; /* 关键：穿透所有点击事件，不遮挡任何按键 */
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    max-width: 90vw;
+    width: max-content;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+#applemusic-floating-lyrics-window * {
+    pointer-events: none !important;
+}
+
+/* ================= UI 样式一：错落几何风 (微五线谱底纹，长歌词自动折行) ================= */
+.am-fl-style-1 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 6px 12px;
+    background: transparent !important;
+}
+
+.am-fl-s1-staff-decor {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    pointer-events: none;
+    opacity: 0.22;
+    z-index: 0;
+}
+.am-fl-s1-staff-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--fl-color, #ffffff) 20%, var(--fl-color, #ffffff) 80%, transparent 100%);
+}
+.am-fl-s1-clef {
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 26px;
+    color: var(--fl-color, #ffffff);
+    opacity: 0.45;
+}
+
+.am-fl-s1-chars-wrap {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap; /* 短歌词保持单行，溢出时自动折行 */
+    gap: 1px 0px;
+    max-width: 100%;
+    text-align: center;
+    line-height: 1.4;
+    word-break: break-word;
+}
+.am-fl-s1-space {
+    width: 6px;
+    display: inline-block;
+}
+.am-fl-s1-char {
+    display: inline-block;
+    font-weight: 800;
+    margin: 0 0.5px;
+    font-size: var(--fs, var(--fl-font-size, 18px));
+    color: var(--fl-color, #ffffff);
+    opacity: 0;
+    transform: translateY(calc(var(--dy, 0px) + 10px)) scale(0.9);
+    animation: amFlCharFadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--delay, 0s);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+.am-fl-s1-char.am-fl-s1-stroke {
+    color: transparent !important;
+    -webkit-text-stroke: 1.2px var(--fl-color, #ffffff);
+}
+.am-fl-s1-char.am-fl-s1-gradient {
+    background: linear-gradient(180deg, var(--fl-color, #ffffff) 30%, rgba(255, 255, 255, 0.35) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.am-fl-s1-char.am-fl-s1-feather {
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0.3) 100%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,1) 55%, rgba(0,0,0,0.3) 100%);
+}
+.am-fl-s1-char.am-fl-s1-blur {
+    filter: blur(0.4px);
+}
+
+@keyframes amFlCharFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(calc(var(--dy, 0px) + 10px)) scale(0.9);
+        filter: blur(3px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(var(--dy, 0px)) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* ================= UI 样式二：网易云双行悬浮歌词 (透明无底色、无发光、单色) ================= */
+.am-fl-style-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    max-width: 100%;
+    text-align: center;
+}
+
+.am-fl-s2-line-current {
+    font-size: var(--fl-font-size, 18px);
+    font-weight: 700;
+    color: var(--fl-color, #ffffff);
+    line-height: 1.4;
+    max-width: 100%;
+    text-align: center;
+    white-space: normal;
+    word-break: break-word;
+    text-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.7);
+    animation: amFlNeteaseLineIn 0.35s ease forwards;
+}
+
+.am-fl-s2-line-next {
+    font-size: calc(var(--fl-font-size, 18px) * 0.82);
+    font-weight: 600;
+    color: var(--fl-color, #ffffff);
+    margin-top: 4px;
+    line-height: 1.35;
+    max-width: 100%;
+    opacity: 0.65;
+    text-align: center;
+    white-space: normal;
+    word-break: break-word;
+    text-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.6);
+    animation: amFlNeteaseLineIn 0.4s ease forwards;
+}
+
+@keyframes amFlNeteaseLineIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= UI 样式三：宋韵雨丝风 (首字实体大字羽化淡化 · 英文花词 · 纯净无镂空) ================= */
+.am-fl-style-3 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 10px 20px 8px;
+    background: transparent !important;
+    font-family: "Songti SC", "Source Han Serif SC", "Noto Serif SC", "STSong", "SimSun", "Songti TC", "Georgia", serif;
+    text-shadow: none !important;
+}
+
+/* 英文歌词花词艺术字体 */
+.am-fl-style-3.am-fl-s3-english {
+    font-family: 'Brush Script MT', 'Snell Roundhand', 'Bickham Script Pro', 'Edwardian Script ITC', 'Zapfino', cursive, 'Georgia', serif;
+    font-style: italic;
+    letter-spacing: 1.2px;
+}
+
+/* 下雨动画背景 */
+.am-fl-s3-rain-wrap {
+    position: absolute;
+    inset: -8px -6px -8px -6px;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+.am-fl-s3-drop {
+    position: absolute;
+    top: -24px;
+    left: var(--rx, 20%);
+    width: 1px;
+    height: var(--rh, 18px);
+    background: linear-gradient(180deg, transparent 0%, var(--fl-color, #ffffff) 70%, transparent 100%);
+    opacity: 0.28;
+    transform: rotate(14deg);
+    animation: amFlRainFall var(--dur, 1.2s) linear infinite;
+    animation-delay: var(--rd, 0s);
+}
+
+@keyframes amFlRainFall {
+    0% {
+        transform: translateY(0) rotate(14deg);
+        opacity: 0;
+    }
+    25% {
+        opacity: 0.32;
+    }
+    85% {
+        opacity: 0.26;
+    }
+    100% {
+        transform: translateY(72px) rotate(14deg);
+        opacity: 0;
+    }
+}
+
+/* 歌词主文本行 */
+.am-fl-s3-chars-wrap {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap; /* 短歌词单行，溢出自动折行 */
+    max-width: 100%;
+    line-height: 1.25;
+    word-break: break-word;
+    text-shadow: none !important;
+}
+
+/* 首字：放大、淡淡的隐约显示、羽化、实体无镂空 */
+.am-fl-s3-first-char {
+    display: inline-block;
+    font-size: calc(var(--fl-font-size, 18px) * 2.4);
+    font-weight: 600;
+    line-height: 1;
+    margin-right: 4px;
+    vertical-align: baseline;
+    color: var(--fl-color, #ffffff) !important;
+    opacity: 0.36;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 15%, rgba(0, 0, 0, 0.2) 100%);
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 15%, rgba(0, 0, 0, 0.2) 100%);
+    text-shadow: none !important;
+}
+
+/* 后续歌词容器：正常水平平行排布，纯净文字 */
+.am-fl-s3-rest-group {
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    line-height: 1.25;
+}
+
+.am-fl-s3-space {
+    display: inline;
+}
+
+.am-fl-s3-char {
+    display: inline-block;
+    font-size: var(--fl-font-size, 18px);
+    font-weight: 600;
+    color: var(--fl-color, #ffffff);
+    letter-spacing: 0.8px;
+    line-height: 1;
+    vertical-align: baseline;
+    text-shadow: none !important;
+    opacity: 1;
+}
+
+/* 结尾几个字的淡化梯度 */
+.am-fl-s3-char.am-fl-s3-tail-fade-1 {
+    opacity: 0.85;
+}
+.am-fl-s3-char.am-fl-s3-tail-fade-2 {
+    opacity: 0.65;
+}
+.am-fl-s3-char.am-fl-s3-tail-fade-3 {
+    opacity: 0.45;
+}
+
+/* 底部极细几何微装饰线条 */
+.am-fl-s3-geom-bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 65%;
+    max-width: 150px;
+    margin-top: 5px;
+    opacity: 0.32;
+}
+.am-fl-s3-geom-line {
+    flex: 1;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent 0%, var(--fl-color, #ffffff) 50%, transparent 100%);
+}
+.am-fl-s3-geom-point {
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: var(--fl-color, #ffffff);
+}
+
+/* ================= UI 样式四：行书飘逸随机风 ================= */
+.am-fl-style-4 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 18px 24px 14px;
+    background: transparent !important;
+    font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+    text-shadow: none !important;
+}
+
+.am-fl-s4-chars-wrap {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    letter-spacing: -0.5px; /* 紧凑排布 */
+    line-height: 1.35;
+    text-align: center;
+}
+
+.am-fl-s4-space {
+    display: inline-block;
+    width: 8px;
+}
+
+/* 首字放大飘逸 */
+.am-fl-s4-char-first {
+    font-family: 'Zhi Mang Xing', 'Brush Script MT', 'STKaiti', cursive, serif !important;
+    font-size: calc(var(--fl-font-size, 18px) * 2.8);
+    font-weight: normal;
+    line-height: 0.85;
+    margin-right: 6px;
+    display: inline-block;
+    vertical-align: baseline;
+    transform-origin: center bottom;
+    background: linear-gradient(175deg, var(--fl-color, #ffffff) 20%, rgba(255, 255, 255, 0.45) 85%, rgba(255, 255, 255, 0.15) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 60%, rgba(0,0,0,0.45) 100%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,1) 60%, rgba(0,0,0,0.45) 100%);
+    opacity: 0;
+    transform: scale(0.8) translateY(12px) rotate(-3deg);
+    animation: amFlS4FirstCharGlideIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 随机飘逸字体 */
+.am-fl-s4-char-cursive {
+    font-family: 'Zhi Mang Xing', 'Brush Script MT', 'STKaiti', cursive, serif !important;
+    font-size: calc(var(--fl-font-size, 18px) * 1.6);
+    font-weight: normal;
+    color: var(--fl-color, #ffffff);
+    margin: 0 2px;
+    display: inline-block;
+    vertical-align: baseline;
+    transform: translateY(2px);
+}
+
+/* 随机括号包裹 */
+.am-fl-s4-bracket {
+    font-family: -apple-system, sans-serif;
+    font-size: calc(var(--fl-font-size, 18px) * 0.8);
+    opacity: 0.4;
+    font-weight: 300;
+    margin: 0 1px;
+    vertical-align: baseline;
+}
+
+/* 基础字符与动画 */
+.am-fl-s4-char {
+    display: inline-block;
+    font-size: var(--fl-font-size, 18px);
+    font-weight: 600;
+    color: var(--fl-color, #ffffff);
+    line-height: 1;
+    margin: 0 1px;
+    vertical-align: baseline;
+    position: relative;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: amFlS4CharFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay, 0s);
+}
+
+/* 独立材质效果 */
+.am-fl-s4-effect-gradient {
+    background: linear-gradient(180deg, var(--fl-color, #ffffff) 15%, rgba(255, 255, 255, 0.5) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.am-fl-s4-effect-stroke {
+    color: transparent !important;
+    -webkit-text-stroke: 1px var(--fl-color, #ffffff);
+    opacity: 0.9;
+}
+
+.am-fl-s4-effect-feather {
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 45%, rgba(0,0,0,0.3) 100%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,1) 45%, rgba(0,0,0,0.3) 100%);
+}
+
+.am-fl-s4-effect-blur {
+    filter: blur(0.4px);
+    opacity: 0.85;
+}
+
+.am-fl-s4-effect-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--fl-color, #ffffff), transparent);
+    opacity: 0.65;
+}
+
+/* 动画关键帧 */
+@keyframes amFlS4FirstCharGlideIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.75) translateY(14px) rotate(-4deg);
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0) rotate(0deg);
+        filter: blur(0);
+    }
+}
+
+@keyframes amFlS4CharFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= 悬浮歌词设置页（低饱和黑白灰极简工作舱） ================= */
+.applemusic-fl-modern-card {
+    background: #fafafa;
+    border: 1px solid #e4e4e7;
+    border-radius: 14px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
+    position: relative;
+}
+.applemusic-fl-modern-card:active {
+    transform: scale(0.97);
+}
+.applemusic-fl-modern-card.active {
+    background: #ffffff;
+    border-color: #18181b;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.am-fl-card-vis {
+    width: 100%;
+    height: 52px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.am-fl-vis-1 { background: #27272a; color: #ffffff; }
+.am-fl-mock-note { font-size: 18px; opacity: 0.35; position: absolute; left: 8px; }
+.am-fl-mock-stagger { font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+
+.am-fl-vis-2 { background: #3f3f46; flex-direction: column; gap: 4px; padding: 0 10px; }
+.am-fl-mock-dual-line1 { width: 75%; height: 4px; background: #ffffff; border-radius: 2px; }
+.am-fl-mock-dual-line2 { width: 45%; height: 3px; background: rgba(255,255,255,0.45); border-radius: 2px; }
+
+.am-fl-vis-3 { background: #1e1e24; color: #ffffff; font-family: "Songti SC", serif; }
+.am-fl-mock-serif-char { font-size: 20px; font-weight: 600; opacity: 0.85; }
+.am-fl-mock-rain-line { position: absolute; width: 1px; height: 16px; background: linear-gradient(180deg, transparent, #ffffff, transparent); right: 16px; top: 10px; transform: rotate(15deg); opacity: 0.4; }
+
+.am-fl-vis-4 { background: #2d2625; color: #ffffff; font-family: "STKaiti", cursive; }
+.am-fl-mock-cursive-char { font-size: 22px; }
+.am-fl-mock-brush-dot { font-size: 10px; opacity: 0.4; font-family: -apple-system, sans-serif; position: absolute; right: 8px; bottom: 4px; }
+
+.am-fl-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.am-fl-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #18181b;
+}
+.am-fl-modern-card.active .am-fl-card-name {
+    color: #000000;
+}
+.am-fl-card-sub {
+    font-size: 10px;
+    color: #71717a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 低饱和黑白灰单色滑块 */
+.am-fl-mono-slider {
+    width: 100%;
+    accent-color: #18181b;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* 模块内复位胶囊按键 */
+.am-fl-reset-action-btn {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 0;
+    background: #ffffff;
+    border: 1px solid #d4d4d8;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #18181b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.am-fl-reset-action-btn:active {
+    background: #f4f4f5;
+    transform: scale(0.98);
+}
+
+/* ================= 分享歌曲同频抽屉 (方案六 · 纯平无发光) ================= */
+.applemusic-share-drawer-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4); z-index: 100000;
+    display: none; flex-direction: column; justify-content: flex-end;
+    opacity: 0; transition: opacity 0.3s ease;
+}
+.applemusic-share-drawer-overlay.applemusic-active {
+    display: flex; opacity: 1;
+}
+
+.applemusic-share-drawer {
+    width: 100%; height: auto; max-height: 80vh; min-height: 0;
+    background: #ffffff; border-radius: 28px 28px 0 0;
+    position: relative; overflow: hidden;
+    transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    color: #000000; padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+.applemusic-share-drawer-overlay.applemusic-active .applemusic-share-drawer {
+    transform: translateY(0);
+}
+
+.applemusic-share-header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px 8px; flex-shrink: 0;
+}
+.applemusic-share-title {
+    font-size: 17px; font-weight: 700; color: #1c1c1e;
+}
+
+/* 右上角纸飞机发送按键 (无发光，仅颜色与缩放微动效) */
+.applemusic-share-send-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, 0.05); color: #8e8e93;
+    cursor: pointer; opacity: 0.35; pointer-events: none;
+    transition: all 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+    border: none; box-shadow: none; /* 彻底去除发光 */
+}
+.applemusic-share-send-btn svg {
+    width: 17px; height: 17px; fill: currentColor;
+    transform: translate(-1px, 1px);
+}
+.applemusic-share-send-btn.active {
+    background: #fa243c; color: #ffffff;
+    opacity: 1; pointer-events: auto; transform: scale(1.05);
+}
+.applemusic-share-send-btn.active:active {
+    transform: scale(0.95);
+}
+
+/* 歌曲预览卡片 */
+.applemusic-share-song-card {
+    margin: 4px 20px 14px; padding: 10px 12px;
+    background: #f7f7f8; border-radius: 14px;
+    display: flex; align-items: center; gap: 12px;
+    flex-shrink: 0; border: none; box-shadow: none;
+}
+.applemusic-share-song-cover {
+    width: 48px; height: 48px; border-radius: 10px;
+    object-fit: cover; flex-shrink: 0; background: #eee;
+}
+.applemusic-share-song-info {
+    flex: 1; min-width: 0;
+}
+.applemusic-share-song-title {
+    font-size: 15px; font-weight: 700; color: #1c1c1e;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.applemusic-share-song-artist {
+    font-size: 12px; color: #8e8e93; margin-top: 1px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.applemusic-share-lossless-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 9.5px; font-weight: 700; color: #1c1c1e;
+    background: rgba(0, 0, 0, 0.06); padding: 1.5px 5px;
+    border-radius: 4px; margin-top: 3px;
+}
+
+/* 律动波形条动画 */
+.applemusic-share-sync-badge {
+    display: flex; align-items: center; gap: 2px; height: 14px;
+    flex-shrink: 0; padding-right: 4px;
+}
+.applemusic-share-sync-bar {
+    width: 2.5px; background: #fa243c; border-radius: 1px;
+    animation: applemusicShareSyncWave 0.8s ease-in-out infinite alternate;
+}
+.applemusic-share-sync-bar:nth-child(1) { height: 40%; animation-delay: 0.1s; }
+.applemusic-share-sync-bar:nth-child(2) { height: 100%; animation-delay: 0.3s; }
+.applemusic-share-sync-bar:nth-child(3) { height: 60%; animation-delay: 0.2s; }
+@keyframes applemusicShareSyncWave {
+    from { transform: scaleY(0.4); }
+    to { transform: scaleY(1); }
+}
+
+/* 角色头像滑动行 */
+.applemusic-share-char-row {
+    display: flex; overflow-x: auto; padding: 2px 20px 10px;
+    gap: 16px; scrollbar-width: none;
+}
+.applemusic-share-char-row::-webkit-scrollbar {
+    display: none;
+}
+.applemusic-share-char-item {
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; flex-shrink: 0; background: transparent; border: none;
+}
+.applemusic-share-avatar-wrap {
+    width: 52px; height: 52px; margin-bottom: 6px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+.applemusic-share-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    object-fit: cover; background: #eee;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.applemusic-share-char-item.selected .applemusic-share-avatar {
+    border-color: #fa243c;
+    transform: scale(1.05);
+}
+.applemusic-share-char-name {
+    font-size: 11px; font-weight: 600; color: #1c1c1e;
+    max-width: 56px; white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; text-align: center;
+    transition: color 0.2s;
+}
+.applemusic-share-char-item.selected .applemusic-share-char-name {
+    color: #fa243c; font-weight: 700;
+}

@@ -1,0 +1,934 @@
+
+        @font-face {
+            font-family: Geomini;
+            src: url(https://file.icve.com.cn/file_doc/561/347/8C756FCA2D48EC6280B7E114B9474FFA.ttf) format(truetype);
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        :root {
+            --app-height: 100vh;
+            --layout-viewport-height: 100vh;
+            --visual-viewport-height: 100vh;
+            --visual-viewport-offset-top: 0px;
+            --visual-viewport-bottom: 100vh;
+            --viewport-width: 100vw;
+            --system-bar-color: #fdfbfb;
+            --system-top-inset: env(safe-area-inset-top, 0px);
+            --system-bottom-inset: env(safe-area-inset-bottom, 0px);
+            --top-safe-area: var(--system-top-inset, env(safe-area-inset-top, 0px));
+            --page-adapt-top-offset: 0px;
+            --page-adapt-bottom-offset: 0px;
+            --simulated-status-bar-bottom: 45px;
+            --wechat-top-inset: calc(max(45px, var(--system-top-inset, 0px), var(--simulated-status-bar-bottom, 0px)) + var(--app-top-offset-wechat, 0px));
+            --message-top-inset: calc(max(54px, var(--system-top-inset, 0px), var(--simulated-status-bar-bottom, 0px)) + var(--app-top-offset-message, 0px));
+            --page-adapt-backdrop-color: #e0e0e0;
+            --desktop-rows: 6;
+            --app-global-font-family: "PingFang SC", "PingFang TC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", sans-serif;
+        }
+        *, *::before, *::after, input, button, textarea, select {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Keep the system default consistent; theme-selected fonts override this dynamically. */
+            font-family: var(--app-global-font-family) !important;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: 600;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: var(--app-height, 100vh);
+            background-color: var(--page-adapt-backdrop-color, #e0e0e0);
+            overflow: hidden;
+        }
+
+        /* 手机外壳模拟 */
+        .iphone {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border-radius: 45px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 8px solid #f0f0f0;
+        }
+
+        /*
+         * All pages share these measured coordinates. The .iphone remains a visual
+         * container; page adaptation values no longer resize or translate it.
+         */
+        .iphone > .status-bar,
+        .iphone > .dock,
+        .iphone > .search-bar {
+            --app-top-adjustment: var(--page-adapt-top-offset, 0px);
+            --app-bottom-adjustment: var(--page-adapt-bottom-offset, 0px);
+        }
+
+        /* Single mobile viewport model: one height source and one safe-area source. */
+        @media (max-width: 768px), (hover: none) and (pointer: coarse) {
+            html,
+            body {
+                width: 100%;
+                height: var(--app-height, 100vh);
+                min-height: var(--app-height, 100vh);
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                overscroll-behavior: none;
+                -webkit-overflow-scrolling: touch;
+                touch-action: manipulation;
+            }
+
+            body {
+                position: fixed;
+                inset: 0;
+                display: block;
+                height: 100%;
+                min-height: 100%;
+            }
+
+            .iphone {
+                position: fixed;
+                inset: 0;
+                top: 0;
+                bottom: auto;
+                width: 100%;
+                height: var(--app-height, 100vh);
+                min-height: var(--app-height, 100vh);
+                max-width: none;
+                max-height: none;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .bottom-nav-wrapper {
+                bottom: calc(25px + var(--system-bottom-inset, 0px));
+            }
+        }
+
+        /* Keep touch devices in the fullscreen shell even if a browser temporarily reports a desktop-width viewport. */
+        html.touch-viewport-shell,
+        html.touch-viewport-shell body {
+            width: 100%;
+            height: var(--app-height, 100vh);
+            min-height: var(--app-height, 100vh);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+            touch-action: manipulation;
+        }
+
+        html.touch-viewport-shell body {
+            position: fixed;
+            inset: 0;
+            display: block;
+        }
+
+        html.touch-viewport-shell .iphone {
+            position: fixed;
+            inset: 0;
+            top: 0;
+            bottom: auto;
+            width: 100%;
+            height: var(--app-height, 100vh);
+            min-height: var(--app-height, 100vh);
+            max-width: none;
+            max-height: none;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        html.touch-viewport-shell .bottom-nav-wrapper {
+            bottom: calc(25px + var(--system-bottom-inset, 0px));
+        }
+
+        /* iOS standalone keeps the simulated status bar over the system status area. */
+        html.ios-installed body .iphone .status-bar {
+            padding-top: calc(14px + var(--system-top-inset, 0px) + var(--page-adapt-top-offset, 0px));
+        }
+
+        html.ios-installed body .iphone .desktop-grid {
+            margin-top: max(calc(var(--top-safe-area) + 21px), 79px);
+            height: calc(100% - 180px);
+        }
+
+        html.ios-installed .iphone > .dock {
+            bottom: calc(0px + var(--system-bottom-inset, 0px));
+        }
+
+        /* Keep the Dock anchored while arranging the desktop so it cannot cover widget edit controls. */
+        .iphone.desktop-editing > .dock {
+            bottom: 15px !important;
+        }
+
+        html.ios-installed .iphone.desktop-editing > .dock {
+            bottom: calc(0px + var(--system-bottom-inset, 0px)) !important;
+        }
+
+        html.ios-installed .iphone > .search-bar {
+            bottom: calc(107px + var(--system-bottom-inset, 0px));
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(14px + var(--system-top-inset, 0px) + var(--page-adapt-top-offset, 0px)) 26px 0 26px;
+            color: #000;
+            z-index: 11000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            pointer-events: none;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .time {
+            font-size: 14.5px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .focus-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 电池UI */
+        .battery-wrapper {
+            display: flex;
+            align-items: center;
+            margin-left: 1px;
+        }
+        
+        .battery-body {
+            width: 22px;
+            height: 11px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            border-radius: 3.5px;
+            position: relative;
+            padding: 1px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .battery-fill {
+            height: 100%;
+            background-color: #000;
+            border-radius: 1.5px;
+            width: 85%;
+            transition: width 0.3s ease;
+        }
+        
+        .battery-nub {
+            width: 1.2px;
+            height: 3.5px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 0 1.5px 1.5px 0;
+        }
+        /* 编辑模式 UI */
+        .edit-ui {
+            position: absolute;
+            top: 18px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            cursor: pointer;
+        }
+
+        .edit-plus {
+            left: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .edit-done {
+            right: 20px;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .edit-touch-target {
+            position: absolute;
+            display: none;
+            height: 48px;
+            z-index: 21;
+            border: 0;
+            background: transparent;
+            appearance: none;
+            -webkit-appearance: none;
+            pointer-events: auto;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .edit-plus-touch-target {
+            left: 12px;
+            width: 48px;
+        }
+
+        .edit-done-touch-target {
+            right: 12px;
+            width: 76px;
+        }
+
+        @media (max-width: 768px) {
+            html.ios-installed .iphone.desktop-editing > .edit-ui {
+                top: max(calc(var(--top-safe-area) - 6px), 46px);
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            html.ios-installed .iphone.desktop-editing > .edit-touch-target {
+                display: block;
+                top: max(calc(var(--top-safe-area) - 6px), 46px);
+            }
+
+            html.ios-installed .iphone.desktop-editing > .desktop-grid {
+                margin-top: max(calc(var(--top-safe-area) + 21px), 79px);
+            }
+
+            html.ios-installed .iphone.desktop-editing > .edit-ui::after {
+                content: none;
+            }
+        }
+
+        /* Preserve the selected row count within the measured desktop area. */
+        .desktop-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            padding: 0;
+            margin-top: 30px;
+            height: calc(100% - 180px);
+            position: relative;
+            z-index: 5;
+            touch-action: none;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            backface-visibility: hidden;
+        }
+
+        .desktop-grid.is-swiping {
+            transition: none !important;
+        }
+
+        .desktop-grid.is-swiping,
+        .desktop-grid.is-settling {
+            will-change: transform;
+        }
+
+        .desktop-page {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-rows: repeat(var(--desktop-rows), 80px);
+            gap: 15px 10px;
+            padding: 25px 20px;
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        html.edge-viewport-compat body .iphone .desktop-grid {
+            height: var(--desktop-grid-height, calc(100% - 180px));
+        }
+
+        html.edge-viewport-compat .desktop-page {
+            gap: var(--desktop-row-gap, 15px) 10px;
+            padding-top: var(--desktop-page-padding-y, 25px);
+            padding-bottom: var(--desktop-page-padding-y, 25px);
+            align-content: start;
+        }
+
+        .desktop-page[hidden] {
+            display: none;
+        }
+
+        .desktop-drag-ghost {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .desktop-page-controls {
+            position: absolute;
+            left: 50%;
+            bottom: 151px;
+            z-index: 8;
+            min-width: 92px;
+            height: 24px;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        html.ios-installed .desktop-page-controls {
+            bottom: calc(151px + var(--system-bottom-inset, 0px));
+        }
+
+        html.touch-viewport-shell .desktop-page-controls.has-content-collision {
+            top: max(calc(var(--top-safe-area) + 2px), 42px);
+            bottom: auto;
+        }
+
+        .desktop-page-dots {
+            min-width: 36px;
+            max-width: 112px;
+            height: 20px;
+            padding: 0 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            pointer-events: auto;
+        }
+
+        .desktop-page-dots::-webkit-scrollbar {
+            display: none;
+        }
+
+        .desktop-page-dot {
+            width: 7px;
+            height: 7px;
+            min-width: 7px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.55);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14);
+            cursor: pointer;
+        }
+
+        .desktop-page-dot.active {
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .desktop-page-action {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.72);
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font: 600 18px/1 Arial, sans-serif;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .desktop-page-controls.is-editing .desktop-page-action {
+            display: flex;
+        }
+
+        .desktop-page-action:disabled {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        /* 桌面格子占位符 */
+        .desktop-slot {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            border-radius: 16px;
+            transition: background-color 0.2s, border 0.2s;
+            border: 1px solid transparent;
+        }
+
+        /* 编辑模式下显示格子 */
+        .desktop-slot.show-grid {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px dashed rgba(0, 0, 0, 0.15);
+        }
+
+        /* APP 图标容器 */
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            touch-action: none;
+            cursor: default;
+            position: relative;
+            width: 100%;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .app-icon {
+            transition: transform 0.2s ease, filter 0.2s ease;
+            width: 60px;
+            height: 60px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(0,0,0,0.02);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            pointer-events: none;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .app-icon::before {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .app-icon.today-calendar-icon,
+        .app-icon.builtin-svg-icon {
+            overflow: hidden;
+            background: linear-gradient(155deg, #fff, #f4f6f9);
+            border: 0;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        .app-icon.today-calendar-icon::before,
+        .app-icon.builtin-svg-icon::before {
+            display: none;
+        }
+
+        /* 文件夹样式 */
+        .app-icon.folder-icon {
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 3px;
+            padding: 6px;
+            align-content: start;
+        }
+        .app-icon.folder-icon::before {
+            display: none;
+        }
+        .folder-mini-icon {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+        }
+
+        .folder-mini-icon.today-calendar-mini-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(155deg, #fff, #f4f6f9);
+        }
+        .folder-mini-icon.today-calendar-mini-icon .today-calendar-shine,
+        .folder-mini-icon.today-calendar-mini-icon .today-calendar-weekday {
+            display: none;
+        }
+        .folder-mini-icon.today-calendar-mini-icon .today-calendar-day {
+            position: static;
+            width: auto;
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        .today-calendar-shine,
+        .app-icon.builtin-svg-icon::after {
+            content: '';
+            pointer-events: none;
+            position: absolute;
+            top: 1px;
+            left: 5px;
+            right: 5px;
+            height: 19px;
+            border-radius: 12px 12px 50% 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0));
+        }
+
+        .today-calendar-weekday,
+        .today-calendar-day {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+            letter-spacing: 0;
+        }
+
+        .today-calendar-weekday {
+            top: 7px;
+            color: #111216;
+            font-size: 10px;
+            line-height: 13px;
+            font-weight: 700;
+        }
+
+        html[data-desktop-icon-style="dark"] .today-calendar-weekday {
+            color: #fff;
+        }
+
+        .today-calendar-day {
+            top: 20px;
+            color: #111216;
+            font-size: 31px;
+            line-height: 34px;
+            font-weight: 800;
+        }
+
+        /* 拖拽悬停动画 (合并与让位) */
+        .app-item.will-merge .app-icon {
+            transform: scale(1.15);
+            filter: brightness(0.7);
+        }
+        .app-item.will-swap {
+            transform: scale(0.9) translateY(8px);
+            opacity: 0.7;
+        }
+
+        .app-name {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #555;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        /* 搜索按钮 */
+        .search-bar {
+            position: absolute;
+            bottom: 115px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #555;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 5;
+        }
+
+        /* 底部程序坞 (Dock) */
+        .dock {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 5;
+            padding: 0 10px;
+        }
+
+
+        .dock .app-item {
+            margin-top: 10px;
+            width: auto;
+        }
+
+        .iphone.desktop-editing > .dock .app-item.jiggling {
+            animation: none !important;
+            transform: none !important;
+            will-change: auto !important;
+        }
+
+        .dock .app-item .app-name {
+            display: none;
+        }
+        
+        .dock .app-icon:not(.builtin-svg-icon):not(.today-calendar-icon) {
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+                .app-delete-btn {
+            display: none;
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #ff3b30;
+            border-radius: 50%;
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            line-height: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-family: Arial, sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .app-item.is-widget.jiggling .app-delete-btn {
+            display: flex;
+        }
+        .is-widget .app-icon::before {
+            display: none;
+        }
+        .dock .app-delete-btn { display: none !important; }
+
+        /* 桌面文件夹弹窗样式 */
+        .folder-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            z-index: 9000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .folder-overlay.active { opacity: 1; pointer-events: auto; }
+        .folder-container {
+            width: 320px; background: rgba(255, 255, 255, 0.65);
+            border-radius: 36px; padding: 20px 20px 30px 20px; box-sizing: border-box;
+        }
+        .folder-name-input {
+            text-align: center; font-size: 24px; color: #000; margin-bottom: 20px;
+            outline: none; background: transparent; border: none; font-weight: 500;
+        }
+        .folder-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 15px;
+            min-height: 100px;
+        }
+        .folder-grid .app-name { color: #333; text-shadow: none; }
+
+                .widget-size-preset {
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* 小组件：长按编辑热区（进入编辑模式，仅非编辑状态显示） */
+        .widget-edit-hotzone {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: transparent;
+            box-shadow: none;
+            border: 0;
+            z-index: 30;
+            display: none;
+            cursor: default;
+        }
+        .widget-edit-hotzone::before {
+            display: none;
+        }
+        .app-item.is-widget:not(.jiggling) .widget-edit-hotzone { display: flex; }
+        .app-item.is-widget.jiggling .widget-edit-hotzone { display: none !important; }
+        .app-item.is-widget.jiggling .app-icon .widget-render-frame { pointer-events: none !important; }
+
+        /* 全新小组件添加抽屉样式 */
+        .widget-picker-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .widget-picker-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .widget-picker-sheet {
+            width: 100%;
+            height: 85vh;
+            background: #f5f5f7;
+            border-radius: 32px 32px 0 0;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .widget-picker-overlay.show .widget-picker-sheet {
+            transform: translateY(0);
+        }
+        .widget-picker-handle {
+            width: 36px; height: 5px;
+            background: #d1d1d6;
+            border-radius: 3px;
+            margin: 12px auto 20px;
+        }
+        .widget-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        .widget-picker-cancel {
+            font-size: 16px;
+            color: #8e8e93;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .widget-picker-header h2 {
+            font-size: 18px; font-weight: 700; color: #1c1c1e; margin: 0;
+        }
+        .widget-picker-tabs-container {
+            padding: 0 20px; margin-bottom: 20px;
+        }
+        .widget-picker-tabs {
+            display: flex;
+            background: #e3e3e8;
+            border-radius: 20px; /* 增加交互栏的圆角 */
+            padding: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .widget-picker-tabs::-webkit-scrollbar { display: none; }
+        .widget-picker-tab {
+            flex: 1; min-width: 70px;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 13px; font-weight: 600; color: #1c1c1e;
+            border-radius: 16px; /* 增加内部 Tab 的圆角 */
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .widget-picker-tab.active {
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .widget-picker-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .widget-picker-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .widget-picker-preview-box {
+            background: #f2f2f7;
+            border-radius: 16px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .widget-picker-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .widget-picker-text h3 {
+            font-size: 16px; font-weight: 700; color: #1c1c1e; margin-bottom: 4px;
+        }
+        .widget-picker-badge {
+            display: inline-block;
+            background: #f2f2f7;
+            color: #8e8e93;
+            font-size: 11px; font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .widget-picker-add-btn {
+            background: #1c1c1e;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer;
+        }
+        .widget-picker-add-btn:active {
+            transform: scale(0.96);
+        }
+
+/* Match the active theme instead of the browser's black fullscreen backdrop. */
+html:fullscreen,
+html:fullscreen::backdrop {
+    background-color: var(--system-bar-color, #fdfbfb);
+}
+html:-webkit-full-screen,
+html:-webkit-full-screen::backdrop {
+    background-color: var(--system-bar-color, #fdfbfb);
+}

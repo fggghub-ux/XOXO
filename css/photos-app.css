@@ -1,0 +1,2972 @@
+/* Shared couple avatars and photo metadata. */
+#photosViewerDescriptionBtn .photos-item-icon svg { stroke:none; fill:currentColor; }
+.photos-app-container .photos-couple-setting { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; padding:16px; border-radius:16px; background:#f5f5f5; font-size:15px; }
+.photos-app-container .photos-couple-setting small { display:block; font-size:12px; color:#777; margin-top:5px; line-height:1.5; }
+.photos-app-container .photos-couple-setting input { appearance:none; -webkit-appearance:none; position:relative; width:51px; height:31px; flex:0 0 51px; margin:0; border:0; border-radius:999px; background:#e9e9eb; cursor:pointer; transition:background .2s; }
+.photos-app-container .photos-couple-setting input::after { content:""; position:absolute; top:2px; left:2px; width:27px; height:27px; border-radius:50%; background:#fff; box-shadow:0 2px 4px #0003; transition:transform .2s; }
+.photos-app-container .photos-couple-setting input:checked { background:#34c759; }
+.photos-app-container .photos-couple-setting input:checked::after { transform:translateX(20px); }
+.photos-app-container .photos-couple-setting input:focus-visible { outline:2px solid #007aff !important; outline-offset:3px; }
+@media (prefers-reduced-motion:reduce) { .photos-app-container .photos-couple-setting input, .photos-app-container .photos-couple-setting input::after { transition:none; } }
+.photos-app-container .photos-url-modes { display:flex; gap:4px; padding:4px; margin:0 0 12px; background:#f2f2f2; border-radius:12px; }
+.photos-app-container .photos-url-modes button { flex:1; border:0; background:transparent; border-radius:9px; padding:9px; color:#777; font:inherit; font-size:14px; }
+.photos-app-container .photos-url-modes button.active { background:#fff; color:#111; box-shadow:0 1px 4px #0001; }
+.photos-app-container .photos-url-preview { width:72px; height:72px; object-fit:cover; border-radius:12px; margin:12px auto; }
+.photos-app-container .photos-description-input { margin-top:12px; min-height:90px; }
+.photos-app-container [hidden] { display:none !important; }
+.photos-app-container .photos-grid.photos-couple-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:16px; padding:12px 16px 32px; }
+.photos-app-container .photos-couple-library-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12px; color:#777; }
+.photos-app-container .photos-couple-library-bar button { background:#f2f2f2; color:#222; border:0; padding:8px 12px; border-radius:12px; font:inherit; white-space:nowrap; }
+.photos-app-container .photos-couple-pair-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.photos-app-container .photos-couple-pair-caption { grid-column:1 / -1; color:#777; font-size:12px; padding:4px 0; }
+.photos-app-container .photos-couple-pair-row .photos-tile { width:100%; aspect-ratio:1; border-radius:14px; }
+.photos-app-container .photos-couple-empty { display:grid; place-items:center; aspect-ratio:1; border:1px dashed #ccc; border-radius:14px; color:#999; font-size:13px; }
+.photos-app-container .photos-couple-overlay { display:none; position:absolute; inset:0; z-index:300; align-items:flex-end; background:#0005; }
+.photos-app-container .photos-couple-overlay.show { display:flex; }
+.photos-app-container .photos-couple-sheet { display:flex; flex-direction:column; width:100%; max-height:88%; background:#fff; color:#111; border-radius:28px 28px 0 0; padding:10px 20px 0; }
+.photos-app-container .photos-couple-handle { width:36px; height:5px; margin:0 auto 14px; border-radius:3px; background:#d3d3d3; flex-shrink:0; }
+.photos-app-container .photos-couple-sheet h3 { margin:0; font-size:19px; }
+.photos-app-container .photos-couple-sheet p { margin:8px 0 12px; color:#777; font-size:12px; line-height:1.6; }
+.photos-app-container .photos-couple-editor-list { overflow-y:auto; min-height:0; overscroll-behavior:contain; padding-bottom:16px; }
+.photos-app-container .photos-couple-editor-cell { position:relative; border:2px solid transparent; border-radius:16px; overflow:hidden; aspect-ratio:1; background:#f3f3f3; }
+.photos-app-container .photos-couple-editor-cell.selected { border-color:#333; }
+.photos-app-container .photos-couple-editor-cell.dragging { opacity:.5; }
+.photos-app-container .photos-couple-editor-cell > button:first-child { width:100%; height:100%; padding:0; border:0; font:inherit; color:#888; background:transparent; }
+.photos-app-container .photos-couple-editor-cell img { width:100%; height:100%; object-fit:cover; }
+.photos-app-container .photos-pair-drag { position:absolute; right:6px; bottom:6px; display:grid; place-items:center; width:36px; height:36px; padding:7px; border:0; border-radius:10px; background:#fff; color:#555; touch-action:none; }
+.photos-app-container .photos-pair-drag svg { width:100%; height:100%; }
+.photos-app-container .photos-couple-sheet footer { display:grid; gap:8px; flex-shrink:0; padding:12px 0 max(16px,env(safe-area-inset-bottom)); border-top:1px solid #eee; }
+.photos-app-container .photos-couple-sheet footer button { padding:14px; border:0; border-radius:15px; background:#f3f3f3; color:#222; font:inherit; font-weight:600; }
+.photos-app-container .photos-couple-sheet footer button:first-child { background:#222; color:#fff; }
+
+.photos-app-container {
+    color: #000000;
+    background: #ffffff;
+    z-index: 10000 !important;
+    touch-action: pan-y;
+    overscroll-behavior-x: none;
+}
+
+/* 核心：彻底去除点击蓝色/灰色框及焦点框 */
+.photos-app-container,
+.photos-app-container * {
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    box-sizing: border-box;
+}
+
+.photos-app-container .photos-shell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+.photos-app-container .photos-topbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: max(52px, calc(14px + env(safe-area-inset-top))) 16px 10px;
+    z-index: 10;
+    transition: transform 0.25s ease;
+
+    background: #ffffff;
+    gap: 12px;
+}
+
+.photos-app-container .photos-top-title-wrap {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.photos-app-container .photos-top-title-wrap:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+}
+
+.photos-app-container .photos-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 2px;
+}
+
+/* iOS 质感玻璃按钮与白色磨砂胶囊效果 */
+.photos-app-container .photos-glass-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.075);
+    border-radius: 20px;
+    color: #000000 !important;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 5px 18px rgba(0, 0, 0, 0.065);
+    backdrop-filter: blur(26px) saturate(140%);
+    -webkit-backdrop-filter: blur(26px) saturate(140%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1), background-color 0.15s ease, opacity 0.15s ease;
+}
+.photos-app-container .photos-glass-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.92);
+}
+.photos-app-container .photos-glass-btn svg {
+    width: 19px;
+    height: 19px;
+    stroke: currentColor !important;
+}
+
+.photos-app-container .photos-text-btn {
+    width: auto;
+    min-width: 56px;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000 !important;
+}
+.photos-app-container .photos-text-btn.active {
+    background: rgba(255, 255, 255, 0.92);
+    color: #000000 !important;
+    box-shadow: inset 0 1px 0 #ffffff, 0 4px 14px rgba(0, 0, 0, 0.065);
+
+    border: 1px solid rgba(0, 0, 0, 0.22);}
+
+.photos-app-container .photos-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 0 calc(96px + env(safe-area-inset-bottom));
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-x: none;
+
+    background: #ffffff;
+}
+.photos-app-container .photos-view { display: none; }
+.photos-app-container .photos-view.active { display: block; }
+.photos-app-container .photos-large-title {
+    margin: 0;
+    font-size: 34px;
+    line-height: 1.04;
+    font-weight: 800;
+    letter-spacing: -1.1px;
+    color: #000000;
+}
+.photos-app-container .photos-countline {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: rgba(60, 60, 67, 0.50);
+}
+
+/* Full-size Photos search tab, matching the reference page structure. */
+.photos-app-container #photosSearchView.active {
+    min-height: 100%;
+}
+.photos-app-container .photos-search-page {
+    min-height: 100%;
+    padding: 6px 16px 115px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+.photos-app-container .photos-search-input-box {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.98), 0 3px 12px rgba(0, 0, 0, 0.035);
+    backdrop-filter: blur(20px) saturate(130%);
+    -webkit-backdrop-filter: blur(20px) saturate(130%);
+}
+.photos-app-container .photos-search-input-box svg {
+    width: 18px;
+    height: 18px;
+    color: #000000;
+    flex-shrink: 0;
+}
+.photos-app-container .photos-search-input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 450;
+    color: #000000;
+    box-shadow: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.photos-app-container .photos-search-input::placeholder {
+    color: rgba(0, 0, 0, 0.43);
+}
+.photos-app-container .photos-search-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 16px;
+}
+.photos-app-container .photos-search-suggestions button {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    border-radius: 18px;
+    min-height: 35px;
+    padding: 7px 12px;
+    color: #171717;
+    font: inherit;
+    font-weight: 550;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 #ffffff, 0 3px 10px rgba(0, 0, 0, 0.035);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+.photos-app-container .photos-search-suggestions button.active {
+    border-color: rgba(0, 0, 0, 0.28);
+    background: #ffffff;
+    color: #000000;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.photos-app-container .photos-search-results-caption {
+    margin: 30px 0 14px;
+    color: #000000;
+    font-size: 16px;
+    font-weight: 650;
+    letter-spacing: -0.25px;
+}
+.photos-app-container .photos-search-results-grid {
+    margin: 0;
+}
+.photos-app-container .photos-search-empty {
+    padding: 55px 12px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+}
+.photos-app-container .photos-search-more {
+    display: block;
+    margin: 20px auto 0;
+    padding: 9px 18px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    border-radius: 20px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    color: #000000;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* 返回导航组 */
+.photos-app-container .photos-back-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 2px;
+    font-size: 14px;
+    font-weight: 550;
+    color: #45484d;
+}
+
+/* iOS monochrome Photos library heading; image pixels stay in their original colors. */
+.photos-app-container .photos-library-month-heading {
+    margin: 10px 16px 13px;
+    color: #000000;
+    font-size: 21px;
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.45px;
+}
+.photos-app-container .photos-library-month-heading:empty {
+    display: none;
+}
+
+/* 相册网格与勾选圈 */
+.photos-app-container .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+    padding: 0;
+
+    margin: 0 14px;
+    border-radius: 17px;
+    overflow: hidden;
+    background: transparent;
+}
+.photos-app-container .photos-tile {
+    position: relative;
+    border: 0;
+    padding: 0;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background: #d9dce1;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.16s ease;
+}
+.photos-app-container .photos-tile:active {
+    transform: scale(0.985);
+    opacity: 0.92;
+}
+.photos-app-container .photos-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+}
+
+/* 收藏红心角标 */
+.photos-app-container .photos-tile-fav-tag {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.42));
+    pointer-events: none;
+}
+.photos-app-container .photos-tile-fav-tag svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* 选择模式选中状态 */
+.photos-app-container .photos-tile-select-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.8px solid #ffffff;
+    background: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.photos-app-container.select-mode .photos-tile-select-badge {
+    display: flex;
+}
+.photos-app-container .photos-tile.selected .photos-tile-select-badge {
+    background: #292c31;
+    border-color: #ffffff;
+    transform: scale(1.06);
+}
+.photos-app-container .photos-tile.selected::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 3px solid #292c31;
+    pointer-events: none;
+}
+.photos-app-container .photos-tile-select-badge svg {
+    width: 14px;
+    height: 14px;
+    stroke: #ffffff;
+    stroke-width: 2.6;
+    display: none;
+}
+.photos-app-container .photos-tile.selected .photos-tile-select-badge svg {
+    display: block;
+}
+
+.photos-app-container .photos-empty {
+    display: none;
+    text-align: center;
+    padding: 100px 20px;
+    color: #83868c;
+    font-size: 14px;
+}
+
+/* =========================================
+   严格对标截图：iOS 原生「精选集」极简高级设计
+   ========================================= */
+.photos-app-container .photos-glass-circle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.075);
+    color: #000000;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: inset 0 1px 0 #ffffff, 0 5px 18px rgba(0, 0, 0, 0.065);
+    backdrop-filter: blur(26px) saturate(140%);
+    -webkit-backdrop-filter: blur(26px) saturate(140%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: auto;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.photos-app-container .photos-glass-circle-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.92);
+}
+.photos-app-container .photos-glass-circle-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+.photos-app-container .photos-collection-view-wrap {
+    padding: 8px 16px 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.photos-app-container .photos-curated-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.photos-app-container .photos-curated-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.photos-app-container .photos-curated-title-btn {
+    border: none;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 21px;
+    font-weight: 720;
+    color: #000000;
+    cursor: pointer;
+    padding: 0;
+    letter-spacing: -0.65px;
+    transition: opacity 0.15s ease;
+}
+.photos-app-container .photos-curated-title-btn:active {
+    opacity: 0.65;
+}
+
+/* 去除磨砂圆圈包裹，放大加粗圆润且呈灰色的向右箭头 */
+.photos-app-container .photos-curated-title-chevron {
+    width: 20px;
+    height: 20px;
+    stroke: #777b82;
+    stroke-width: 3.2;
+    display: block;
+    transition: stroke 0.15s ease;
+}
+.photos-app-container .photos-curated-title-btn:active .photos-curated-title-chevron {
+    stroke: #636366;
+}
+
+.photos-app-container .photos-header-chevron-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1), background-color 0.15s ease;
+}
+.photos-app-container .photos-header-chevron-btn:active {
+    transform: scale(0.9);
+    background: rgba(142, 142, 147, 0.24);
+}
+.photos-app-container .photos-header-chevron-btn.collapsed svg {
+    transform: rotate(-90deg);
+}
+.photos-app-container .photos-header-chevron-btn svg {
+    transition: transform 0.25s ease;
+}
+
+.photos-app-container .photos-pinned-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.photos-app-container .photos-curated-text-action {
+    border: none;
+    background: transparent;
+    color: #000000;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.15s ease;
+}
+.photos-app-container .photos-curated-text-action:active {
+    opacity: 0.6;
+}
+
+/* 相簿大圆角横滑卡片（白字浮于左下角） */
+.photos-app-container .photos-horiz-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 2px 2px 8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    transition: max-height 0.28s ease, opacity 0.22s ease;
+    max-height: 148px;
+}
+.photos-app-container .photos-horiz-scroll.collapsed {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    pointer-events: none;
+}
+.photos-app-container .photos-horiz-scroll::-webkit-scrollbar { display: none; }
+
+.photos-app-container .photos-curated-card {
+    flex: 0 0 148px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: transform 0.16s ease;
+}
+.photos-app-container .photos-curated-card:active {
+    transform: scale(0.96);
+}
+.photos-app-container .photos-curated-card-cover {
+    width: 148px;
+    height: 126px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    background: #eff0f2;
+    box-shadow: none;
+}
+.photos-app-container .photos-curated-card-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-curated-empty-cover {
+    width: 100%;
+    height: 100%;
+    background: #f0f1f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #555b62;
+}
+.photos-app-container .photos-curated-empty-cover svg {
+    width: 44px;
+    height: 44px;
+    opacity: 0.8;
+}
+
+/* 左下角沉浸白字 */
+.photos-app-container .photos-card-bottom-text {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+}
+.photos-app-container .photos-curated-card-cover.is-empty .photos-card-bottom-text,
+.photos-app-container .photos-pinned-cover.is-empty .photos-card-bottom-text {
+    color: #3a3a3c;
+    text-shadow: none;
+}
+
+/* 固定模块卡片：尺寸与相簿保持完全一致 (138px x 138px) 横向滑动 */
+.photos-app-container .photos-pinned-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 2px 2px 8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    transition: max-height 0.28s ease, opacity 0.22s ease;
+    max-height: 148px;
+}
+.photos-app-container .photos-pinned-scroll.collapsed {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    pointer-events: none;
+}
+.photos-app-container .photos-pinned-scroll::-webkit-scrollbar { display: none; }
+
+.photos-app-container .photos-pinned-card {
+    position: relative;
+    flex: 0 0 148px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: transform 0.16s ease;
+}
+.photos-app-container .photos-pinned-card:active {
+    transform: scale(0.96);
+}
+.photos-app-container .photos-pinned-cover {
+    width: 148px;
+    height: 126px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    background: #eff0f2;
+    box-shadow: none;
+}
+.photos-app-container .photos-pinned-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-pinned-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f0f1f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #555b62;
+}
+.photos-app-container .photos-pinned-placeholder svg {
+    width: 44px;
+    height: 44px;
+    opacity: 0.8;
+}
+.photos-app-container .photos-pinned-white-heart {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+.photos-app-container .photos-pinned-white-heart svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* 列表模块：彻底去除丑陋小图标，对标原图的极简纯文本 + 蓝色圆圈小箭头 */
+.photos-app-container .photos-menu-section {
+    margin-top: 10px;
+}
+.photos-app-container .photos-ios-plain-group {
+    display: flex;
+    flex-direction: column;
+}
+.photos-app-container .photos-ios-plain-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-top: 0.5px solid rgba(60, 60, 67, 0.15);
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+.photos-app-container .photos-ios-plain-row:active {
+    opacity: 0.6;
+}
+.photos-app-container .photos-ios-plain-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #313338;
+    letter-spacing: -0.2px;
+}
+.photos-app-container .photos-ios-round-arrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+.photos-app-container .photos-ios-round-arrow svg {
+    width: 13px;
+    height: 13px;
+    stroke: #000000;
+}
+
+/* 预览顶栏收藏按钮 */
+.photos-app-container .photos-viewer-fav-btn {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+.photos-app-container .photos-viewer-fav-btn:active {
+    transform: scale(0.85);
+}
+.photos-app-container .photos-viewer-fav-btn.active {
+    color: #404349;
+}
+.photos-app-container .photos-viewer-fav-btn.active svg {
+    fill: currentColor;
+}
+
+/* 底部悬浮白色磨砂胶囊栏：加宽且优化手感 */
+.photos-app-container .photos-bottom-nav {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    max-width: none;
+    margin-inline: 0;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+
+    height: 62px;
+    padding: 0;
+    gap: 12px;
+    border: 0;
+    background: transparent;
+}
+.photos-app-container.select-mode .photos-bottom-nav {
+    transform: translateY(120px);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.photos-app-container .photos-tabs-capsule {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(0, 0, 0, 0.085);
+    border-radius: 31px;
+    padding: 5px;
+    box-shadow: inset 0 1px 0 #ffffff, 0 9px 26px rgba(0, 0, 0, 0.07);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    pointer-events: auto;
+
+    flex: 0 1 210px;
+    min-width: 0;
+    height: 100%;
+}
+
+/* 核心：在左右两项间左右平滑滑动的灰色指示胶囊 */
+.photos-app-container .photos-tabs-slider {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: calc(50% - 6px);
+    background: rgba(255, 255, 255, 0.86); /* 纯粹质感灰色胶囊 */
+    border-radius: 24px;
+    pointer-events: none;
+    z-index: 1;
+    transform: translate3d(0, 0, 0);
+    will-change: auto;
+    transition: transform 0.32s cubic-bezier(0.25, 1, 0.33, 1), opacity 0.18s ease;
+
+    border: 1px solid rgba(255, 255, 255, 0.97);
+    box-shadow: inset 0 1px 0 #ffffff, 0 3px 13px rgba(0, 0, 0, 0.075);}
+.photos-app-container .photos-tabs-capsule[data-active="collections"] .photos-tabs-slider {
+    transform: translate3d(100%, 0, 0);
+}
+
+.photos-app-container .photos-tabs-capsule[data-active="search"] .photos-tabs-slider {
+    opacity: 0;
+}
+
+.photos-app-container .photos-capsule-btn {
+    position: relative;
+    z-index: 2;
+    border: 0;
+    outline: none;
+    background: transparent;
+    border-radius: 28px;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: rgba(0, 0, 0, 0.44);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: color 0.24s ease, opacity 0.15s ease;
+}
+.photos-app-container .photos-capsule-btn:active {
+    opacity: 0.7;
+}
+.photos-app-container .photos-capsule-btn.active {
+    background: transparent;
+    color: #000000;
+}
+.photos-app-container .photos-capsule-btn svg {
+    width: 21px;
+    height: 21px;
+    flex: 0 0 auto;
+}
+.photos-app-container .photos-capsule-btn span {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* 白色磨砂圆圈搜索按钮 */
+.photos-app-container .photos-search-circle {
+    width: 62px;
+    height: 62px;
+    border-radius: 31px;
+    border: 1px solid rgba(0, 0, 0, 0.085);
+    background: rgba(255, 255, 255, 0.84);
+    box-shadow: inset 0 1px 0 #ffffff, 0 9px 26px rgba(0, 0, 0, 0.07);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.48);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+
+    flex: 0 0 62px;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+}
+.photos-app-container .photos-search-circle.active {
+    background: rgba(255, 255, 255, 0.86);
+    color: #000000;
+
+    border: 1px solid rgba(255, 255, 255, 0.98);
+    box-shadow: inset 0 1px 0 #ffffff, 0 3px 13px rgba(0, 0, 0, 0.075);}
+.photos-app-container .photos-search-circle:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.96);
+}
+.photos-app-container .photos-search-circle svg {
+    width: 23px;
+    height: 23px;
+
+    fill: none;
+
+    stroke: currentColor;}
+
+/* =========================================
+   全屏相簿独立列表管理视图 (白色磨砂质感顶栏)
+   ========================================= */
+.photos-app-container .photos-subpage-topbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: max(52px, calc(14px + env(safe-area-inset-top))) 16px 12px;
+    background: #ffffff;
+    z-index: 10;
+}
+.photos-app-container .photos-subpage-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 680;
+    color: #24262b;
+    pointer-events: none;
+    letter-spacing: -0.3px;
+}
+.photos-app-container .photos-round-icon-btn {
+    position: relative;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.075);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: inset 0 1px 0 #ffffff, 0 5px 18px rgba(0, 0, 0, 0.065);
+    backdrop-filter: blur(26px) saturate(140%);
+    -webkit-backdrop-filter: blur(26px) saturate(140%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1), background-color 0.15s ease;
+}
+.photos-app-container .photos-round-icon-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.92);
+}
+.photos-app-container .photos-subpage-actions {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(0, 0, 0, 0.075);
+    border-radius: 22px;
+    padding: 3px 5px;
+    box-shadow: inset 0 1px 0 #ffffff, 0 5px 18px rgba(0, 0, 0, 0.065);
+    backdrop-filter: blur(26px) saturate(140%);
+    -webkit-backdrop-filter: blur(26px) saturate(140%);
+}
+.photos-app-container .photos-subpage-actions .photos-round-icon-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    width: 34px;
+    height: 34px;
+}
+.photos-app-container .photos-subpage-actions .photos-round-icon-btn:active {
+    background: rgba(0, 0, 0, 0.06);
+    transform: scale(0.9);
+}
+
+.photos-app-container .photos-albums-full-list {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px 100px;
+    transition: all 0.22s ease;
+}
+
+/* 相簿单列列表模式 */
+.photos-app-container .photos-album-list-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 0.5px solid rgba(60, 60, 67, 0.14);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+}
+.photos-app-container .photos-album-list-row:active {
+    opacity: 0.65;
+}
+.photos-app-container .photos-album-list-cover {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: #eef0f2;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 14px;
+    box-shadow: none;
+}
+.photos-app-container .photos-album-list-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-album-list-cover svg {
+    width: 28px;
+    height: 28px;
+    opacity: 0.8;
+}
+.photos-app-container .photos-album-list-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.photos-app-container .photos-album-list-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.photos-app-container .photos-album-list-name {
+    font-size: 17px;
+    font-weight: 610;
+    color: #000000;
+    letter-spacing: -0.2px;
+}
+.photos-app-container .photos-album-pinned-tag {
+    font-size: 10px;
+    background: rgba(56, 60, 66, 0.09);
+    color: #45484d;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+.photos-app-container .photos-album-list-count {
+    font-size: 14px;
+    color: #777b82;
+    font-weight: 400;
+}
+
+/* 顶部悬浮胶囊交互栏（个人和共享） */
+.photos-app-container .photos-top-floating-capsule-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 12;
+    display: flex;
+    justify-content: center;
+    padding: 6px 16px 10px;
+    background: linear-gradient(180deg, #ffffff 75%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: auto;
+}
+.photos-app-container .photos-scope-capsule {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(238, 238, 242, 0.88);
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    border-radius: 24px;
+    padding: 3px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* 顶部交互胶囊内部的平移滑块动画 */
+.photos-app-container .photos-scope-slider {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: 68px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+    z-index: 1;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.33, 1);
+}
+.photos-app-container .photos-scope-capsule[data-scope="shared"] .photos-scope-slider {
+    transform: translate3d(68px, 0, 0);
+}
+
+.photos-app-container .photos-scope-pill-btn {
+    position: relative;
+    z-index: 2;
+    border: none;
+    background: transparent;
+    width: 68px;
+    padding: 6px 0;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #777b82;
+    cursor: pointer;
+    transition: color 0.22s ease, opacity 0.15s ease;
+}
+.photos-app-container .photos-scope-pill-btn:active {
+    opacity: 0.7;
+}
+.photos-app-container .photos-scope-pill-btn.active {
+    background: transparent;
+    color: #000000;
+}
+
+/* 共享相簿封面对方角色头像微标（单列列表在右下角，横向与网格在右上角） */
+.photos-app-container .photos-album-shared-avatar-badge {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+    z-index: 4;
+    background: #e9eaed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.photos-app-container .photos-album-shared-avatar-badge.bottom-right {
+    bottom: 4px;
+    right: 4px;
+}
+.photos-app-container .photos-album-shared-avatar-badge.top-right {
+    top: 6px;
+    right: 6px;
+}
+.photos-app-container .photos-album-shared-avatar-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-album-shared-avatar-badge span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555555;
+}
+.photos-app-container .photos-album-shared-avatar-badge.default {
+    background: #292c31;
+    color: #ffffff;
+}
+.photos-app-container .photos-album-pinned-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 2px;
+    transform: rotate(45deg);
+}
+
+/* =========================================
+   自定义与重新排序抽屉 (纯白极简浅色模式)
+   ========================================= */
+.photos-app-container .photos-reorder-drawer-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 260;
+    background: rgba(0, 0, 0, 0.38);
+    display: none;
+    align-items: flex-end;
+    opacity: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.25s ease;
+}
+.photos-app-container .photos-reorder-drawer-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+.photos-app-container .photos-reorder-drawer-sheet {
+    width: 100%;
+    max-height: 86vh;
+    background: #ffffff;
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+.photos-app-container .photos-reorder-drawer-overlay.show .photos-reorder-drawer-sheet {
+    transform: translateY(0);
+}
+.photos-app-container .photos-reorder-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+.photos-app-container .photos-reorder-text-btn {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 600;
+    color: #292c31;
+    cursor: pointer;
+    padding: 4px 0;
+}
+.photos-app-container .photos-reorder-circle-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+.photos-app-container .photos-reorder-circle-close:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.96);
+}
+.photos-app-container .photos-reorder-list {
+    position: relative;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+}
+.photos-app-container .photos-reorder-ghost {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(41, 44, 49, 0.3);
+    z-index: 50;
+    pointer-events: none;
+    transform: scale(1.02);
+    transition: transform 0.1s ease;
+}
+.photos-app-container .photos-reorder-handle {
+    touch-action: none;
+    -webkit-touch-callout: none;
+}
+.photos-app-container .photos-reorder-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 24px;
+}
+.photos-app-container .photos-reorder-title {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #000000;
+    letter-spacing: -0.5px;
+}
+.photos-app-container .photos-reorder-desc {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #777b82;
+    line-height: 1.35;
+}
+.photos-app-container .photos-reorder-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+}
+.photos-app-container .photos-reorder-item-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 0.5px solid rgba(60, 60, 67, 0.12);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 0.15s ease;
+}
+.photos-app-container .photos-reorder-item-row:active {
+    background: rgba(0, 0, 0, 0.03);
+}
+.photos-app-container .photos-reorder-check-slot {
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.photos-app-container .photos-reorder-checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #292c31;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.18s ease;
+}
+.photos-app-container .photos-reorder-item-row.checked .photos-reorder-checkbox {
+    background: #292c31;
+}
+.photos-app-container .photos-reorder-checkbox svg {
+    display: none;
+}
+.photos-app-container .photos-reorder-item-row.checked .photos-reorder-checkbox svg {
+    display: block;
+}
+.photos-app-container .photos-reorder-item-title {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000000;
+    letter-spacing: -0.2px;
+}
+.photos-app-container .photos-reorder-handle {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+}
+
+/* =========================================
+   新建相簿抽屉 (遵循 iOS 灰白质感与示意图设计)
+   ========================================= */
+.photos-app-container .photos-create-album-drawer-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 240;
+    background: rgba(0, 0, 0, 0.38);
+    display: none;
+    align-items: flex-end;
+    opacity: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: opacity 0.25s ease;
+}
+.photos-app-container .photos-create-album-drawer-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+.photos-app-container .photos-create-album-drawer-sheet {
+    width: 100%;
+    max-height: 88vh;
+    background: #ffffff; /* iOS 典型浅灰底色 */
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column;
+    padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+.photos-app-container .photos-create-album-drawer-overlay.show .photos-create-album-drawer-sheet {
+    transform: translateY(0);
+}
+.photos-app-container .photos-create-album-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+.photos-app-container .photos-create-album-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #000000;
+}
+.photos-app-container .photos-frosted-circle-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+.photos-app-container .photos-frosted-circle-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.96);
+}
+.photos-app-container .photos-create-album-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+}
+.photos-app-container .photos-create-cover-card-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 6px 0 10px;
+}
+
+/* 纯灰圆角大方块占位卡片：无描边，正中央为原始图片图标 */
+.photos-app-container .photos-create-placeholder-card {
+    width: 170px;
+    height: 170px;
+    border-radius: 28px;
+    background: #e9eaed;
+    border: none;
+    outline: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.photos-app-container .photos-create-placeholder-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-create-placeholder-card svg {
+    width: 56px;
+    height: 56px;
+    opacity: 0.82;
+}
+
+/* 添加照片胶囊按钮：完全无边框，纯灰背景与深灰文字 */
+.photos-app-container .photos-create-add-photo-capsule {
+    border: none !important;
+    outline: none !important;
+    background: #e9eaed;
+    color: #3a3a3c;
+    padding: 7px 22px;
+    border-radius: 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: none;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.photos-app-container .photos-create-add-photo-capsule:active {
+    transform: scale(0.94);
+    background: #dcdce0;
+}
+
+/* 输入框卡片：纯白背景，不要浅灰边框 */
+.photos-app-container .photos-create-field-card {
+    background: #ffffff;
+    border: none !important;
+    border-radius: 16px;
+    padding: 13px 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.photos-app-container .photos-create-field-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+    outline: none;
+}
+.photos-app-container .photos-create-section-caption {
+    font-size: 13px;
+    font-weight: 600;
+    color: #777b82;
+    padding-left: 6px;
+}
+
+/* 好友列表：纯白背景，不要浅灰边框 */
+.photos-app-container .photos-create-contacts-list {
+    background: #ffffff;
+    border: none !important;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+}
+.photos-app-container .photos-create-contact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 0.5px solid rgba(60, 60, 67, 0.08);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.photos-app-container .photos-create-contact-row:last-child {
+    border-bottom: none;
+}
+.photos-app-container .photos-create-contact-row:active {
+    background: rgba(0, 0, 0, 0.03);
+}
+.photos-app-container .photos-create-contact-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.photos-app-container .photos-create-contact-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e9eaed;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #777b82;
+}
+.photos-app-container .photos-create-contact-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-create-contact-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+}
+.photos-app-container .photos-create-contact-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.8px solid #c8cbd0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s ease;
+}
+.photos-app-container .photos-create-contact-row.checked .photos-create-contact-check {
+    background: #292c31;
+    border-color: #292c31;
+}
+.photos-app-container .photos-create-contact-check svg {
+    display: none;
+    width: 12px;
+    height: 12px;
+}
+.photos-app-container .photos-create-contact-row.checked .photos-create-contact-check svg {
+    display: block;
+}
+
+/* 相簿网格排版模式（一行显示两个） */
+.photos-app-container .photos-albums-full-list.grid-mode {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 12px 16px 120px;
+}
+.photos-app-container .photos-albums-full-list.grid-mode .photos-album-list-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    border-bottom: none;
+}
+.photos-app-container .photos-albums-full-list.grid-mode .photos-album-list-cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border-radius: 18px;
+    margin-right: 0;
+    margin-bottom: 8px;
+}
+.photos-app-container .photos-albums-full-list.grid-mode .photos-album-list-cover svg {
+    width: 42px;
+    height: 42px;
+    opacity: 0.8;
+}
+.photos-app-container .photos-albums-full-list.grid-mode .photos-album-list-info {
+    width: 100%;
+}
+
+/* 更改封面 iOS 底部抽屉 (一行 4 张网格) */
+.photos-app-container .photos-drawer-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 280;
+    background: rgba(0, 0, 0, 0.38);
+    display: none;
+    align-items: flex-end;
+    opacity: 0;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: opacity 0.22s ease;
+}
+.photos-app-container .photos-drawer-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+.photos-app-container .photos-drawer-sheet {
+    width: 100%;
+    max-height: 72vh;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(30px) saturate(190%);
+    -webkit-backdrop-filter: blur(30px) saturate(190%);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 12px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.16);
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.photos-app-container .photos-drawer-overlay.show .photos-drawer-sheet {
+    transform: translateY(0);
+}
+.photos-app-container .photos-drawer-handle {
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(60, 60, 67, 0.25);
+    margin: 0 auto 12px;
+}
+.photos-app-container .photos-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+.photos-app-container .photos-drawer-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #000;
+}
+.photos-app-container .photos-drawer-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: #292c31;
+    cursor: pointer;
+}
+.photos-app-container .photos-cover-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    overflow-y: auto;
+    max-height: 50vh;
+    padding-bottom: 12px;
+}
+.photos-app-container .photos-cover-cell {
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background: #e9eaed;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.photos-app-container .photos-cover-cell:active {
+    transform: scale(0.94);
+}
+.photos-app-container .photos-cover-cell.active {
+    border-color: #292c31;
+}
+.photos-app-container .photos-cover-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-drawer-empty {
+    text-align: center;
+    padding: 36px 0;
+    color: rgba(60, 60, 67, 0.55);
+    font-size: 14px;
+}
+
+/* 多选模式底部操作栏 (iOS Bottom Action Toolbar) */
+.photos-app-container .photos-selection-toolbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.88);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 18px;
+    z-index: 16;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+.photos-app-container.select-mode .photos-selection-toolbar {
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.photos-app-container .photos-toolbar-action {
+    background: transparent;
+    border: none;
+    color: #292c31;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.photos-app-container .photos-toolbar-action:active {
+    transform: scale(0.92);
+    opacity: 0.7;
+}
+.photos-app-container .photos-toolbar-action.danger {
+    color: #474a50;
+}
+.photos-app-container .photos-toolbar-action:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* =========================================
+   编辑相簿：层叠卡片抽屉弹窗 (对标截图)
+   ========================================= */
+.photos-app-container .photos-album-sheet-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 210;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: flex-end;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.photos-app-container .photos-album-sheet-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+.photos-app-container .photos-album-sheet-modal {
+    width: 100%;
+    height: 91vh;
+    background: #ffffff;
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.22);
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    position: relative;
+}
+.photos-app-container .photos-album-sheet-overlay.show .photos-album-sheet-modal {
+    transform: translateY(0);
+}
+.photos-app-container .photos-album-sheet-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 0.5px solid rgba(60, 60, 67, 0.12);
+    flex-shrink: 0;
+}
+.photos-app-container .photos-album-sheet-text-btn {
+    border: none;
+    background: transparent;
+    font-size: 17px;
+    font-weight: 600;
+    color: #292c31;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: opacity 0.15s ease;
+}
+.photos-app-container .photos-album-sheet-text-btn:active {
+    opacity: 0.6;
+}
+.photos-app-container .photos-album-sheet-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: -0.3px;
+}
+.photos-app-container .photos-album-sheet-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 16px 100px;
+    -webkit-overflow-scrolling: touch;
+}
+.photos-app-container .photos-album-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px 12px;
+}
+.photos-app-container .photos-album-sheet-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.15s ease;
+}
+.photos-app-container .photos-album-sheet-card:active {
+    transform: scale(0.96);
+}
+.photos-app-container .photos-album-sheet-cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    background: #e9eaed;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.photos-app-container .photos-album-sheet-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-album-sheet-cover svg {
+    width: 36px;
+    height: 36px;
+    opacity: 0.8;
+}
+.photos-app-container .photos-album-sheet-check {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1.8px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.photos-app-container .photos-album-sheet-card.selected .photos-album-sheet-check {
+    background: #292c31;
+    border-color: #ffffff;
+    transform: scale(1.05);
+}
+.photos-app-container .photos-album-sheet-check svg {
+    width: 14px;
+    height: 14px;
+    stroke: #ffffff;
+    stroke-width: 2.8;
+    display: none;
+}
+.photos-app-container .photos-album-sheet-card.selected .photos-album-sheet-check svg {
+    display: block;
+}
+.photos-app-container .photos-album-sheet-name {
+    width: 100%;
+    font-size: 15px;
+    font-weight: 700;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+}
+.photos-app-container .photos-album-sheet-count {
+    font-size: 13px;
+    color: #777b82;
+    font-weight: 500;
+    margin-top: 2px;
+}
+.photos-app-container .photos-album-sheet-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.94);
+    border-top: 0.5px solid rgba(60, 60, 67, 0.14);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index: 10;
+}
+.photos-app-container .photos-album-sheet-count-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: -0.2px;
+}
+.photos-app-container .photos-album-sheet-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.photos-app-container .photos-album-sheet-action-btn {
+    border: none;
+    background: rgba(0, 0, 0, 0.06);
+    color: #292c31;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.photos-app-container .photos-album-sheet-action-btn:active {
+    transform: scale(0.94);
+    opacity: 0.7;
+}
+.photos-app-container .photos-album-sheet-action-btn.danger {
+    color: #474a50;
+    background: rgba(71, 74, 80, 0.1);
+}
+.photos-app-container .photos-album-sheet-action-btn:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* =========================================
+   全屏沉浸照片浏览查看器（对标 iOS 18 截图浅色磨砂质感）
+   ========================================= */
+.photos-app-container .photos-preview-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #ffffff;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+.photos-app-container .photos-preview-overlay.show { display: flex; }
+
+/* 顶栏（永久可见，绝不隐藏） */
+.photos-app-container .photos-viewer-topbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px 16px 10px;
+    z-index: 20;
+    pointer-events: auto;
+}
+
+/* 顶部白色磨砂圆形按键 */
+.photos-app-container .photos-viewer-circle-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1), background-color 0.15s ease;
+}
+.photos-app-container .photos-viewer-circle-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.92);
+}
+.photos-app-container .photos-viewer-circle-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: #000000;
+}
+
+/* 显式强化放大底栏左下角分享图标，大小精准微调为 24px */
+.photos-app-container #photosViewerShareBtn svg {
+    width: 24px !important;
+    height: 24px !important;
+}
+
+/* 顶栏中间磨砂胶囊（日期/时间双行） */
+.photos-app-container .photos-viewer-date-capsule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 22px;
+    min-width: 130px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+}
+.photos-app-container .photos-viewer-date-capsule .photos-capsule-main-date {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000000;
+    line-height: 1.2;
+}
+.photos-app-container .photos-viewer-date-capsule .photos-capsule-sub-time {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(60, 60, 67, 0.7);
+    line-height: 1.2;
+    margin-top: 1px;
+}
+
+/* 主展示区 */
+.photos-app-container .photos-viewer-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 12px 16px;
+}
+.photos-app-container .photos-viewer-main img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 26px;
+    box-shadow: 0 14px 42px rgba(0, 0, 0, 0.16);
+    object-fit: contain;
+    transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* 底部照片流缩略图胶卷 (Filmstrip) */
+.photos-app-container .photos-viewer-filmstrip-wrap {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    overflow-x: auto;
+    padding: 0 16px;
+    -webkit-overflow-scrolling: touch;
+    z-index: 20;
+}
+.photos-app-container .photos-viewer-filmstrip-wrap::-webkit-scrollbar { display: none; }
+.photos-app-container .photos-filmstrip-thumb {
+    width: 32px;
+    height: 42px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    opacity: 0.55;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
+}
+.photos-app-container .photos-filmstrip-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-filmstrip-thumb.active {
+    opacity: 1;
+    transform: scale(1.12);
+    border-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+/* 底部操作栏（对标截图排版：左分享，中三合一磨砂胶囊，右删除） */
+.photos-app-container .photos-viewer-bottombar {
+    padding: 10px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+    background: transparent;
+}
+
+/* 中间三合一白色磨砂胶囊 */
+.photos-app-container .photos-viewer-mid-capsule {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 30px;
+    padding: 3px 12px;
+    gap: 16px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+}
+.photos-app-container .photos-capsule-item-btn {
+    border: none;
+    background: transparent;
+    width: 38px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.photos-app-container .photos-capsule-item-btn:active {
+    transform: scale(0.88);
+}
+.photos-app-container .photos-capsule-item-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #000000;
+}
+
+/* 详情信息浮动抽屉面板强化 */
+.photos-app-container .photos-viewer-info-panel {
+    display: none;
+    position: absolute;
+    bottom: 96px;
+    left: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(32px) saturate(190%);
+    -webkit-backdrop-filter: blur(32px) saturate(190%);
+    border-radius: 20px;
+    padding: 16px 18px;
+    color: #000000;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
+    z-index: 30;
+    max-height: 52vh;
+    overflow-y: auto;
+    animation: photosFadeDown 0.22s ease;
+}
+.photos-app-container .photos-viewer-info-panel.show { display: block; }
+
+.photos-app-container .photos-viewer-info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.photos-app-container .photos-viewer-info-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #000000;
+}
+.photos-app-container .photos-viewer-info-res {
+    font-size: 12px;
+    font-weight: 600;
+    color: #292c31;
+    background: rgba(41, 44, 49, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.photos-app-container .photos-viewer-prompt-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 0.5px solid rgba(60, 60, 67, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.photos-app-container .photos-copy-prompt-btn {
+    align-self: flex-start;
+    border: none;
+    background: rgba(0, 0, 0, 0.06);
+    color: #292c31;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.photos-app-container .photos-copy-prompt-btn:active {
+    transform: scale(0.94);
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   iOS 风格图片调节/编辑抽屉 (Tune Drawer)
+   ========================================= */
+.photos-app-container .photos-tune-drawer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    box-shadow: 0 -10px 32px rgba(0, 0, 0, 0.15);
+    padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+.photos-app-container .photos-tune-drawer.show {
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.photos-app-container .photos-tune-drawer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid rgba(60, 60, 67, 0.12);
+}
+.photos-app-container .photos-tune-bar-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+}
+.photos-app-container .photos-tune-bar-btn {
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: #777b82;
+    cursor: pointer;
+    padding: 4px 6px;
+}
+.photos-app-container .photos-tune-bar-btn.confirm {
+    color: #292c31;
+    font-weight: 700;
+}
+
+.photos-app-container .photos-tune-quick-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.photos-app-container .photos-tune-act-btn {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.photos-app-container .photos-tune-act-btn:active {
+    transform: scale(0.94);
+    background: rgba(0, 0, 0, 0.08);
+}
+.photos-app-container .photos-tune-act-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+.photos-app-container .photos-tune-filters-track {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 6px 2px 10px;
+    -webkit-overflow-scrolling: touch;
+}
+.photos-app-container .photos-tune-filters-track::-webkit-scrollbar { display: none; }
+
+.photos-app-container .photos-tune-filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.photos-app-container .photos-tune-filter-preview {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: #e9eaed;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.photos-app-container .photos-tune-filter-item.active .photos-tune-filter-preview {
+    border-color: #292c31;
+    transform: scale(1.1);
+}
+.photos-app-container .photos-tune-filter-item span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #777b82;
+}
+.photos-app-container .photos-tune-filter-item.active span {
+    color: #292c31;
+}
+
+/* 滤镜小圆圈视觉色块 */
+.photos-app-container .filter-none { background: linear-gradient(135deg, #e4e6e9, #737780); }
+.photos-app-container .filter-vivid { background: linear-gradient(135deg, #989da4, #eef0f2); }
+.photos-app-container .filter-warm { background: linear-gradient(135deg, #d3d5d9, #83878f); }
+.photos-app-container .filter-cool { background: linear-gradient(135deg, #b1b6bd, #e8eaed); }
+.photos-app-container .filter-mono { background: linear-gradient(135deg, #434343, #000000); }
+.photos-app-container .filter-vintage { background: linear-gradient(135deg, #dadcdf, #92959a); }
+.photos-app-container .filter-dramatic { background: linear-gradient(135deg, #6f747b, #c7cbd0); }
+
+/* 白色磨砂灵动岛式展开弹出菜单 (在原按键处膨胀扩散，圆角更小) */
+.photos-app-container .photos-filter-menu-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 150;
+    display: none;
+    background: rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.photos-app-container .photos-filter-menu-overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+.photos-app-container .photos-filter-dropdown {
+    position: absolute;
+    top: 52px; /* 锚定于原有顶部按键物理位置 */
+    right: 70px;
+    width: 182px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 22px; /* 增大圆角，重现 iOS 原生优雅弧度 */
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
+    backdrop-filter: blur(36px) saturate(190%);
+    -webkit-backdrop-filter: blur(36px) saturate(190%);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* 原位灵动岛展开动画 */
+    transform-origin: 90% 12px;
+    transform: scale(0.22, 0.16);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.32s cubic-bezier(0.18, 1.25, 0.32, 1), opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.photos-app-container .photos-filter-menu-overlay.show .photos-filter-dropdown {
+    transform: scale(1, 1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 精选集、相簿独立页、相簿详情页与图片详情页右上角菜单位置与展开原点 */
+.photos-app-container .photos-collections-dropdown,
+.photos-app-container .photos-albums-page-dropdown,
+.photos-app-container .photos-album-detail-dropdown,
+.photos-app-container .photos-viewer-dropdown {
+    right: 16px;
+    top: 52px;
+    width: 196px;
+    transform-origin: 90% 12px;
+}
+
+/* 顶部两个并排排序胶囊 */
+.photos-app-container .photos-menu-sort-pills {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.photos-app-container .photos-sort-pill {
+    height: 48px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    color: #000000 !important;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.photos-app-container .photos-sort-pill:active {
+    transform: scale(0.95);
+}
+.photos-app-container .photos-sort-pill.active {
+    background: rgba(0, 0, 0, 0.14);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+.photos-app-container .photos-sort-pill svg {
+    width: 17px;
+    height: 17px;
+    color: #000000 !important;
+    stroke: #000000 !important;
+}
+.photos-app-container .photos-sort-pill span {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: #000000 !important;
+}
+
+/* 菜单小标题 */
+.photos-app-container .photos-menu-section-caption {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.55);
+    padding: 2px 8px 6px;
+    letter-spacing: -0.2px;
+}
+
+/* 菜单项垂直列表 */
+.photos-app-container .photos-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.photos-app-container .photos-dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 9px 10px;
+    border-radius: 14px; /* 同步增大条目激活圆角 */
+    font-size: 15px;
+    font-weight: 500;
+    color: #000000 !important;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 0.15s ease, transform 0.12s ease;
+}
+.photos-app-container .photos-dropdown-item:active {
+    background: rgba(0, 0, 0, 0.08);
+    transform: scale(0.98);
+}
+
+/* 勾选栏位，保证对齐 */
+.photos-app-container .photos-item-check-slot {
+    width: 22px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+}
+.photos-app-container .photos-item-check-slot svg {
+    width: 16px;
+    height: 16px;
+    stroke: #000000;
+    display: none;
+}
+.photos-app-container .photos-dropdown-item.active .photos-item-check-slot svg {
+    display: block;
+}
+
+/* 菜单项图标 */
+.photos-app-container .photos-item-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    flex-shrink: 0;
+    color: #000000 !important;
+}
+.photos-app-container .photos-item-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #000000 !important;
+    stroke: #000000;
+}
+.photos-app-container .photos-item-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000 !important;
+    letter-spacing: -0.2px;
+}
+
+.photos-app-container .photos-dropdown-divider {
+    height: 0.5px;
+    background: rgba(60, 60, 67, 0.18);
+    margin: 6px 4px;
+}
+
+/* =========================================
+   iOS 原生风格分享与隔空投送 (AirDrop) 抽屉
+   ========================================= */
+.photos-app-container .photos-share-sheet-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 250;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: flex-end;
+    opacity: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.25s ease;
+}
+.photos-app-container .photos-share-sheet-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.photos-app-container .photos-share-sheet {
+    width: 100%;
+    max-height: 88vh;
+    background: #ffffff;
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0 calc(20px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+.photos-app-container .photos-share-sheet-overlay.show .photos-share-sheet {
+    transform: translateY(0);
+}
+
+.photos-app-container .photos-share-sheet-handle {
+    width: 38px;
+    height: 4.5px;
+    border-radius: 3px;
+    background: rgba(60, 60, 67, 0.26);
+    margin: 2px auto 10px;
+    flex-shrink: 0;
+}
+
+.photos-app-container .photos-share-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 14px;
+    flex-shrink: 0;
+}
+
+.photos-app-container .photos-share-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.photos-app-container .photos-share-airdrop-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #ffffff 0%, #f3f4f6 100%);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95), inset 0 -1.5px 3px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.photos-app-container .photos-share-airdrop-icon-box svg {
+    filter: drop-shadow(0 2px 4px rgba(64, 158, 255, 0.28));
+}
+
+.photos-app-container .photos-share-title-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.photos-app-container .photos-share-title-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: #000000;
+}
+.photos-app-container .photos-share-options-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #777b82;
+    cursor: pointer;
+}
+
+.photos-app-container .photos-share-close-glass-capsule {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.photos-app-container .photos-share-close-glass-capsule:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.96);
+}
+
+.photos-app-container .photos-share-sheet-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 中间大卡片预览展示区 */
+.photos-app-container .photos-share-preview-center {
+    display: flex;
+    justify-content: center;
+    padding: 0 16px;
+}
+.photos-app-container .photos-share-large-card {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    height: 260px;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #f3f4f6;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+.photos-app-container .photos-share-large-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photos-app-container .photos-share-checked-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #292c31;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.photos-app-container .photos-share-checked-badge svg {
+    width: 13px;
+    height: 13px;
+    stroke: #ffffff;
+    stroke-width: 3;
+}
+
+/* 仅展示当前登录的微信好友 */
+.photos-app-container .photos-share-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.photos-app-container .photos-share-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(60, 60, 67, 0.6);
+    padding: 0 20px;
+}
+.photos-app-container .photos-airdrop-contacts-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 4px 20px 8px;
+    -webkit-overflow-scrolling: touch;
+}
+.photos-app-container .photos-airdrop-contacts-row::-webkit-scrollbar { display: none; }
+
+.photos-app-container .photos-airdrop-contact-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 66px;
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.16s ease;
+}
+.photos-app-container .photos-airdrop-contact-item:active {
+    transform: scale(0.92);
+}
+
+.photos-app-container .photos-airdrop-avatar-wrap {
+    position: relative;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: #e9eaed;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    border: 2.5px solid transparent;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.photos-app-container .photos-airdrop-contact-item.selected .photos-airdrop-avatar-wrap {
+    border-color: #292c31;
+    transform: scale(1.05);
+}
+
+.photos-app-container .photos-airdrop-avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.photos-app-container .photos-airdrop-badge-icon {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #292c31;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
+.photos-app-container .photos-airdrop-badge-icon svg {
+    width: 12px;
+    height: 12px;
+}
+.photos-app-container .photos-airdrop-contact-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+/* 抽屉底部右下角 Send 按钮 */
+.photos-app-container .photos-share-sheet-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px calc(8px + env(safe-area-inset-bottom, 0px));
+    border-top: 0.5px solid rgba(60, 60, 67, 0.12);
+}
+.photos-app-container .photos-share-send-btn {
+    border: none;
+    border-radius: 20px;
+    background: #000000;
+    color: #ffffff;
+    padding: 9px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+}
+.photos-app-container .photos-share-send-btn:active {
+    transform: scale(0.94);
+}
+.photos-app-container .photos-share-send-btn:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+/* =========================================
+   通用输入弹窗 UI (完全对标系统通用输入弹窗样式规范)
+   ========================================= */
+.photos-app-container .photos-modal-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1100;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: opacity 0.25s ease;
+}
+.photos-app-container .photos-modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.photos-app-container .photos-modal-dialog {
+    width: 275px;
+    max-width: 90%;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+}
+.photos-app-container .photos-modal-overlay.show .photos-modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.photos-app-container .photos-modal-header {
+    padding: 24px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.photos-app-container .photos-modal-title {
+    width: 100%;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000000;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+.photos-app-container .photos-modal-desc {
+    font-size: 13px;
+    color: rgba(60, 60, 67, 0.65);
+    margin-top: 6px;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.photos-app-container .photos-modal-body {
+    padding: 8px 16px 18px;
+    box-sizing: border-box;
+}
+
+.photos-app-container .photos-modal-input {
+    width: 100%;
+    height: 48px;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    font-size: 15px;
+    font-weight: 500;
+    color: #000000;
+    outline: none;
+    transition: background-color 0.2s ease;
+}
+.photos-app-container .photos-modal-input:focus {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.photos-app-container .photos-modal-textarea {
+    width: 100%;
+    height: 110px;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
+    outline: none;
+    resize: none;
+    line-height: 1.45;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+}
+.photos-app-container .photos-modal-textarea:focus {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.photos-app-container .photos-modal-footer,
+.photos-app-container .photos-modal-actions {
+    display: flex;
+    gap: 10px;
+    padding: 0 16px 20px;
+    box-sizing: border-box;
+    border-top: none;
+    height: auto;
+}
+
+.photos-app-container .photos-modal-btn {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    height: 38px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.photos-app-container .photos-modal-btn:active {
+    transform: scale(0.96);
+}
+.photos-app-container .photos-modal-btn.cancel {
+    background-color: rgba(0, 0, 0, 0.06);
+    color: #000000;
+    border-right: none;
+    font-weight: 600;
+}
+.photos-app-container .photos-modal-btn.confirm {
+    background-color: #000000;
+    color: #ffffff;
+    box-shadow: none;
+    font-weight: 600;
+}
+

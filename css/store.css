@@ -1,0 +1,7230 @@
+/* ============================================================
+   Apple Store / 淘悦集官方商城 1:1 原版完整样式
+   所有类名前缀统一：store-
+============================================================ */
+
+:root {
+    --store-primary: #000000;
+    --store-primary-grad: #000000;
+    --store-gold-theme: #000000;
+    --store-bg-gray: #ffffff;
+    --store-card-bg: #ffffff;
+    --store-text-main: #000000;
+    --store-text-sub: #8e8e93;
+    --store-border-light: rgba(0, 0, 0, 0.06);
+    --store-ios-radius: 14px;
+}
+
+/* 全屏 App 容器与视口控制（彻底禁用移动端蓝色点击高亮阴影，防止点击穿透抖动） */
+.store-app-container,
+.store-app-container * {
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+}
+
+.store-app-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: var(--store-text-main);
+    z-index: 7000;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    transform: none;
+    transition: opacity 0.15s ease-out;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* 顶部生成悬浮灵动胶囊体提示 */
+.store-top-island-pill {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-60px) scale(0.9);
+    background: rgba(29, 29, 31, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: #ffffff;
+    padding: 7px 18px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28), 0 0 0 0.5px rgba(255, 255, 255, 0.15);
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+}
+
+.store-top-island-pill.show {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.store-island-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: storeAiSpin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+.store-island-text {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+}
+
+.store-app-container.show {
+    transform: translateY(0);
+}
+
+.store-main-viewport {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+.store-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+    vertical-align: middle;
+}
+
+/* 页面切换控制器 */
+.store-tab-panel {
+    display: none;
+    padding-bottom: 78px;
+    min-height: 100%;
+    box-sizing: border-box;
+    background-color: #ffffff;
+}
+
+.store-tab-panel.store-active {
+    display: block;
+}
+
+/* ================= 1. 首页（商城常规购物） ================= */
+.store-mall-header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background: #ffffff;
+    padding-top: 44px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 4px;
+    color: #000000;
+    border-bottom: none;
+}
+
+/* 此处两段冗余样式已删除，统一使用下文第 183 行处生效的定义 */
+
+.store-header-icons-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.store-header-icon-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-header-icon-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+}
+
+.store-mall-subnav {
+    display: flex;
+    overflow-x: auto;
+    padding: 6px 0 8px;
+    gap: 22px;
+    background: #ffffff;
+    white-space: nowrap;
+    border-bottom: none;
+}
+.store-mall-subnav::-webkit-scrollbar {
+    display: none;
+}
+.store-subnav-item {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #8e8e93;
+    position: relative;
+    cursor: pointer;
+    padding-bottom: 6px;
+}
+.store-subnav-item.active {
+    color: #000000;
+    font-weight: 800;
+}
+.store-subnav-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #000000;
+}
+
+.store-mall-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 9px;
+}
+
+.store-mall-title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    cursor: pointer;
+    user-select: none;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+}
+
+.store-mall-title:active {
+    opacity: 0.65;
+}
+
+/* 右上角定位地址组件 */
+.store-header-address-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    background: #f2f2f7;
+    color: #1d1d1f;
+    padding: 4px 9px;
+    border-radius: 14px;
+    cursor: pointer;
+    max-width: 170px;
+}
+
+.store-header-address-btn span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.store-search-container {
+    display: flex;
+    align-items: center;
+    background: #f2f2f7;
+    border-radius: 20px;
+    padding: 4px 6px 4px 12px;
+}
+
+.store-search-container input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    color: var(--store-text-main);
+    background: transparent;
+}
+
+.store-search-submit-btn {
+    background: #1d1d1f;
+    color: #ffffff;
+    border: none;
+    padding: 5px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 黑曜大牌折扣海报卡（3D物品层叠破框） */
+.store-poster-card-main {
+    margin: 10px 10px 6px;
+    background: #3a3a3c;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    height: 146px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    user-select: none;
+}
+
+.store-poster-left-content {
+    position: relative;
+    z-index: 5;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 58%;
+}
+
+.store-intro-sup {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+
+.store-huge-promo {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: #ffffff;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+}
+
+.store-huge-promo span {
+    color: #e5e5ea;
+}
+
+.store-cta-pill-btn {
+    align-self: flex-start;
+    background: #ffffff;
+    color: #18181a;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 6px 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 右侧 3 个放大层叠 SVG 包裹容器 */
+.store-cluster-stack-box {
+    position: absolute;
+    right: -8px;
+    bottom: -8px;
+    width: 195px;
+    height: 145px;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.store-item-svg {
+    position: absolute;
+    display: block;
+}
+
+.store-svg-drink {
+    width: 82px;
+    height: 82px;
+    left: 14px;
+    bottom: 40px;
+    z-index: 1;
+    transform: rotate(-10deg) scale(1.1);
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.22));
+}
+
+.store-svg-cake {
+    width: 124px;
+    height: 98px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 2;
+    transform: rotate(3deg) scale(1.18);
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.26));
+}
+
+.store-svg-avocado {
+    width: 80px;
+    height: 80px;
+    left: 54px;
+    bottom: 0px;
+    z-index: 3;
+    transform: rotate(-4deg) scale(1.15);
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.28));
+}
+
+/* 商城双拼活动卡片（领券中心 & 限时抢购左右卡片排版 - 极简 ins iOS 白灰风） */
+.store-nav-duo-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 8px 10px 4px;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+.store-duo-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px 12px 12px 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border: 0.5px solid rgba(0, 0, 0, 0.07);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.025), 0 1px 2px rgba(0, 0, 0, 0.015);
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.store-duo-card:active {
+    transform: scale(0.975);
+    background: #f7f7f9;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.store-duo-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.store-duo-en-tag {
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: #aeaeb2;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.store-duo-card-title {
+    font-size: 14.5px;
+    font-weight: 750;
+    color: #1d1d1f;
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+}
+
+.store-duo-card-sub {
+    font-size: 10.5px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    margin-top: 1px;
+}
+
+.store-duo-card-badge {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #48484a;
+    background: #f2f2f7;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-top: 5px;
+    line-height: 1.15;
+    border: 0.5px solid rgba(0, 0, 0, 0.04);
+}
+
+.store-duo-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #f8f8fa;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.02);
+    transition: background 0.15s ease;
+}
+
+.store-duo-icon-box svg {
+    width: 19px;
+    height: 19px;
+    color: #1d1d1f;
+}
+
+/* ================= 限时抢购与拼单全屏页面样式 (ins iOS 极简白灰风) ================= */
+.store-flash-countdown-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #ffffff;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+
+.store-flash-banner-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.store-flash-pulse-dot {
+    width: 6.5px;
+    height: 6.5px;
+    border-radius: 50%;
+    background: #1d1d1f;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+.store-flash-session-txt {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    letter-spacing: -0.2px;
+}
+
+.store-flash-timer-box {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    color: #8e8e93;
+    font-weight: 500;
+}
+
+.store-flash-time-digit {
+    background: #1d1d1f;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 2px 4px;
+    border-radius: 4px;
+    min-width: 16px;
+    text-align: center;
+    line-height: 1;
+}
+
+.store-flash-card-v1 {
+    display: flex;
+    gap: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+}
+
+.store-flash-cover {
+    width: 86px;
+    height: 86px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: #f2f2f7;
+    flex-shrink: 0;
+    border: 0.5px solid rgba(0, 0, 0, 0.04);
+}
+
+.store-flash-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.store-flash-title-line {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.store-flash-badge {
+    align-self: flex-start;
+    font-size: 9px;
+    font-weight: 700;
+    color: #1d1d1f;
+    background: #f2f2f7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.2px;
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.store-flash-badge.pin {
+    background: #1d1d1f;
+    color: #ffffff;
+    border: none;
+}
+
+.store-flash-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.store-flash-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+}
+
+.store-flash-progress-bar {
+    flex: 1;
+    height: 4px;
+    background: #f2f2f7;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.store-flash-progress-inner {
+    height: 100%;
+    background: #1d1d1f;
+    border-radius: 2px;
+}
+
+.store-flash-progress-txt {
+    font-size: 10.5px;
+    color: #8e8e93;
+    font-weight: 600;
+}
+
+.store-flash-bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.store-flash-price-box {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.store-flash-price-main {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.4px;
+}
+
+.store-flash-price-orig {
+    font-size: 11px;
+    color: #aeaeb2;
+    text-decoration: line-through;
+    font-weight: 500;
+}
+
+.store-flash-buy-btn {
+    border: none;
+    background: #1d1d1f;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+}
+
+.store-flash-buy-btn:active {
+    opacity: 0.8;
+}
+
+.store-flash-buy-btn.waiting {
+    background: #f2f2f7;
+    color: #636366;
+    font-size: 10.5px;
+    padding: 5px 10px;
+}
+
+.store-flash-buy-btn.finished {
+    background: #34c759;
+    color: #ffffff;
+}
+
+/* 拼单成员双头像排版 */
+.store-flash-pin-avatars-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 4px 0;
+}
+
+.store-flash-pin-avatar-user,
+.store-flash-pin-avatar-friend {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #1d1d1f;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.store-flash-pin-avatar-user img,
+.store-flash-pin-avatar-friend img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.store-flash-pin-avatar-friend {
+    background: #e5e5ea;
+    color: #8e8e93;
+    margin-left: -8px;
+}
+
+.store-flash-pin-avatar-friend.joined {
+    background: #34c759;
+    color: #ffffff;
+}
+
+.store-flash-pin-tip-txt {
+    font-size: 11px;
+    color: #8e8e93;
+    margin-left: 6px;
+}
+
+/* 商品瀑布流 */
+.store-floor-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ee0a24;
+}
+
+.store-products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 8px;
+}
+
+.store-mall-item-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    cursor: pointer;
+}
+
+.store-card-cover-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    background-color: #e5e5ea;
+}
+
+.store-card-cover-wrap img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #e5e5ea;
+}
+
+.store-card-details {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.store-card-name {
+    font-size: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.store-card-badges {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.store-card-tag {
+    font-size: 9px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    border: 1px solid #ee0a24;
+    color: #ee0a24;
+}
+
+.store-card-money-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.store-price-curr {
+    font-size: 11px;
+    color: #ee0a24;
+    font-weight: bold;
+}
+
+.store-price-num {
+    font-size: 16px;
+    color: #ee0a24;
+    font-weight: 800;
+}
+
+.store-sales-stat {
+    font-size: 10px;
+    color: var(--store-text-sub);
+}
+
+/* ================= 2. 外卖频道 ================= */
+.store-takeout-header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background: #fff;
+    padding-top: 60px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-bottom: 12px;
+    border-bottom: 0.5px solid var(--store-border-light);
+}
+
+.store-address-picker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.store-current-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--store-text-main);
+    cursor: pointer;
+}
+
+.store-location-switch-btn {
+    font-size: 11px;
+    color: var(--store-primary);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+}
+
+.store-takeout-search-wrap {
+    display: flex;
+    align-items: center;
+    background: #efeff4;
+    border-radius: 18px;
+    padding: 6px 12px;
+    gap: 6px;
+}
+
+.store-takeout-search-wrap input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 12px;
+}
+
+/* 外卖 5 宫格金刚区 */
+.store-nav-grid-takeout {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px 0;
+    padding: 14px 6px;
+    background: #fff;
+    margin-bottom: 8px;
+}
+
+.store-takeout-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    color: #444;
+    cursor: pointer;
+}
+
+.store-takeout-icon-bg {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.store-takeout-icon-bg svg {
+    width: 26px;
+    height: 26px;
+    fill: currentColor;
+}
+
+.store-filter-ribbon {
+    position: sticky;
+    top: 110px;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: #fff;
+    padding: 10px 0;
+    font-size: 12px;
+    color: var(--store-text-sub);
+    border-bottom: 0.5px solid var(--store-border-light);
+}
+
+.store-filter-item {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.store-filter-item.store-active {
+    color: var(--store-primary);
+    font-weight: bold;
+}
+
+.store-shop-list-wrap {
+    padding: 8px;
+}
+
+.store-shop-entry-card {
+    background: #fff;
+    border-radius: var(--store-ios-radius);
+    padding: 11px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+}
+
+.store-shop-avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.store-shop-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-shop-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.store-shop-name {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.store-shop-rate-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.store-star-box {
+    display: flex;
+    align-items: center;
+    color: #ff9800;
+    font-weight: bold;
+    gap: 2px;
+}
+
+.store-shop-delivery-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--store-text-sub);
+    margin-bottom: 6px;
+}
+
+.store-shop-coupons {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.store-coupon-tag {
+    font-size: 9px;
+    border: 1px solid #ff4d4f;
+    color: #ff4d4f;
+    border-radius: 3px;
+    padding: 0 4px;
+}
+
+/* ================= 3. 消息页面 ================= */
+.store-sub-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    padding-top: 48px;
+    padding-bottom: 12px;
+    padding-left: 14px;
+    padding-right: 14px;
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 0.5px solid var(--store-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.store-bare-back-btn {
+    position: absolute;
+    left: 14px;
+    bottom: 10px;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1d1d1f;
+}
+
+.store-bare-back-btn:active {
+    opacity: 0.5;
+}
+
+.store-msg-category-strip {
+    display: flex;
+    justify-content: space-around;
+    padding: 14px 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--store-border-light);
+}
+
+.store-msg-category-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.store-msg-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.store-msg-conv-list {
+    background: #fff;
+    margin: 8px 10px;
+    border-radius: var(--store-ios-radius);
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.store-conv-item {
+    display: flex;
+    padding: 12px 14px;
+    gap: 12px;
+    border-bottom: 0.5px solid var(--store-border-light);
+    cursor: pointer;
+}
+
+.store-conv-item img {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.store-conv-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.store-conv-top-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.store-conv-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.store-conv-time {
+    font-size: 11px;
+    color: var(--store-text-sub);
+}
+
+.store-conv-preview {
+    font-size: 12px;
+    color: var(--store-text-sub);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+}
+
+/* ================= 4. 购物车页面 ================= */
+.store-cart-content-pad {
+    padding: 8px 10px;
+}
+
+.store-cart-group-card {
+    background: #fff;
+    border-radius: var(--store-ios-radius);
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+}
+
+.store-cart-store-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.store-cart-sku-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.store-custom-check-circle {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #bbb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.store-custom-check-circle.store-active {
+    background: var(--store-primary);
+    border-color: var(--store-primary);
+    color: #fff;
+}
+
+.store-sku-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.store-sku-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-sku-title {
+    font-size: 12px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.store-sku-desc-tag {
+    font-size: 10px;
+    background: #f7f7f7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--store-text-sub);
+    display: inline-block;
+    margin-bottom: 6px;
+}
+
+.store-sku-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.store-counter-group {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.store-counter-btn {
+    border: none;
+    background: #fafafa;
+    width: 22px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.store-counter-num {
+    width: 28px;
+    text-align: center;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    font-size: 11px;
+    line-height: 20px;
+    background: #fff;
+}
+
+.store-cart-sticky-bar {
+    position: fixed;
+    bottom: 64px;
+    left: 0;
+    right: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 0.5px solid var(--store-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    z-index: 90;
+}
+
+/* ================= 5. 个人中心（我的） ================= */
+.store-profile-masthead {
+    background: transparent;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 4px;
+    color: #1d1d1f;
+    position: relative;
+}
+
+.store-profile-primary-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    padding: 12px 6px;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.store-profile-avatar-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.store-profile-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    object-fit: cover;
+    background: #fff;
+}
+
+.store-user-name-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #1d1d1f;
+}
+
+.store-user-meta-tags {
+    display: flex;
+    gap: 6px;
+}
+
+.store-meta-tag {
+    font-size: 10px;
+    background: #f2f2f7;
+    color: #86868b;
+    padding: 2px 7px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.store-panel-block {
+    background: transparent;
+    border-radius: 0;
+    margin: 16px 16px 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.store-panel-header-tabbed {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: none;
+    padding-bottom: 6px;
+}
+
+.store-order-scope-switch {
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.store-scope-btn {
+    cursor: pointer;
+    color: var(--store-text-sub);
+    position: relative;
+}
+
+.store-scope-btn.store-active {
+    color: var(--store-text-main);
+}
+
+.store-scope-btn.store-active::after {
+    content: "";
+    position: absolute;
+    bottom: -11px;
+    left: 20%;
+    width: 60%;
+    height: 2px;
+    background: var(--store-primary);
+}
+
+.store-all-orders-link {
+    font-size: 11px;
+    color: var(--store-text-sub);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.store-flow-status-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding-top: 14px;
+    text-align: center;
+}
+
+.store-status-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #111111;
+    cursor: pointer;
+}
+
+.store-status-icon-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-order-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background-color: #ee0a24;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    white-space: nowrap;
+    border: 1.5px solid #ffffff;
+    pointer-events: none;
+}
+
+/* 优惠券抽屉顶部把手条通用规范 */
+.store-bottom-drawer-panel .store-sheet-pull-bar {
+    width: 36px;
+    height: 4.5px;
+    background: #d1d1d6;
+    border-radius: 3px;
+    margin: 0 auto 12px;
+    flex-shrink: 0;
+}
+
+.store-status-node svg {
+    width: 24px;
+    height: 24px;
+    color: #111111;
+}
+
+/* 个人主页 5 宫格快捷功能行（等分对齐） */
+.store-quick-nav-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    text-align: center;
+    padding: 6px 0;
+}
+
+.store-quick-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #111111;
+    cursor: pointer;
+    min-width: 0;
+}
+
+.store-quick-node svg {
+    width: 22px;
+    height: 22px;
+    color: #111111;
+    flex-shrink: 0;
+}
+
+.store-quick-node span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    letter-spacing: -0.2px;
+}
+
+.store-asset-deck {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    padding: 6px 0;
+}
+
+.store-asset-column {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 11px;
+    color: var(--store-text-sub);
+}
+
+.store-asset-highlight {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--store-text-main);
+}
+
+.store-tools-deck-grid {
+    display: flex;
+    flex-direction: column;
+    padding-top: 4px;
+}
+
+.store-tool-cell {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 4px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1d1d1f;
+    cursor: pointer;
+}
+
+.store-tool-cell svg {
+    width: 20px;
+    height: 20px;
+    color: #1d1d1f;
+}
+
+/* ================= 6. 底栏（统一双色方案 + 选中独立放大） ================= */
+.store-app-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    height: 64px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    box-sizing: border-box;
+    background: #ffffff;
+    border-top: 1px solid #e5e5ea;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.03);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+
+.store-tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    color: #7f7f7f;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.store-tab-icon-box {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.store-tab-icon-box svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    fill: #7f7f7f;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 外卖图标略微微调 */
+.store-tab-btn:nth-child(3) .store-tab-icon-box svg {
+    width: 21px;
+    height: 21px;
+}
+
+/* 缩小实心心愿单图标（避免过于厚重） */
+.store-tab-btn:nth-child(4) .store-tab-icon-box svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* 缩减个人主页图标尺寸（不再放大，缩至精细适配） */
+.store-tab-btn:last-child .store-tab-icon-box svg {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* 底栏激活状态如图标单独放大 */
+.store-tab-btn.store-active .store-tab-icon-box svg {
+    transform: scale(1.18);
+}
+
+.store-tab-text {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    transition: color 0.2s ease;
+    color: #7f7f7f;
+}
+
+.store-tab-btn:not(.store-active) .store-tab-icon-box {
+    opacity: 1;
+    background: transparent;
+}
+
+.store-tab-btn.store-active .store-tab-icon-box {
+    background: transparent;
+    border-radius: 0;
+    transform: none;
+}
+
+.store-tab-btn.store-active .store-tab-icon-box svg,
+.store-tab-btn.store-active .store-tab-icon-box svg path {
+    fill: #000000 !important;
+}
+
+.store-tab-btn.store-active .store-tab-text {
+    font-weight: 800;
+    color: #000000;
+}
+
+.store-cart-tag-bubble {
+    position: absolute;
+    top: 2px;
+    right: 18%;
+    background: #ee0a24;
+    color: #fff;
+    font-size: 9px;
+    padding: 0 4px;
+    border-radius: 6px;
+    font-weight: bold;
+    line-height: 14px;
+}
+
+/* ================= 规格抽屉面板 ================= */
+.store-drawer-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1200;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.store-drawer-mask.store-active {
+    display: block;
+    opacity: 1;
+}
+
+.store-drawer-box {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 18px 18px 0 0;
+    padding: 16px;
+    z-index: 1300;
+    transform: translateY(100%);
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-sizing: border-box;
+}
+
+.store-drawer-box.store-active {
+    transform: translateY(0);
+}
+
+.store-drawer-header {
+    display: flex;
+    gap: 12px;
+    position: relative;
+    padding-bottom: 12px;
+    border-bottom: 0.5px solid var(--store-border-light);
+}
+
+.store-drawer-header img {
+    width: 76px;
+    height: 76px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.store-drawer-close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+}
+
+.store-confirm-bar-btn {
+    width: 100%;
+    background: var(--store-primary-grad);
+    color: #fff;
+    border: none;
+    padding: 11px;
+    border-radius: 22px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 14px;
+    cursor: pointer;
+}
+
+/* ================= 7. 店铺专区（得物/淘宝黑白低饱和神店街） ================= */
+.store-shop-spotlight-card {
+    margin: 8px 12px 14px;
+    padding: 20px 18px;
+    border-radius: 14px;
+    background: #18181a;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.store-shop-spotlight-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #8e8e93;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.store-shop-spotlight-title {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.store-shop-spotlight-sub {
+    font-size: 11.5px;
+    color: #a1a1a6;
+}
+
+.store-shop-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 14px 10px;
+}
+
+.store-shop-list-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #111111;
+}
+
+.store-shop-list-filter {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8e8e93;
+    cursor: pointer;
+}
+
+.store-brand-stores-wrap {
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.store-brand-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px 12px 12px;
+    border: 1px solid #ededf0;
+}
+
+.store-brand-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.store-brand-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.store-brand-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-brand-title-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+}
+
+.store-brand-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #111111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.store-brand-badge {
+    font-size: 9.5px;
+    background: #111111;
+    color: #ffffff;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.store-brand-sub {
+    font-size: 11px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.store-brand-enter-btn {
+    border: 1px solid #111111;
+    background: transparent;
+    color: #111111;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.store-brand-enter-btn:active {
+    background: #111111;
+    color: #ffffff;
+}
+
+.store-brand-showcase-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.store-brand-showcase-item {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.store-brand-item-img-box {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f2f2f7;
+}
+
+.store-brand-item-img-box img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.store-brand-item-price {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #111111;
+    margin-top: 5px;
+    text-align: center;
+}
+
+/* ================= 8. 全屏二级子页面公共框架（订单页 & 商品详情页） ================= */
+.store-subpage-view {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    z-index: 8000;
+    display: none;
+    flex-direction: column;
+    transform: none;
+    transition: none;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.store-subpage-view.store-subpage-active {
+    display: flex;
+}
+
+/* 顶部三栏规范导航条（带明确返回键，标题绝对居中） */
+.store-subpage-nav {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 44px 12px 10px;
+    background: #ffffff;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+    box-sizing: border-box;
+    height: 88px;
+}
+
+.store-subpage-back-circle {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1d1d1f;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.store-subpage-back-circle:active {
+    background: #e5e5ea;
+}
+
+.store-subpage-nav-title {
+    position: absolute;
+    left: 48px;
+    right: 48px;
+    bottom: 10px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1d1d1f;
+    letter-spacing: -0.3px;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.store-subpage-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+}
+
+.store-subpage-icon-action {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1d1d1f;
+    border-radius: 50%;
+}
+
+.store-subpage-icon-action:active {
+    background: #e5e5ea;
+}
+
+/* 订单页面 Tab 分类与卡片样式 */
+.store-order-tabs-bar {
+    display: flex;
+    background: #ffffff;
+    padding: 0 8px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+}
+
+.store-order-tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0 10px;
+    font-size: 13px;
+    color: #8e8e93;
+    cursor: pointer;
+    position: relative;
+    font-weight: 600;
+}
+
+.store-order-tab-item.active {
+    color: #1d1d1f;
+    font-weight: 700;
+}
+
+.store-order-tab-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background: #1d1d1f;
+    border-radius: 2px;
+}
+
+.store-subpage-scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 14px 80px;
+}
+
+.store-order-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.store-order-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.04);
+    font-size: 12px;
+}
+
+.store-order-status-badge {
+    color: #8e8e93;
+    font-weight: 600;
+}
+
+.store-order-prod-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.store-order-prod-row img {
+    width: 68px;
+    height: 68px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #e5e5ea;
+}
+
+.store-order-prod-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-order-prod-title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.store-order-prod-sku {
+    font-size: 11px;
+    color: #8e8e93;
+    margin-bottom: 6px;
+}
+
+.store-order-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.04);
+}
+
+.store-order-btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.store-order-pill-btn {
+    border: 1px solid #d1d1d6;
+    background: #ffffff;
+    color: #3a3a3c;
+    border-radius: 16px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.store-order-pill-btn.primary {
+    background: #3a3a3c;
+    color: #ffffff;
+    border-color: #3a3a3c;
+}
+
+/* ================= 9. 淘宝风格商品详情全屏页（低饱和白灰） ================= */
+.store-goods-scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 84px;
+}
+
+.store-goods-big-banner {
+    width: 100%;
+    padding-top: 92%;
+    position: relative;
+    background: #e5e5ea;
+}
+
+.store-goods-big-banner img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.store-goods-banner-badge {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.store-goods-card-section {
+    background: #ffffff;
+    border-radius: 14px;
+    margin: 10px 10px 0;
+    padding: 14px 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+.store-goods-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.store-goods-price-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.5px;
+}
+
+.store-goods-sales {
+    font-size: 11.5px;
+    color: #8e8e93;
+}
+
+.store-goods-title-main {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+    color: #1d1d1f;
+    margin-bottom: 10px;
+}
+
+/* 淘宝式排版行条（优惠/保障/参数） */
+.store-tb-cell-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 12px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.04);
+}
+.store-tb-cell-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.store-tb-cell-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+.store-tb-cell-label {
+    color: #8e8e93;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.store-tb-cell-value {
+    color: #3a3a3c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.store-tb-tag-gray {
+    font-size: 10px;
+    background: #f2f2f7;
+    color: #636366;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 0.5px solid #d1d1d6;
+}
+
+/* 规格选择胶囊 */
+.store-goods-spec-picker-title {
+    font-size: 12px;
+    color: #8e8e93;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.store-goods-spec-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.store-goods-spec-item {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 16px;
+    background: #f2f2f7;
+    color: #3a3a3c;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.store-goods-spec-item.active {
+    background: #e5e5ea;
+    color: #1d1d1f;
+    border-color: #8e8e93;
+    font-weight: 700;
+}
+
+/* 淘宝式评价板块预览 */
+.store-tb-comment-box {
+    margin-top: 10px;
+    padding-top: 8px;
+}
+.store-tb-comment-user {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #8e8e93;
+    margin-bottom: 6px;
+}
+.store-tb-comment-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #d1d1d6;
+    flex-shrink: 0;
+}
+
+/* 真实评价打星显示高亮与低饱和差评颜色 */
+.store-tb-comment-user span:last-child {
+    letter-spacing: 1px;
+}
+.store-tb-comment-text {
+    font-size: 12px;
+    color: #3a3a3c;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 淘宝式店铺卡片 */
+.store-tb-shop-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.store-tb-shop-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.store-tb-shop-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #2c2c2e;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+/* 淘宝式底部双拼高辨识度工具栏（低饱和白灰色调） */
+.store-goods-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.store-tb-icon-btn-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 44px;
+    font-size: 10px;
+    color: #8e8e93;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.store-tb-icon-btn-col.store-service-btn svg {
+    stroke-width: 44px;
+    paint-order: stroke fill;
+}
+
+.store-tb-icon-btn-col.store-fav-btn svg {
+    stroke-width: 42px;
+    paint-order: stroke fill;
+}
+
+.store-tb-icon-btn-col:active {
+    opacity: 0.6;
+}
+
+.store-goods-action-btns {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    justify-content: flex-end;
+    margin-left: 6px;
+}
+
+.store-goods-bar-btn {
+    border: none;
+    flex: 1;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s ease;
+}
+.store-goods-bar-btn:active {
+    opacity: 0.75;
+}
+
+.store-goods-bar-btn.btn-cart {
+    background: #e5e5ea;
+    color: #1d1d1f;
+}
+
+.store-goods-bar-btn.btn-buy {
+    background: #3a3a3c;
+    color: #ffffff;
+}
+
+/* 圆润右箭头公用组件 */
+.store-chevron-right-svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+/* ================= 10. 地址管理全屏页 ================= */
+.store-address-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 4px;
+}
+.store-address-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.store-address-main {
+    flex: 1;
+    min-width: 0;
+}
+.store-address-row1 {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.store-address-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d1d1f;
+}
+.store-address-tel {
+    font-size: 12px;
+    color: #8e8e93;
+}
+.store-address-default-badge {
+    font-size: 9.5px;
+    background: #3a3a3c;
+    color: #ffffff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+.store-address-detail-txt {
+    font-size: 12px;
+    color: #3a3a3c;
+    line-height: 1.4;
+}
+.store-address-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+}
+.store-address-add-btn {
+    width: 100%;
+    height: 42px;
+    border-radius: 21px;
+    background: #3a3a3c;
+    color: #ffffff;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ================= 11. 订单状态详情页（待支付 / 待发货） ================= */
+.store-order-status-banner {
+    background: #3a3a3c;
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 18px 16px;
+    margin-bottom: 12px;
+}
+.store-order-status-banner-title {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.store-order-status-banner-desc {
+    font-size: 11.5px;
+    color: #c7c7cc;
+}
+.store-detail-addr-box {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ================= 12. 淘宝式物流时间轴页面 ================= */
+.store-logistics-head-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+.store-timeline-box {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+.store-timeline-item {
+    position: relative;
+    padding-left: 24px;
+    padding-bottom: 20px;
+    border-left: 1.5px solid #e5e5ea;
+}
+.store-timeline-item:last-child {
+    border-left: 1.5px solid transparent;
+    padding-bottom: 0;
+}
+.store-timeline-dot {
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #c7c7cc;
+}
+.store-timeline-item.active .store-timeline-dot {
+    background: #1d1d1f;
+    box-shadow: 0 0 0 3px #e5e5ea;
+}
+.store-timeline-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 3px;
+}
+.store-timeline-time {
+    font-size: 11px;
+    color: #8e8e93;
+}
+
+/* ================= 13. 评价页面 ================= */
+.store-review-star-row {
+    display: flex;
+    gap: 12px;
+    margin: 14px 0 16px;
+}
+.store-review-star {
+    font-size: 26px;
+    color: #d1d1d6;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+.store-review-star.active {
+    color: #1d1d1f;
+}
+.store-review-textarea {
+    width: 100%;
+    height: 120px;
+    border: 1px solid #e5e5ea;
+    border-radius: 10px;
+    background: #fafafc;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 13px;
+    color: #1d1d1f;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+}
+
+/* ================= 14. 退款/售后页面 ================= */
+.store-refund-step-box {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ================= 15. 地址管理模式与新增抽屉 ================= */
+.store-addr-manage-btn {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d1d1f;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+}
+.store-address-manage-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    box-sizing: border-box;
+    z-index: 10;
+}
+.store-address-manage-bar.active {
+    display: flex;
+}
+.store-drawer-mask-layer {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9000;
+    opacity: 0;
+    pointer-events: none;
+    transition: none;
+}
+.store-drawer-mask-layer.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.store-bottom-drawer-panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    height: 68vh;
+    max-height: 540px;
+    min-height: 440px;
+    background: #ffffff;
+    border-radius: 24px 24px 0 0;
+    padding: 18px 16px 0;
+    z-index: 9100;
+    display: none;
+    transform: none;
+    transition: none;
+    box-sizing: border-box;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+}
+.store-bottom-drawer-panel.show {
+    display: flex;
+    transform: none;
+}
+.store-drawer-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+.store-drawer-body-scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 16px;
+}
+.store-drawer-footer-action {
+    flex-shrink: 0;
+    padding: 12px 0 calc(20px + env(safe-area-inset-bottom, 12px));
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ================= 15.1 收货地址抽屉（地图集成与双底栏按钮风格） ================= */
+.store-map-address-drawer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    height: 84vh;
+    max-height: 720px;
+    background: #f7f7f8;
+    border-radius: 24px 24px 0 0;
+    z-index: 9200;
+    display: none;
+    flex-direction: column;
+    transform: none;
+    transition: none;
+    overflow: hidden;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.16);
+    box-sizing: border-box;
+}
+.store-map-address-drawer.show {
+    display: flex;
+    transform: none;
+}
+
+/* 上部地图视口 */
+.store-map-viewport-section {
+    position: relative;
+    width: 100%;
+    height: 34%;
+    min-height: 170px;
+    background: #e5e5ea;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.store-map-render-canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+}
+
+.store-map-center-pin-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    z-index: 40;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.store-map-pin-icon {
+    width: 28px;
+    height: 28px;
+    color: #1d1d1f;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+.store-map-pin-shadow {
+    width: 10px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 50%;
+    margin-top: 1px;
+}
+
+.store-map-locate-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1d1d1f;
+    cursor: pointer;
+    z-index: 50;
+    border: none;
+}
+
+/* 下部表单卡片 */
+.store-map-form-card-sheet {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    margin-top: -10px;
+    position: relative;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.store-sheet-pull-bar {
+    width: 36px;
+    height: 4px;
+    background: #e5e5ea;
+    border-radius: 2px;
+    margin: 8px auto 6px;
+    flex-shrink: 0;
+}
+
+.store-sheet-content-scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 6px 16px 16px;
+}
+
+/* 顶部简洁分段栏：用户地址 vs 角色地址 */
+.store-addr-type-segmented {
+    display: flex;
+    background: #f2f2f7;
+    border-radius: 8px;
+    padding: 3px;
+    margin-bottom: 12px;
+    gap: 4px;
+}
+
+.store-addr-type-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8e8e93;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.store-addr-type-item.active {
+    background: #ffffff;
+    color: #1d1d1f;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+/* User 面具自动填充下拉浮层：圆角 4px，带头像显示 */
+.store-mask-quick-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    z-index: 9999;
+    padding: 4px 0;
+    max-height: 180px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.store-mask-dropdown-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #8e8e93;
+    padding: 4px 10px;
+    letter-spacing: 0.3px;
+}
+
+.store-mask-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.15s ease;
+}
+
+.store-mask-dropdown-item:hover,
+.store-mask-dropdown-item:active {
+    background: #f2f2f7;
+}
+
+.store-mask-dropdown-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: #e5e5ea;
+    flex-shrink: 0;
+}
+
+.store-mask-dropdown-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-mask-drop-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1.3;
+}
+
+.store-mask-drop-phone {
+    font-size: 11px;
+    color: #8e8e93;
+}
+
+/* 底部操作区：左下角取消，右下角保存地址 */
+.store-sheet-split-actions {
+    display: flex;
+    gap: 12px;
+    padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 12px));
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+}
+
+.store-sheet-cancel-btn {
+    flex: 1;
+    height: 44px;
+    border-radius: 22px;
+    background: #f2f2f7;
+    color: #636366;
+    font-size: 14.5px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.store-sheet-cancel-btn:active {
+    background: #e5e5ea;
+}
+
+.store-sheet-save-btn {
+    flex: 2;
+    height: 44px;
+    border-radius: 22px;
+    background: #1d1d1f;
+    color: #ffffff;
+    font-size: 14.5px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.store-sheet-save-btn:active {
+    opacity: 0.85;
+}
+
+/* ================= 29. 居中 iOS 白灰风格角色选择弹窗 ================= */
+.store-char-select-dialog {
+    width: 90%;
+    max-width: 340px;
+    max-height: 72vh;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    animation: storeWbPopIn 0.26s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+}
+
+.store-char-select-header {
+    padding: 16px 18px 12px;
+    border-bottom: 0.5px solid #f0f0f2;
+    flex-shrink: 0;
+}
+
+.store-char-select-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1d1d1f;
+}
+
+.store-char-select-sub {
+    font-size: 11px;
+    color: #8e8e93;
+    margin-top: 2px;
+}
+
+.store-char-select-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.store-char-item-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #f8f8fa;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.store-char-item-card:hover,
+.store-char-item-card:active {
+    background: #f2f2f7;
+}
+
+.store-char-item-card.selected {
+    background: #ffffff;
+    border-color: #d1d1d6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.store-char-item-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e5e5ea;
+    flex-shrink: 0;
+}
+
+.store-char-item-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.store-char-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-char-item-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d1d1f;
+}
+
+.store-char-item-phone {
+    font-size: 11.5px;
+    color: #8e8e93;
+    margin-top: 2px;
+}
+
+.store-char-item-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid #c7c7cc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.store-char-item-card.selected .store-char-item-check {
+    background: #1d1d1f;
+    border-color: #1d1d1f;
+    color: #ffffff;
+}
+
+.store-char-select-footer {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0));
+    border-top: 0.5px solid #f0f0f2;
+    background: #fafafc;
+    flex-shrink: 0;
+}
+
+.store-char-btn-cancel {
+    flex: 1;
+    height: 38px;
+    border-radius: 19px;
+    background: #e5e5ea;
+    color: #1d1d1f;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.store-char-btn-confirm {
+    flex: 1;
+    height: 38px;
+    border-radius: 19px;
+    background: #1d1d1f;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+/* 地址卡片角色标识 */
+.store-address-char-badge {
+    font-size: 9.5px;
+    background: #f2f2f7;
+    color: #1d1d1f;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.store-address-tag-badge {
+    font-size: 9.5px;
+    background: #f2f2f7;
+    color: #636366;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* 此处重复的表单卡片样式已清理，统一使用上文第 1007 行处生效的定义 */
+
+/* 搜索地址框（防溢出紧凑设计） */
+.store-tb-search-addr-wrap {
+    display: flex;
+    align-items: center;
+    background: #f2f2f7;
+    border-radius: 20px;
+    padding: 6px 10px 6px 12px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+}
+.store-tb-search-addr-wrap input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 12.5px;
+    color: #1d1d1f;
+    font-family: inherit;
+    padding: 0 6px;
+}
+.store-tb-paste-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #3a3a3c;
+    border-left: 0.5px solid #d1d1d6;
+    padding-left: 8px;
+    margin-left: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+    line-height: 1.1;
+    gap: 2px;
+}
+
+/* ================= 19. 外卖点餐详情页（低饱和白灰设计） ================= */
+#storeTakeoutDetailSubpage .store-subpage-nav {
+    border-bottom: none;
+}
+.store-takeout-masthead {
+    background: #ffffff;
+    padding: 12px 14px 10px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+.store-takeout-shop-header-card {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.store-takeout-shop-avatar-img {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #e5e5ea;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+.store-takeout-shop-info-col {
+    flex: 1;
+    min-width: 0;
+}
+.store-takeout-name-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1d1d1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+.store-takeout-meta-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #8e8e93;
+}
+.store-takeout-star-badge {
+    color: #1d1d1f;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.store-takeout-badge-line {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+.store-takeout-pill-tag {
+    font-size: 10px;
+    background: #f2f2f7;
+    color: #636366;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+.store-takeout-split-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    background: #ffffff;
+}
+.store-takeout-left-menu {
+    width: 84px;
+    background: #f7f7f9;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-shrink: 0;
+    border-right: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+.store-takeout-menu-item {
+    padding: 15px 8px;
+    font-size: 12px;
+    color: #8e8e93;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+}
+.store-takeout-menu-item.active {
+    background: #ffffff;
+    color: #1d1d1f;
+    font-weight: 700;
+}
+.store-takeout-menu-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+    background: #1d1d1f;
+}
+.store-takeout-right-dishes {
+    flex: 1;
+    background: #ffffff;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 12px 88px;
+}
+.store-takeout-full-dishes {
+    width: 100%;
+    padding: 12px 14px 88px;
+}
+.store-dish-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+.store-dish-thumb {
+    width: 82px;
+    height: 82px;
+    border-radius: 10px;
+    background: #e5e5ea;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.store-dish-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.store-dish-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1.35;
+}
+.store-dish-desc {
+    font-size: 11px;
+    color: #8e8e93;
+    margin-top: 3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.store-dish-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+}
+.store-dish-price {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1d1d1f;
+}
+.store-dish-action-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.store-dish-step-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: #1d1d1f;
+    color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.store-dish-step-btn.minus {
+    background: #f2f2f7;
+    color: #1d1d1f;
+}
+
+.store-dish-step-btn:active {
+    transform: scale(0.92);
+    opacity: 0.85;
+}
+
+.store-dish-step-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d1d1f;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* 外卖订单详情专属页面样式 */
+.store-takeout-order-status-card {
+    background: linear-gradient(135deg, #1d1d1f 0%, #2c2c2e 100%);
+    border-radius: 16px;
+    padding: 18px 16px;
+    color: #ffffff;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.store-takeout-order-status-card.delivering {
+    background: linear-gradient(135deg, #1b3824 0%, #15241b 100%);
+}
+
+.store-tk-status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.store-tk-status-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.18);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.store-tk-status-time {
+    font-size: 12px;
+    color: #34c759;
+    font-weight: 600;
+}
+
+.store-tk-status-title {
+    font-size: 15.5px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
+/* 外卖配送进度条 */
+.store-tk-status-progress-track {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+}
+
+.store-tk-progress-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.store-tk-node-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #636366;
+    transition: all 0.2s ease;
+}
+
+.store-tk-node-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.store-tk-progress-node.done .store-tk-node-dot,
+.store-tk-progress-node.active .store-tk-node-dot {
+    background: #34c759;
+    box-shadow: 0 0 8px rgba(52, 199, 89, 0.6);
+}
+
+.store-tk-progress-node.done .store-tk-node-label,
+.store-tk-progress-node.active .store-tk-node-label {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.store-tk-progress-line {
+    flex: 1;
+    height: 2px;
+    background: #3a3a3c;
+    margin: 0 4px 18px;
+}
+
+.store-tk-progress-line.done,
+.store-tk-progress-line.active {
+    background: #34c759;
+}
+
+/* 专送骑手信息卡片（加固独立展示与对齐） */
+#storeOrderDetailSubpage .store-takeout-rider-card {
+    background: #ffffff !important;
+    border-radius: 14px !important;
+    padding: 12px 14px !important;
+    margin-bottom: 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    border: 0.5px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+    box-sizing: border-box !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-avatar {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: #1d1d1f !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-avatar svg {
+    display: block !important;
+    stroke: #ffffff !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-name {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1d1d1f !important;
+    margin-bottom: 3px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-rating {
+    font-size: 11px !important;
+    color: #ff9500 !important;
+    font-weight: bold !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-sub {
+    font-size: 11px !important;
+    color: #8e8e93 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-actions {
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+}
+
+#storeOrderDetailSubpage .store-tk-rider-action-btn {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: #f2f2f7 !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #1d1d1f !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+#storeOrderDetailSubpage .store-tk-addr-icon-box {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    background: #eaf8ef !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+/* 外卖小票餐品清单（三列横向对齐：品名 数量 金额） */
+#storeOrderDetailSubpage .store-takeout-dishes-receipt-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 10px 0 !important;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+#storeOrderDetailSubpage .store-tk-dish-receipt-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    font-size: 13px !important;
+    width: 100% !important;
+}
+
+#storeOrderDetailSubpage .store-tk-dish-receipt-name {
+    flex: 1 !important;
+    font-weight: 600 !important;
+    color: #1d1d1f !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    padding-right: 12px !important;
+}
+
+#storeOrderDetailSubpage .store-tk-dish-receipt-count {
+    font-size: 12px !important;
+    color: #8e8e93 !important;
+    min-width: 40px !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+}
+
+#storeOrderDetailSubpage .store-tk-dish-receipt-price {
+    font-weight: 700 !important;
+    color: #1d1d1f !important;
+    min-width: 70px !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+}
+
+/* 外卖底部悬浮黑白胶囊结算条 */
+.store-takeout-bottom-cart-bar {
+
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    right: 14px;
+    height: 52px;
+    background: #1d1d1f;
+    border-radius: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px 0 16px;
+    z-index: 20;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    box-sizing: border-box;
+}
+.store-takeout-bottom-cart-left {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    color: #ffffff;
+}
+.store-takeout-bottom-cart-price {
+    font-size: 17px;
+    font-weight: 800;
+    color: #ffffff;
+}
+.store-takeout-bottom-cart-tip {
+    font-size: 11px;
+    color: #8e8e93;
+}
+.store-takeout-bottom-cart-submit {
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 20px;
+    background: #ffffff;
+    color: #1d1d1f;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+.store-takeout-bottom-cart-submit:active {
+    opacity: 0.85;
+}
+
+/* ================= 20. 品牌好店主页（极简低饱和白灰好店风） ================= */
+#storeBrandShopSubpage .store-subpage-nav {
+    border-bottom: none;
+}
+.store-brand-page-banner {
+    background: #ffffff;
+    padding: 16px 14px 14px;
+    border-bottom: none;
+}
+.store-brand-page-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.store-brand-page-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+    color: #1d1d1f;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    flex-shrink: 0;
+}
+.store-brand-page-follow-btn {
+    padding: 6px 15px;
+    border-radius: 16px;
+    border: 1px solid #1d1d1f;
+    background: #1d1d1f;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.store-brand-page-follow-btn.active {
+    background: #e5e5ea;
+    color: #3a3a3c;
+    border-color: #e5e5ea;
+}
+.store-brand-sub-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.04);
+    font-size: 11px;
+    color: #8e8e93;
+}
+.store-brand-sub-node {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #636366;
+}
+.store-brand-page-tabs {
+    display: flex;
+    background: #ffffff;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    padding: 0 12px;
+}
+.store-brand-page-tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0 10px;
+    font-size: 13px;
+    color: #8e8e93;
+    cursor: pointer;
+    font-weight: 600;
+    position: relative;
+    transition: color 0.15s ease;
+}
+.store-brand-page-tab-item.active {
+    color: #1d1d1f;
+    font-weight: 700;
+}
+.store-brand-page-tab-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    width: 40%;
+    height: 2px;
+    background: #1d1d1f;
+    border-radius: 2px;
+}
+
+/* 表单行结构 */
+.store-tb-form-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+    font-size: 13.5px;
+}
+.store-tb-form-line-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+.store-tb-required-star {
+    color: #ff3b30;
+    font-weight: bold;
+    margin-right: 4px;
+}
+.store-tb-form-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13.5px;
+    color: #1d1d1f;
+    flex: 1;
+    min-width: 0;
+    font-family: inherit;
+}
+
+/* 标签组 */
+.store-tb-tag-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 14px 0 10px;
+}
+.store-tb-tags-flex {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.store-tb-addr-pill {
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: #f2f2f7;
+    color: #3a3a3c;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+.store-tb-addr-pill.active {
+    background: #e5e5ea;
+    color: #1d1d1f;
+    border-color: #8e8e93;
+    font-weight: 700;
+}
+
+/* 底部保存大按钮 */
+.store-sheet-foot-btn-wrap {
+    padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 12px));
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+}
+.store-tb-save-addr-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 22px;
+    background: #e5e5ea;
+    color: #1d1d1f;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.store-tb-save-addr-btn.active {
+    background: #3a3a3c;
+    color: #ffffff;
+}
+.store-drawer-title-txt {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d1d1f;
+}
+.store-input-group-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+    font-size: 13px;
+}
+.store-input-label-col {
+    width: 76px;
+    color: #8e8e93;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.store-input-field-col {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    color: #1d1d1f;
+    background: transparent;
+    font-family: inherit;
+}
+
+/* ================= 16. 淘宝规格 SKU 抽屉 ================= */
+.store-sku-drawer-info {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.store-sku-drawer-thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #e5e5ea;
+}
+.store-sku-drawer-meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.store-sku-stepper-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 16px 0 20px;
+    padding-top: 12px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ================= 17. 确认订单结算全屏页 ================= */
+.store-checkout-foot-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    box-sizing: border-box;
+}
+
+/* ================= 18. 宝贝全部评价全屏页与免费/本地AI弹窗 ================= */
+.store-reviews-clean-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    padding: 14px 14px 8px;
+}
+
+/* 居中弹窗：免费 AI 渠道选择面板 */
+.store-free-ai-dialog {
+    width: 92%;
+    max-width: 380px;
+    max-height: 85vh;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    animation: storeWbPopIn 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+}
+
+.store-free-ai-header {
+    position: relative;
+    padding: 18px 18px 12px;
+    border-bottom: 0.5px solid #f0f0f2;
+    flex-shrink: 0;
+}
+
+.store-free-ai-title {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.3px;
+}
+
+.store-free-ai-sub {
+    font-size: 11px;
+    color: #8e8e93;
+    margin-top: 3px;
+    line-height: 1.35;
+    padding-right: 28px;
+}
+
+.store-free-ai-header .store-wb-close-x-btn {
+    position: absolute;
+    right: 14px;
+    top: 16px;
+    margin: 0;
+}
+
+.store-free-ai-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.store-free-ai-field-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 8px;
+}
+
+/* 渠道平铺卡片列表 */
+.store-free-channel-deck {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.store-free-channel-card {
+    background: #f8f8fa;
+    border: 1.5px solid #ededf0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.store-free-channel-card:active {
+    background: #f0f0f3;
+}
+
+.store-free-channel-card.selected {
+    background: #ffffff;
+    border-color: #1d1d1f;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.store-free-channel-row1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.store-free-channel-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+}
+
+.store-free-channel-tag {
+    font-size: 9.5px;
+    font-weight: 600;
+    background: #e5e5ea;
+    color: #1d1d1f;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.store-free-channel-card.selected .store-free-channel-tag {
+    background: #1d1d1f;
+    color: #ffffff;
+}
+
+.store-free-channel-desc {
+    font-size: 11px;
+    color: #8e8e93;
+    line-height: 1.35;
+}
+
+/* 渠道配置卡片 */
+.store-free-config-card {
+    background: #f8f8fa;
+    border-radius: 14px;
+    padding: 12px;
+    border: 0.5px solid #ededf0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.store-free-config-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.store-free-config-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+.store-free-config-input {
+    border: 1px solid #d1d1d6;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 12.5px;
+    color: #1d1d1f;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s ease;
+}
+
+.store-free-config-input:focus {
+    border-color: #1d1d1f;
+}
+
+.store-free-loading-box {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    text-align: center;
+    gap: 12px;
+}
+
+.store-free-ai-footer {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0));
+    border-top: 0.5px solid #f0f0f2;
+    background: #fafafc;
+    flex-shrink: 0;
+}
+
+/* ================= 21. 商城设置与微信面具账号切换全屏页 ================= */
+.store-settings-group-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #8e8e93;
+    margin: 8px 4px 10px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.store-current-account-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.store-settings-accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.store-settings-account-item {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.store-settings-account-item:active {
+    background: #f2f2f7;
+}
+
+.store-settings-avatar-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e5e5ea;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.store-settings-avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.store-settings-account-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-settings-account-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+
+.store-settings-badge-active {
+    font-size: 10px;
+    background: #e1f5fe;
+    color: #0288d1;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.store-settings-account-sub {
+    font-size: 11.5px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.store-settings-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: #ffffff;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px env(safe-area-inset-bottom, 0);
+    box-sizing: border-box;
+    z-index: 20;
+}
+
+.store-settings-logout-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 22px;
+    background: #fff1f0;
+    color: #ff3b30;
+    border: 1px solid rgba(255, 59, 48, 0.2);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.store-settings-logout-btn:active {
+    background: #ffe5e5;
+    opacity: 0.85;
+}
+
+/* ================= 22. 卡券包精致白灰卡券样式 ================= */
+.store-coupon-ticket-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.store-coupon-left-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.5px;
+    min-width: 68px;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+}
+
+.store-coupon-left-val span {
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 2px;
+}
+
+.store-coupon-mid-info {
+    flex: 1;
+    min-width: 0;
+    padding: 0 10px;
+    border-left: 0.5px dashed #e5e5ea;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.store-coupon-title-line {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+
+.store-coupon-limit-line {
+    font-size: 11px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================= 23. 仿淘宝极简快捷登录多账号子页面（规范版） ================= */
+.store-login-view {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    color: #1d1d1f;
+    z-index: 9500;
+    display: none;
+    flex-direction: column;
+    transform: none;
+    transition: none;
+    box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.store-login-view.store-login-active {
+    display: flex;
+    transform: none;
+}
+
+.store-login-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 44px 16px 10px;
+    background: #ffffff;
+    height: 84px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.store-login-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px calc(24px + env(safe-area-inset-bottom, 16px));
+    box-sizing: border-box;
+}
+
+.store-login-brand-tag {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #636366;
+    background: #f2f2f7;
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.store-login-accounts-deck {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.store-login-account-card {
+    background: #ffffff;
+    border: 1px solid #ededf0;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.store-login-account-card:hover {
+    border-color: #d1d1d6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.store-login-account-card:active {
+    transform: scale(0.985);
+    background: #fafafc;
+}
+
+.store-login-card-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #f2f2f7;
+    border: 1.5px solid #ededf0;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.store-login-card-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.store-login-card-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-login-card-name {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.store-login-card-wxid {
+    font-size: 12px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.store-login-enter-pill {
+    padding: 6px 14px;
+    border-radius: 18px;
+    background: #1d1d1f;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease;
+}
+
+.store-login-enter-pill:active {
+    opacity: 0.8;
+}
+
+.store-login-empty-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 36px 16px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.store-login-empty-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: #f2f2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+.store-login-empty-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1d1d1f;
+    margin-bottom: 6px;
+}
+
+.store-login-empty-desc {
+    font-size: 12px;
+    color: #8e8e93;
+    line-height: 1.5;
+    max-width: 260px;
+    margin-bottom: 22px;
+}
+
+.store-login-goto-wc-btn {
+    width: 100%;
+    max-width: 240px;
+    height: 44px;
+    border-radius: 22px;
+    background: #1d1d1f;
+    color: #ffffff;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: opacity 0.15s ease;
+}
+
+.store-login-goto-wc-btn:active {
+    opacity: 0.8;
+}
+
+.store-login-agreement-line {
+    font-size: 11px;
+    color: #a1a1a6;
+    text-align: center;
+    margin-top: auto;
+    padding-top: 24px;
+    line-height: 1.5;
+}
+
+.store-login-agreement-line a {
+    color: #1d1d1f;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ================= 方案 B：世界书树形导轨绑定弹窗 ================= */
+.store-modal-mask {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.store-modal-mask.show {
+    display: flex;
+}
+
+.store-worldbook-dialog {
+    width: 100%;
+    max-width: 410px;
+    max-height: 82vh;
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    animation: storeWbPopIn 0.26s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+}
+
+@keyframes storeWbPopIn {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.store-wb-dialog-header {
+    padding: 16px 16px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 0.5px solid #ededf0;
+    flex-shrink: 0;
+}
+
+.store-wb-header-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-wb-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #8e8e93;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.store-wb-dialog-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.3px;
+    margin-bottom: 2px;
+}
+
+.store-wb-dialog-desc {
+    font-size: 11px;
+    color: #8e8e93;
+    line-height: 1.35;
+}
+
+.store-wb-close-x-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f2f2f7;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #636366;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 8px;
+    transition: background 0.15s ease;
+}
+
+.store-wb-close-x-btn:active {
+    background: #e5e5ea;
+}
+
+/* 树形滚动列表 */
+.store-wb-tree-scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 14px;
+    box-sizing: border-box;
+}
+
+.store-wb-tree-group {
+    margin-bottom: 6px;
+}
+
+.store-wb-tree-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    user-select: none;
+}
+
+.store-wb-tree-head:hover,
+.store-wb-tree-head:active {
+    background: #f2f2f7;
+}
+
+.store-wb-head-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* 圆润播放三角形 SVG */
+.store-wb-play-arrow {
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    color: #8e8e93;
+}
+
+.store-wb-play-arrow svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.store-wb-tree-group.expanded .store-wb-play-arrow {
+    transform: rotate(90deg);
+    color: #000000;
+}
+
+/* 文件夹图标 */
+.store-wb-folder-icon {
+    width: 18px;
+    height: 18px;
+    fill: #ffcc00;
+    flex-shrink: 0;
+}
+
+.store-wb-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1c1c1e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 树形折叠区与导轨线 */
+.store-wb-tree-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+
+.store-wb-tree-group.expanded .store-wb-tree-body {
+    max-height: 520px;
+}
+
+.store-wb-tree-line {
+    position: absolute;
+    left: 14px;
+    top: 0;
+    bottom: 12px;
+    width: 1.5px;
+    background: #e5e5ea;
+}
+
+.store-wb-branch-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 3px 0 6px;
+}
+
+.store-wb-tree-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    margin-left: 6px;
+    border-radius: 8px;
+    background: #fafafa;
+    border: 0.5px solid #ededf0;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s ease;
+}
+
+.store-wb-tree-item:active {
+    background: #f2f2f7;
+}
+
+.store-wb-tree-item::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    width: 10px;
+    height: 1.5px;
+    background: #e5e5ea;
+}
+
+.store-wb-item-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-wb-item-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #1c1c1e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.store-wb-item-keys {
+    font-size: 10.5px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+/* 圆角方框 Checkbox */
+.store-wb-sq-checkbox {
+    width: 19px;
+    height: 19px;
+    border-radius: 6px;
+    border: 1.8px solid #c7c7cc;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+}
+
+.store-wb-sq-checkbox svg {
+    width: 12px;
+    height: 12px;
+    display: block;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.18s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.store-wb-sq-checkbox.checked {
+    background: #000000;
+    border-color: #000000;
+}
+
+.store-wb-sq-checkbox.checked svg {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 底部操作区 */
+.store-wb-dialog-footer {
+    padding: 12px 18px calc(14px + env(safe-area-inset-bottom, 0));
+    border-top: 0.5px solid #ededf0;
+    background: #fafafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.store-wb-footer-stat {
+    font-size: 12px;
+    color: #8e8e93;
+    font-weight: 600;
+}
+
+.store-wb-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.store-wb-btn-cancel {
+    background: #e5e5ea;
+    color: #1d1d1f;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 18px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.store-wb-btn-cancel:active {
+    opacity: 0.75;
+}
+
+.store-wb-btn-confirm {
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 18px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.store-wb-btn-confirm:active {
+    opacity: 0.75;
+}
+
+/* ================= 26. 商城分享给好友居中弹窗样式 ================= */
+.store-share-dialog {
+    width: 100%;
+    max-width: 340px;
+    max-height: 76vh;
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    animation: storeWbPopIn 0.26s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+}
+
+.store-share-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px 12px;
+    border-bottom: 0.5px solid #f0f0f2;
+    flex-shrink: 0;
+}
+
+.store-share-title-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.store-share-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.3px;
+}
+
+.store-share-sub {
+    font-size: 11px;
+    color: #8e8e93;
+}
+
+/* 待分享卡片缩略预览 */
+.store-share-preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 16px 10px;
+    padding: 10px 12px;
+    background: #f7f7f9;
+    border-radius: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+
+.store-share-preview-thumb {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #e5e5ea;
+    flex-shrink: 0;
+}
+
+.store-share-preview-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.store-share-preview-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.store-share-preview-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d1d1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    margin-bottom: 3px;
+}
+
+.store-share-preview-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.store-share-preview-price {
+    font-size: 13px;
+    font-weight: 800;
+    color: #1d1d1f;
+}
+
+.store-share-preview-tag {
+    font-size: 9.5px;
+    background: #e5e5ea;
+    color: #636366;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* 搜索好友框 */
+.store-share-search-box {
+    margin: 0 16px 8px;
+    display: flex;
+    align-items: center;
+    background: #f2f2f7;
+    border-radius: 18px;
+    padding: 6px 12px;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.store-share-search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    color: #1d1d1f;
+}
+
+/* 好友列表滚动区 */
+.store-share-list-scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.store-share-contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.store-share-contact-item:hover,
+.store-share-contact-item:active {
+    background: #f2f2f7;
+}
+
+.store-share-contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e5e5ea;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-share-contact-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.store-share-contact-info {
+    flex: 1;
+    min-width: 0;
+    padding: 0 10px;
+}
+
+.store-share-contact-name {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #1d1d1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.store-share-contact-sub {
+    font-size: 11.5px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+.store-share-send-btn {
+    border: none;
+    background: #000000;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease;
+}
+
+.store-share-send-btn:active {
+    opacity: 0.75;
+}
+
+/* ================= 27. iOS 风格 AI 商城生成弹窗样式 ================= */
+.store-ai-gen-dialog {
+    width: 90%;
+    min-width: 290px;
+    max-width: 360px;
+    background: #ffffff;
+    border-radius: 22px;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 24px 56px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    margin: auto;
+    animation: storeWbPopIn 0.26s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+}
+
+/* ================= 28. 下单页选择地址居中弹窗样式 ================= */
+.store-addr-select-dialog {
+    width: 90%;
+    min-width: 290px;
+    max-width: 360px;
+    max-height: 75vh;
+    background: #ffffff;
+    border-radius: 22px;
+    box-shadow: 0 24px 56px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    margin: auto;
+    animation: storeWbPopIn 0.26s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+}
+
+.store-addr-select-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px 12px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+.store-addr-select-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1d1d1f;
+}
+
+.store-addr-select-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.store-addr-select-item {
+    background: #f8f8fa;
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.store-addr-select-item.selected {
+    background: #ffffff;
+    border-color: #1d1d1f;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.store-addr-select-actions {
+    padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0));
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.store-ai-gen-head {
+    padding: 18px 18px 12px;
+    text-align: center;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+
+.store-ai-gen-icon-bubble {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #1c1c1e;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.store-ai-gen-title {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.3px;
+    margin-bottom: 3px;
+}
+
+.store-ai-gen-desc {
+    font-size: 11.5px;
+    color: #8e8e93;
+    line-height: 1.4;
+    padding: 0 8px;
+}
+
+.store-ai-gen-body {
+    padding: 14px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.store-ai-meta-banner {
+    background: #f2f2f7;
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: #636366;
+}
+
+.store-ai-meta-banner span b {
+    color: #1d1d1f;
+}
+
+.store-ai-inputs-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* AI 生成弹窗自定义提示词折叠栏 */
+.store-ai-prompt-fold-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    contain: content;
+}
+
+.store-ai-prompt-fold-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: #ffffff;
+}
+
+.store-ai-prompt-fold-head:active {
+    background: #f7f7f9;
+}
+
+.store-ai-prompt-fold-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.store-ai-prompt-fold-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.store-ai-prompt-reset-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: #f2f2f7;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1d1d1f;
+}
+
+.store-ai-prompt-arrow-svg {
+    width: 14px;
+    height: 14px;
+    stroke: #8e8e93;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.store-ai-prompt-fold-card.expanded .store-ai-prompt-arrow-svg {
+    transform: rotate(90deg);
+}
+
+.store-ai-prompt-fold-body {
+    display: none;
+    background: #fafafc;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+    padding: 10px 14px 12px;
+}
+
+.store-ai-prompt-fold-card.expanded .store-ai-prompt-fold-body {
+    display: block;
+}
+
+.store-ai-prompt-textarea {
+    width: 100%;
+    height: 120px;
+    border: 1px solid #e5e5ea;
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    font-size: 11.5px;
+    color: #1d1d1f;
+    line-height: 1.45;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+}
+
+.store-ai-input-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.store-ai-input-row:last-child {
+    border-bottom: none;
+}
+
+.store-ai-input-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.store-ai-stepper-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.store-ai-step-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    border: 1px solid #d1d1d6;
+    background: #f2f2f7;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    transition: background 0.15s ease;
+}
+
+.store-ai-step-btn:active {
+    background: #e5e5ea;
+}
+
+.store-ai-num-input {
+    width: 36px;
+    text-align: center;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 800;
+    color: #007aff;
+    font-family: inherit;
+}
+
+.store-ai-foot-actions {
+    display: flex;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+    margin-top: 6px;
+}
+
+.store-ai-foot-btn {
+    flex: 1;
+    height: 48px;
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007aff;
+    transition: background 0.15s ease;
+}
+
+.store-ai-foot-btn.cancel {
+    color: #8e8e93;
+    border-right: 0.5px solid rgba(0, 0, 0, 0.1);
+}
+
+.store-ai-foot-btn:active {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.store-ai-gen-loading-box {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 16px;
+    text-align: center;
+    gap: 12px;
+}
+
+.store-ai-spinner {
+    width: 34px;
+    height: 34px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #007aff;
+    border-radius: 50%;
+    animation: storeAiSpin 0.8s linear infinite;
+}
+
+@keyframes storeAiSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ================= 30. 结算备注输入栏 (低饱和白灰圆润) ================= */
+.store-order-remark-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0 4px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.05);
+    margin-top: 8px;
+    gap: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.store-order-remark-label {
+    font-size: 12.5px;
+    color: #1d1d1f;
+    font-weight: 600;
+    flex-shrink: 0;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.store-order-remark-input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    outline: none;
+    background: #f4f4f6;
+    border-radius: 10px;
+    padding: 7px 10px;
+    font-size: 12px;
+    color: #1d1d1f;
+    font-family: inherit;
+    text-align: left;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.store-order-remark-input:focus {
+    background: #ffffff;
+    border-color: #1d1d1f;
+}
+
+.store-order-remark-input::placeholder {
+    color: #a1a1a6;
+    text-align: left;
+}
+
+/* ================= 31. 仿图片 UI：圆润可爱地图与派送线路 (美团黄点缀 + 低饱和白灰) ================= */
+.store-map-route-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.store-map-canvas-container {
+    width: 100%;
+    height: 190px;
+    background: #f4f4f6;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.store-map-svg-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* 美团黄可爱提示浮标 */
+.store-map-eta-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #ffc300;
+    color: #332400;
+    padding: 6px 14px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(255, 195, 0, 0.28);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    z-index: 10;
+}
+
+/* 童话速递专属黑色浮标：彻底去除黄色发光效果 */
+.store-map-eta-badge.mall-dark-badge {
+    background: #1d1d1f !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* 模仿图2：快递员圆角卡片及右侧垂直电话按钮 */
+.store-courier-fig2-card {
+    background: #f7f7f9;
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.store-courier-fig2-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.store-courier-fig2-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e5e5ea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.store-courier-fig2-avatar svg {
+    width: 24px;
+    height: 24px;
+    fill: #3a3a3c;
+}
+
+.store-courier-fig2-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1.2;
+}
+
+.store-courier-fig2-sub {
+    font-size: 11.5px;
+    color: #8e8e93;
+    margin-top: 3px;
+}
+
+.store-courier-fig2-phone-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    color: #1d1d1f;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.store-courier-fig2-phone-btn span {
+    font-size: 11px;
+    color: #1d1d1f;
+    font-weight: 600;
+}
+
+.store-map-eta-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+}
+
+.store-map-eta-dist {
+    font-size: 10px;
+    opacity: 0.85;
+    font-weight: 600;
+}
+
+.store-map-dest-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 10;
+}
+
+.store-map-dest-badge svg {
+    width: 13px;
+    height: 13px;
+    color: #ff9500;
+}
+
+/* 底部圆润骑手详情条 (包含步骤指示点、骑手电话/聊天) */
+.store-rider-cute-panel {
+    background: #232326;
+    color: #ffffff;
+    border-radius: 18px;
+    padding: 14px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.store-rider-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.store-rider-head-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.store-rider-eta-text {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.store-rider-sub-status {
+    font-size: 11px;
+    color: #a1a1a6;
+}
+
+/* 简约步骤圆点导轨条 (美团黄点缀) */
+.store-cute-step-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+}
+
+.store-cute-tracker-node {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.store-cute-tracker-node svg {
+    width: 15px;
+    height: 15px;
+    color: #8e8e93;
+}
+
+.store-cute-tracker-node.active svg {
+    color: #ffc300;
+}
+
+.store-cute-tracker-dots {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 0 8px;
+}
+
+.store-cute-dot-unit {
+    width: 3.5px;
+    height: 3.5px;
+    border-radius: 50%;
+    background: #636366;
+}
+
+.store-cute-dot-unit.active {
+    background: #ffc300;
+}
+
+.store-rider-foot-profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.store-rider-profile-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.store-rider-cute-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ffc300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.store-rider-cute-avatar svg {
+    width: 20px;
+    height: 20px;
+    color: #332400;
+}
+
+.store-rider-name-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.store-rider-cute-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.store-rider-cute-role {
+    font-size: 10.5px;
+    color: #8e8e93;
+}
+
+.store-rider-action-circles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.store-action-round-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.store-action-round-btn:active {
+    background: #ffc300;
+    color: #1d1d1f;
+}
+
+.store-action-round-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* 美团黄调点缀外卖详情卡片 */
+.store-takeout-order-status-card.meituan-theme {
+    background: linear-gradient(135deg, #2c2920 0%, #1e1d1a 100%);
+    border: 1px solid rgba(255, 195, 0, 0.15);
+}
+
+.store-takeout-order-status-card.meituan-theme .store-tk-status-badge {
+    background: rgba(255, 195, 0, 0.18);
+    color: #ffc300;
+}
+
+.store-takeout-order-status-card.meituan-theme .store-tk-status-time {
+    color: #ffc300;
+}
+
+.store-tk-progress-node.active-yellow .store-tk-node-dot {
+    background: #ffc300 !important;
+    box-shadow: 0 0 8px rgba(255, 195, 0, 0.6) !important;
+}
+
+.store-tk-progress-node.active-yellow .store-tk-node-label {
+    color: #ffc300 !important;
+}
+
+.store-tk-progress-line.active-yellow {
+    background: #ffc300 !important;
+}
+
+/* ================= 32. 微信气泡内代付卡片方案1 (无发光纯净版) ================= */
+.store-pay-goods-card-v1,
+.store-pay-takeout-card-v1 {
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
+}
+
+.store-pay-goods-card-v1:active,
+.store-pay-takeout-card-v1:active {
+    transform: scale(0.982);
+    opacity: 0.95;
+}
+
+/* ================= 33. 商品到货取件码卡片 (低饱和黑白灰极简质感) ================= */
+.store-order-pickup-box {
+    background: #1d1d1f;
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.store-pickup-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 12px;
+}
+
+.store-pickup-title-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #c7c7cc;
+}
+
+.store-pickup-status-tag {
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.store-pickup-code-val {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffffff;
+    margin: 4px 0 6px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+}
+
+.store-pickup-hint {
+    font-size: 11.5px;
+    color: #8e8e93;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.store-pickup-loc-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #a1a1a6;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.store-pickup-loc-row span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================= 34. 商品信息编辑抽屉 (低饱和白灰极简质感) ================= */
+.store-edit-product-drawer {
+    height: 84vh !important;
+    max-height: 720px !important;
+    background: #ffffff;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.16);
+    display: none;
+    flex-direction: column;
+}
+
+.store-edit-product-drawer.show {
+    display: flex;
+}
+
+.store-edit-field-block {
+    margin-bottom: 14px;
+}
+
+.store-edit-field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+}
+
+.store-edit-input,
+.store-edit-textarea,
+.store-edit-select {
+    width: 100%;
+    border: 1px solid #e5e5ea;
+    background: #f8f8fa;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #1d1d1f;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.store-edit-input:focus,
+.store-edit-textarea:focus,
+.store-edit-select:focus {
+    border-color: #1d1d1f;
+    background: #ffffff;
+}
+
+.store-edit-textarea {
+    resize: none;
+    line-height: 1.45;
+}
+
+.store-edit-select {
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+}
+
+.store-edit-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* 封面编辑区（左右居中纯净大图展示） */
+.store-edit-cover-center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 16px;
+    position: relative;
+}
+
+.store-edit-cover-center-wrap {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.store-edit-cover-center-wrap:active {
+    transform: scale(0.94);
+}
+
+.store-edit-cover-center-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+    background: #f2f2f7;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    display: block;
+}
+
+.store-edit-cover-center-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: #1d1d1f;
+    color: #ffffff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    border: 2px solid #ffffff;
+}
+
+.store-edit-cover-center-tip {
+    font-size: 11px;
+    color: #8e8e93;
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+/* 仿截图 iOS 纯冷白超清磨砂毛玻璃弹出菜单（无暗色遮罩，紧贴图片附近） */
+.store-glass-menu-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: transparent;
+    display: none;
+}
+
+.store-glass-menu-mask.show {
+    display: block;
+}
+
+.store-glass-menu-panel {
+    position: fixed;
+    width: 246px;
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(10px) saturate(130%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(130%) !important;
+    border-radius: 34px;
+    border: 0.5px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.06), inset 0 0 0 0.5px rgba(255, 255, 255, 0.45) !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 100000;
+    padding: 8px 0;
+    transform-origin: top center;
+    animation: storeGlassMenuPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes storeGlassMenuPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.store-glass-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 13px 20px;
+    cursor: pointer;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: #1d1d1f;
+    border-bottom: none;
+    transition: background 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.store-glass-menu-item:active {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.store-glass-menu-icon {
+    width: 21px;
+    height: 21px;
+    display: block;
+    flex-shrink: 0;
+}
+
+/* 规格型号 & 评价列表 */
+.store-edit-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.store-edit-action-link {
+    background: none;
+    border: none;
+    color: #1d1d1f;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+}
+
+.store-edit-action-link:active {
+    opacity: 0.6;
+}
+
+.store-edit-dynamic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.store-edit-spec-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8f8fa;
+    border: 0.5px solid #ededf0;
+    padding: 6px 8px;
+    border-radius: 10px;
+}
+
+.store-edit-spec-extra-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.store-edit-del-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 0.5px solid #e5e5ea;
+    color: #ff3b30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+}
+
+.store-edit-del-btn:active {
+    background: #fee2e2;
+}
+
+/* 评价编辑条目卡片 */
+.store-edit-review-row {
+    background: #f8f8fa;
+    border: 0.5px solid #ededf0;
+    padding: 10px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.store-edit-review-head-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 美食编辑条目卡片 */
+.store-edit-dish-row {
+    background: #f8f8fa;
+    border: 0.5px solid #ededf0;
+    padding: 10px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.store-edit-dish-thumb-preview {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #e5e5ea;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+/* Reuse the existing cover picker for every dish thumbnail. */
+.store-edit-dish-cover-picker {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    padding: 3px;
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.store-edit-dish-cover-picker .store-edit-dish-thumb-preview {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 9px;
+}
+.store-edit-dish-cover-picker:active { background: #ededf0; }
+.store-edit-dish-cover-picker:focus-visible { outline: 2px solid #8e8e93; outline-offset: 2px; }
+.store-edit-dish-cover-badge {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    min-width: 26px;
+    padding: 2px 4px;
+    border-radius: 5px;
+    background: rgba(32,32,35,.72);
+    color: #fff;
+    font-size: 9px;
+    line-height: 1.25;
+    font-weight: 650;
+    text-align: center;
+    pointer-events: none;
+}
+.store-edit-dish-cover-hint {
+    margin: 7px 0 0;
+    color: #8e8e93;
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+
+
+
+/* Store search: full-screen native-style catalog results. */
+#storeSearchSubpage {
+    background: #f5f5f7;
+}
+#storeSearchSubpage .store-subpage-nav {
+    background: #ffffff;
+}
+.store-search-main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+}
+.store-search-input-row {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border-radius: 14px;
+    background: #ffffff;
+    padding: 0 14px;
+    border: 1px solid rgba(0, 0, 0, 0.045);
+    color: #8e8e93;
+}
+.store-search-input-row input {
+    border: 0;
+    background: transparent;
+    color: #1d1d1f;
+    font: inherit;
+    font-size: 15px;
+    outline: none;
+    flex: 1;
+    min-width: 0;
+}
+.store-search-input-row input::placeholder {
+    color: #a1a1a6;
+}
+.store-search-clear {
+    background: #f2f2f7;
+    border: 0;
+    border-radius: 12px;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 650;
+    color: #636366;
+    padding: 5px 9px;
+    cursor: pointer;
+}
+.store-search-clear[hidden] {
+    display: none;
+}
+.store-search-tabs {
+    margin-top: 16px;
+    background: #e9e9ee;
+    border-radius: 12px;
+    padding: 4px;
+    display: flex;
+    gap: 3px;
+}
+.store-search-tab {
+    min-width: 0;
+    flex: 1;
+    padding: 9px 0;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #636366;
+    font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
+}
+.store-search-tab.active {
+    background: #ffffff;
+    color: #1d1d1f;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.09);
+}
+.store-search-count {
+    font-size: 12px;
+    font-weight: 650;
+    color: #8e8e93;
+    padding: 21px 3px 11px;
+}
+.store-search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.store-search-result {
+    width: 100%;
+    padding: 11px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 13px;
+    border: 0;
+    border-radius: 16px;
+    background: #ffffff;
+    color: #1d1d1f;
+    cursor: pointer;
+    font: inherit;
+    min-height: 98px;
+}
+.store-search-result:active {
+    background: #f9f9fb;
+}
+.store-search-result > img {
+    width: 78px;
+    height: 78px;
+    flex: 0 0 78px;
+    border-radius: 11px;
+    object-fit: cover;
+    background: #f2f2f7;
+}
+.store-search-result-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+.store-search-result-tag {
+    color: #8e8e93;
+    font-size: 10px;
+    font-weight: 700;
+}
+.store-search-result-title {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    word-break: break-word;
+}
+.store-search-result-subtitle {
+    font-size: 11px;
+    line-height: 1.3;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.store-search-result-price {
+    font-size: 12px;
+    font-weight: 750;
+    margin-top: 2px;
+}
+.store-search-result > svg {
+    width: 16px;
+    height: 16px;
+    color: #aeaeb2;
+    fill: currentColor;
+    stroke: none;
+    flex: 0 0 16px;
+}
+.store-search-empty {
+    background: #ffffff;
+    border-radius: 17px;
+    padding: 56px 20px;
+    text-align: center;
+}
+.store-search-empty-title {
+    font-size: 15px;
+    font-weight: 750;
+    color: #1d1d1f;
+}
+.store-search-empty p {
+    color: #8e8e93;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 10px 0 0;
+}
+
+/* iOS 18 product editing sheet. Keep all rules scoped to this drawer. */
+#storeEditProductDrawerMask {
+    background: rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: opacity 0.22s ease;
+}
+
+#storeEditProductDrawerBox {
+    height: min(89dvh, 810px) !important;
+    max-height: min(89dvh, 810px) !important;
+    min-height: 0;
+    padding: 9px 0 0;
+    border-radius: 29px 29px 0 0;
+    border: 0.5px solid rgba(255, 255, 255, 0.72);
+    border-bottom: 0;
+    background: #f5f5f7;
+    box-shadow: 0 -15px 48px rgba(0, 0, 0, 0.18);
+}
+
+#storeEditProductDrawerBox.show {
+    animation: storeProductSheetEnter 0.27s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes storeProductSheetEnter {
+    from { opacity: 0.96; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#storeEditProductDrawerBox .store-sheet-pull-bar {
+    width: 36px;
+    height: 5px;
+    margin: 0 auto 10px;
+    background: #c7c7cc;
+    border-radius: 5px;
+}
+
+#storeEditProductDrawerBox .store-edit-ios-header {
+    text-align: center;
+    padding: 6px 16px 17px;
+    flex-shrink: 0;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.055);
+}
+
+#storeEditProductDrawerBox .store-edit-ios-title {
+    color: #171719;
+    font-size: 17px;
+    font-weight: 750;
+    line-height: 1.3;
+    letter-spacing: -0.45px;
+}
+
+#storeEditProductDrawerBox .store-edit-ios-subtitle {
+    color: #8e8e93;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+#storeEditProductDrawerScroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 8px 16px 28px;
+    box-sizing: border-box;
+}
+
+#storeEditProductDrawerScroll::-webkit-scrollbar {
+    display: none;
+}
+
+#storeEditProductDrawerBox .store-edit-ios-section {
+    margin: 12px 0 19px;
+}
+
+#storeEditProductDrawerBox .store-edit-ios-section-title {
+    padding: 0 5px 9px;
+    font-size: 12px;
+    font-weight: 650;
+    color: #6b6b70;
+    letter-spacing: 0.08px;
+}
+
+#storeEditProductDrawerBox .store-edit-ios-card {
+    border-radius: 17px;
+    border: 0.5px solid rgba(0, 0, 0, 0.055);
+    background: #ffffff;
+    padding: 17px 15px 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.018);
+    overflow: hidden;
+}
+
+#storeEditProductDrawerBox .store-edit-field-block {
+    min-width: 0;
+    margin-bottom: 16px;
+}
+
+#storeEditProductDrawerBox .store-edit-field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 650;
+    color: #48484a;
+    margin-bottom: 8px;
+    letter-spacing: -0.12px;
+}
+
+#storeEditProductDrawerBox .store-edit-input,
+#storeEditProductDrawerBox .store-edit-textarea,
+#storeEditProductDrawerBox .store-edit-select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    background-color: #f4f4f7;
+    color: #1d1d1f;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+#storeEditProductDrawerBox .store-edit-input::placeholder,
+#storeEditProductDrawerBox .store-edit-textarea::placeholder {
+    color: #a1a1a6;
+    font-weight: 400;
+}
+
+#storeEditProductDrawerBox .store-edit-input:focus,
+#storeEditProductDrawerBox .store-edit-textarea:focus,
+#storeEditProductDrawerBox .store-edit-select:focus {
+    border-color: #b9b9c0;
+    background-color: #ffffff;
+}
+
+#storeEditProductDrawerBox .store-edit-select {
+    padding-right: 34px;
+    background-position: right 12px center;
+}
+
+#storeEditProductDrawerBox .store-edit-textarea {
+    min-height: 76px;
+    resize: vertical;
+    max-height: 160px;
+}
+
+#storeEditProductDrawerBox .store-edit-form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+}
+
+#storeEditProductDrawerBox #storeEditPriceInput {
+    font-weight: 750;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Move the existing cover above the shop picker without changing its behavior. */
+#storeEditProductDrawerScroll > .store-edit-ios-section:first-child .store-edit-ios-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+}
+
+#storeEditProductDrawerScroll > .store-edit-ios-section:first-child .store-edit-cover-center-container {
+    order: -1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 17px 0;
+    min-width: 0;
+}
+
+#storeEditProductDrawerBox .store-edit-cover-center-wrap {
+    width: 106px;
+    height: 106px;
+    border-radius: 16px;
+    flex: 0 0 106px;
+}
+
+#storeEditProductDrawerBox .store-edit-cover-center-img {
+    border-radius: 16px;
+    box-shadow: none;
+    border: 0.5px solid rgba(0, 0, 0, 0.075);
+    background: #f2f2f7;
+}
+
+#storeEditProductDrawerBox .store-edit-cover-center-wrap:focus-visible {
+    outline: 2px solid #636366 !important;
+    outline-offset: 3px;
+}
+
+#storeEditProductDrawerBox .store-edit-cover-center-badge {
+    right: -5px;
+    bottom: -4px;
+    width: 29px;
+    height: 29px;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.13);
+}
+
+#storeEditProductDrawerBox .store-edit-cover-center-tip {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    color: #8e8e93;
+    font-size: 12px;
+    line-height: 1.55;
+    font-weight: 500;
+    text-align: left;
+}
+
+#storeEditProductDrawerBox .store-edit-cover-center-tip::before {
+    content: '商品封面';
+    display: block;
+    color: #262628;
+    font-size: 14px;
+    font-weight: 750;
+    margin-bottom: 6px;
+}
+
+#storeEditProductDrawerScroll > .store-edit-ios-section:first-child .store-edit-field-block {
+    margin: 0;
+    padding: 16px 0 17px;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Compact, readable list editing, with the outer section label as the only heading. */
+#storeEditProductDrawerBox .store-edit-section-header {
+    min-height: 34px;
+    margin-bottom: 13px;
+    justify-content: flex-end;
+}
+
+#storeEditProductDrawerScroll > .store-edit-ios-section:nth-child(n+3) .store-edit-section-header .store-edit-field-label {
+    display: none;
+}
+
+#storeEditProductDrawerBox .store-edit-action-link {
+    border: 0.5px solid #e5e5ea;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    border-radius: 11px;
+    padding: 9px 13px;
+    font-size: 12px;
+    font-weight: 700;
+    min-height: 35px;
+}
+
+#storeEditProductDrawerBox .store-edit-action-link:active {
+    background: #e5e5ea;
+    opacity: 1;
+}
+
+#storeEditProductDrawerBox .store-edit-dynamic-list {
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+#storeEditProductDrawerBox .store-edit-spec-row,
+#storeEditProductDrawerBox .store-edit-review-row {
+    min-width: 0;
+    padding: 11px;
+    border-radius: 13px;
+    border: 0.5px solid #ececf0;
+    background: #f6f6f8;
+    gap: 9px;
+}
+
+#storeEditProductDrawerBox .store-edit-spec-row > .store-edit-input,
+#storeEditProductDrawerBox .store-edit-review-row .store-edit-input,
+#storeEditProductDrawerBox .store-edit-review-row .store-edit-select,
+#storeEditProductDrawerBox .store-edit-review-row .store-edit-textarea {
+    background-color: #ffffff;
+    min-width: 0;
+    min-height: 39px;
+    padding: 9px 10px;
+    border: 0.5px solid #ececf0;
+    border-radius: 9px;
+    font-size: 12px;
+}
+
+#storeEditProductDrawerBox .store-edit-spec-extra-wrap {
+    gap: 5px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+#storeEditProductDrawerBox .store-edit-spec-extra-wrap .store-edit-input {
+    width: 62px !important;
+    min-height: 39px;
+    padding: 8px 5px;
+    background-color: #ffffff;
+    text-align: center;
+}
+
+#storeEditProductDrawerBox .store-edit-del-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    color: #8e8e93;
+}
+
+#storeEditProductDrawerBox .store-edit-del-btn:active {
+    background: #e5e5ea;
+}
+
+#storeEditProductDrawerBox .store-edit-review-head-line {
+    gap: 7px;
+}
+
+#storeEditProductDrawerBox .store-edit-review-head-line > .store-edit-input {
+    flex: 1 1 auto !important;
+    min-width: 0;
+}
+
+#storeEditProductDrawerBox .store-edit-review-head-line > .store-edit-select {
+    flex: 0 0 104px;
+    width: 104px !important;
+    padding-right: 22px;
+}
+
+#storeEditProductDrawerBox .store-edit-review-row .store-edit-textarea {
+    min-height: 65px;
+    line-height: 1.5;
+}
+
+/* Fixed bottom actions remain visible while long specifications and reviews scroll. */
+#storeEditProductDrawerBox .store-edit-ios-footer {
+    margin-top: auto;
+    flex-shrink: 0;
+    gap: 10px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.94);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.075);
+    backdrop-filter: blur(20px) saturate(115%);
+    -webkit-backdrop-filter: blur(20px) saturate(115%);
+}
+
+#storeEditProductDrawerBox .store-edit-ios-footer button {
+    height: 48px;
+    border-radius: 13px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#storeEditProductDrawerBox .store-edit-ios-footer .store-sheet-cancel-btn {
+    flex: 0.9;
+    background: #f2f2f7;
+    color: #3a3a3c;
+}
+
+#storeEditProductDrawerBox .store-edit-ios-footer .store-sheet-save-btn {
+    flex: 1.8;
+    background: #1d1d1f;
+    color: #ffffff;
+}
+
+#storeEditProductDrawerBox .store-image-generating .store-edit-cover-center-img {
+    opacity: 0.48;
+}
+
+@media (max-width: 350px) {
+    #storeEditProductDrawerBox .store-edit-form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    #storeEditProductDrawerBox .store-edit-cover-center-wrap {
+        width: 94px;
+        height: 94px;
+        flex-basis: 94px;
+    }
+    #storeEditProductDrawerScroll > .store-edit-ios-section:first-child .store-edit-cover-center-container {
+        gap: 12px;
+    }
+    #storeEditProductDrawerBox .store-edit-review-head-line > .store-edit-select {
+        flex-basis: 95px;
+        width: 95px !important;
+    }
+}
+
+@media (max-height: 620px) {
+    #storeEditProductDrawerBox {
+        height: 94dvh !important;
+        max-height: 94dvh !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #storeEditProductDrawerBox.show {
+        animation: none;
+    }
+    #storeEditProductDrawerMask {
+        transition: none;
+    }
+}
+
+
+/* Mall settings and personalization: native iOS monochrome controls. */
+#storeSettingsSubpage .store-settings-scroll,
+#storeAppearanceSubpage .store-appearance-scroll {
+    padding: 15px 16px 112px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #f5f5f7;
+    box-sizing: border-box;
+}
+#storeAppearanceSubpage .store-appearance-scroll { padding-bottom: 38px; }
+#storeSettingsSubpage .store-settings-section-label {
+    padding: 3px 4px 0;
+    color: #92929a;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 2px;
+}
+#storeSettingsSubpage .store-settings-group-label,
+#storeAppearanceSubpage .store-settings-group-label {
+    color: #777780;
+    margin: 23px 4px 9px;
+    font-size: 12px;
+    font-weight: 650;
+    letter-spacing: .3px;
+}
+#storeSettingsSubpage .store-current-account-card,
+#storeSettingsSubpage .store-settings-account-item {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.055);
+    border-radius: 17px;
+    box-shadow: none;
+}
+#storeSettingsSubpage .store-current-account-card { padding: 17px 15px; }
+#storeSettingsSubpage .store-settings-badge-active {
+    background: #f0f0f2;
+    color: #333338;
+    padding: 4px 7px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+#storeSettingsSubpage .store-settings-account-name { min-width: 0; flex-wrap: wrap; }
+#storeSettingsSubpage .store-settings-personalize-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.055);
+    border-radius: 17px;
+    color: #1c1c1e;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    box-sizing: border-box;
+    appearance: none;
+}
+#storeSettingsSubpage .store-settings-personalize-row:active { background: #f0f0f2; }
+#storeSettingsSubpage .store-settings-row-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: #f2f2f4;
+    border-radius: 13px;
+    color: #333;
+    flex: none;
+}
+#storeSettingsSubpage .store-settings-row-icon svg { width: 23px; height: 23px; fill: #92929a; }
+#storeSettingsSubpage .store-settings-row-title {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+#storeSettingsSubpage .store-settings-row-title strong { font-size: 15px; font-weight: 700; }
+#storeSettingsSubpage .store-settings-row-title small { font-size: 11px; color: #85858d; }
+#storeSettingsSubpage .store-settings-row-chevron { width: 17px; height: 17px; flex: none; color: #a9a9af; }
+#storeSettingsSubpage .store-settings-footer-tip {
+    color: #9898a1;
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 18px 8px 0;
+}
+#storeSettingsSubpage .store-settings-logout-btn {
+    background: #fff;
+    color: #ff3b30;
+    border: 1px solid #e9e9ed;
+    border-radius: 13px;
+    font-size: 14px;
+}
+#storeAppearanceSubpage .store-appearance-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.05);
+    border-radius: 17px;
+    overflow: hidden;
+    padding: 0 15px 15px;
+}
+#storeAppearanceSubpage .store-appearance-switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 17px 0;
+    cursor: pointer;
+}
+#storeAppearanceSubpage .store-appearance-switch-row > span:first-child,
+#storeAppearanceSubpage .store-appearance-editor-head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+#storeAppearanceSubpage .store-appearance-switch-row strong,
+#storeAppearanceSubpage .store-appearance-editor-head strong {
+    font-size: 14px;
+    color: #1d1d1f;
+    font-weight: 700;
+}
+#storeAppearanceSubpage .store-appearance-switch-row small {
+    font-size: 11px;
+    color: #8e8e93;
+    line-height: 1.5;
+}
+#storeAppearanceSubpage .store-appearance-toggle {
+    width: 50px;
+    height: 30px;
+    flex: 0 0 50px;
+    position: relative;
+}
+#storeAppearanceSubpage .store-appearance-toggle input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+}
+#storeAppearanceSubpage .store-appearance-toggle-track {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    background: #d1d1d6;
+    transition: background .22s ease;
+}
+#storeAppearanceSubpage .store-appearance-toggle-track::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.17);
+    transition: transform .22s ease;
+}
+#storeAppearanceSubpage .store-appearance-toggle input:checked + .store-appearance-toggle-track { background: #222; }
+#storeAppearanceSubpage .store-appearance-toggle input:checked + .store-appearance-toggle-track::before { transform: translateX(20px); }
+#storeAppearanceSubpage .store-appearance-toggle input:focus-visible + .store-appearance-toggle-track { outline: 2px solid #555; outline-offset: 3px; }
+#storeAppearanceSubpage .store-appearance-help {
+    font-size: 11px;
+    color: #929299;
+    line-height: 1.65;
+    margin: 12px 1px 0;
+}
+#storeAppearanceSubpage .store-appearance-editor-head {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 0 12px;
+}
+#storeAppearanceSubpage .store-appearance-editor-head span { font-size: 10px; color: #999; }
+#storeAppearanceSubpage .store-appearance-css-editor {
+    display: block;
+    width: 100%;
+    min-height: 190px;
+    box-sizing: border-box;
+    resize: vertical;
+    border-radius: 12px;
+    border: 1px solid #e6e6ea;
+    padding: 12px;
+    background: #f8f8fa;
+    color: #242429;
+    font: 12px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace;
+    outline: none;
+    -webkit-appearance: none;
+}
+#storeAppearanceSubpage .store-appearance-css-editor:focus { border-color: #a5a5ad; box-shadow: none; }
+#storeAppearanceSubpage .store-appearance-actions { display: flex; gap: 9px; margin-top: 14px; }
+#storeAppearanceSubpage .store-appearance-actions button {
+    flex: 1;
+    min-width: 0;
+    height: 41px;
+    border: 0;
+    border-radius: 11px;
+    background: #f0f0f2;
+    color: #27272b;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+}
+#storeAppearanceSubpage .store-appearance-actions button.store-appearance-primary { background: #222; color: #fff; }
+#storeAppearanceSubpage .store-appearance-reset {
+    display: block;
+    width: 100%;
+    margin: 19px 0 10px;
+    background: none;
+    border: 0;
+    color: #85858b;
+    font-size: 12px;
+    padding: 9px;
+    cursor: pointer;
+}
+
+
+/* Phosphor Fill product artwork: single gray glyph on clean neutral space. */
+.store-card-cover-wrap.store-vector-cover {
+    padding-top: 74%;
+    background: #f8f8fa;
+}
+.store-card-cover-wrap.store-vector-cover > img {
+    object-fit: cover;
+    background: #f8f8fa;
+}
+
+
+/* Scoped second-level content creation screen. */
+#storeAppUI .store-create-entry-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+#storeAppUI .store-create-entry-btn svg {
+    width: 19px;
+    height: 19px;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 1px;
+    stroke-linejoin: round;
+}
+#storeCreateCatalogSubpage {
+    background: #fff;
+}
+#storeCreateCatalogSubpage .store-create-page-scroll {
+    background: #fff;
+    box-sizing: border-box;
+    padding: 20px 18px 85px;
+}
+#storeCreateCatalogSubpage .store-create-segment {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    height: 44px;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 13px;
+    background: #f2f2f5;
+    box-sizing: border-box;
+}
+#storeCreateCatalogSubpage .store-create-segment-tab {
+    appearance: none;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #86868b;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+#storeCreateCatalogSubpage .store-create-segment-tab.active {
+    background: #fff;
+    color: #1d1d1f;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .075);
+}
+#storeCreateCatalogSubpage .store-create-segment-tab:focus-visible,
+#storeCreateCatalogSubpage .store-create-action-row:focus-visible {
+    outline: 2px solid #8e8e93 !important;
+    outline-offset: 2px !important;
+}
+#storeCreateCatalogSubpage .store-create-section {
+    padding-top: 42px;
+}
+#storeCreateCatalogSubpage .store-create-section-head {
+    margin-bottom: 23px;
+}
+#storeCreateCatalogSubpage .store-create-section-head h2 {
+    margin: 0 0 10px;
+    color: #161619;
+    font-size: 25px;
+    font-weight: 750;
+    letter-spacing: -.6px;
+    line-height: 1.25;
+}
+#storeCreateCatalogSubpage .store-create-section-head p {
+    margin: 0;
+    color: #8e8e93;
+    font-size: 13px;
+    line-height: 1.75;
+}
+#storeCreateCatalogSubpage .store-create-action-row {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 80px;
+    padding: 15px;
+    gap: 13px;
+    text-align: left;
+    border: 1px solid #ededf0;
+    border-radius: 15px;
+    background: #fff;
+    color: #1c1c1e;
+    cursor: pointer;
+    transition: background-color .2s ease, transform .18s ease;
+}
+#storeCreateCatalogSubpage .store-create-action-row:active {
+    background: #f7f7f9;
+    transform: scale(.99);
+}
+#storeCreateCatalogSubpage .store-create-action-glyph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    color: #fff;
+    border-radius: 12px;
+    background: #1e1e20;
+}
+#storeCreateCatalogSubpage .store-create-action-text {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: 5px;
+}
+#storeCreateCatalogSubpage .store-create-action-text strong {
+    color: #1c1c1e;
+    font-size: 14px;
+    font-weight: 680;
+}
+#storeCreateCatalogSubpage .store-create-action-text small {
+    color: #8e8e93;
+    font-size: 11px;
+    font-weight: 450;
+}
+#storeCreateCatalogSubpage .store-create-chevron {
+    flex-shrink: 0;
+    color: #b4b4bb;
+}
+#storeCreateCatalogSubpage .store-create-section-note {
+    margin: 17px 4px 0;
+    color: #a1a1a7;
+    font-size: 11px;
+    line-height: 1.7;
+}
+@media (max-width: 360px) {
+    #storeCreateCatalogSubpage .store-create-page-scroll { padding-left: 13px; padding-right: 13px; }
+}

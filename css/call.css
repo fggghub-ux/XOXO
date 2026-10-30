@@ -1,0 +1,3379 @@
+/* 电话 APP 容器 */
+.calling-app-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 7000;
+    background-color: #ffffff;
+    color: #000000;
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* 页面子容器 */
+.calling-page {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.calling-page.calling-active {
+    display: flex;
+}
+
+/* 白色磨砂毛玻璃 */
+.calling-frosted-glass {
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+/* 顶部导航栏 */
+.calling-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    padding-top: max(50px, calc(44px + env(safe-area-inset-top)));
+    z-index: 50;
+    min-height: 94px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calling-header-title {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+/* 磨砂胶囊按钮与磨砂圆圈按钮 */
+.calling-frosted-capsule-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calling-frosted-circle-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    cursor: pointer;
+}
+
+/* 通话记录分段控制器 */
+.calling-frosted-segmented-control {
+    display: flex;
+    padding: 4px;
+    border-radius: 24px;
+    background-color: rgba(245, 245, 245, 0.8);
+}
+
+.calling-seg-item {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.calling-seg-item.calling-active {
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.calling-large-title {
+    font-size: 32px;
+    font-weight: 700;
+    padding: 4px 20px 12px 20px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* 搜索栏 */
+.calling-search-container {
+    padding: 4px 20px 12px 20px;
+    z-index: 50;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calling-search-bar {
+    display: flex;
+    align-items: center;
+    border-radius: 24px;
+    padding: 8px 16px;
+    height: 44px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calling-search-icon {
+    color: #8e8e93;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px;
+    min-height: 20px;
+    flex-shrink: 0;
+}
+
+.calling-search-input {
+    border: none;
+    background: transparent;
+    flex: 1;
+    margin: 0 10px;
+    font-size: 16px;
+    color: #000;
+    outline: none;
+    min-width: 0;
+}
+.calling-search-input::placeholder { color: #8e8e93; }
+
+/* 列表区域 */
+.calling-list-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 120px;
+    position: relative;
+    width: 100%;
+}
+
+.calling-list-item {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 通讯录角色间距增大 */
+.calling-contact-page-item .calling-item-content {
+    padding: 24px 0 !important;
+}
+
+.calling-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #a3b1c6;
+    margin-right: 16px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.calling-avatar.calling-default-avatar {
+    background: linear-gradient(180deg, #9fb2d8, #7a8ebc);
+}
+
+.calling-item-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 0.5px solid #e5e5ea;
+}
+.calling-list-item:last-child .calling-item-content { border-bottom: none; }
+
+.calling-item-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+.calling-item-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+}
+.calling-item-title.calling-missed { color: #ff3b30; }
+
+.calling-item-subtitle {
+    font-size: 14px;
+    color: #8e8e93;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 语音留言最多两行截断 */
+.calling-vm-transcription-text {
+    font-size: 14px;
+    color: #8e8e93;
+    line-height: 1.35;
+    margin-top: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+
+.calling-outgoing-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: #8e8e93;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.calling-item-right {
+    display: flex;
+    align-items: center;
+    color: #8e8e93;
+    font-size: 15px;
+    gap: 12px;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.calling-phone-btn-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f2f2f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.calling-phone-btn-circle:active {
+    background-color: #e5e5ea;
+    transform: scale(0.92);
+}
+
+.calling-phone-btn-circle svg {
+    width: 18px;
+    height: 18px;
+    fill: #007aff;
+}
+
+/* ==========================================================================
+   最近通话编辑模式与多选删除样式
+   ========================================================================== */
+.calling-select-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid #c7c7cc;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    background-color: #ffffff;
+}
+
+.calling-recents-editing .calling-select-circle {
+    display: flex;
+}
+
+.calling-select-circle.calling-selected {
+    background-color: #ff3b30;
+    border-color: #ff3b30;
+}
+
+.calling-select-circle.calling-selected::after {
+    content: '';
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+}
+
+/* 编辑模式底部删除操作栏 */
+.calling-recents-edit-bar {
+    position: absolute;
+    bottom: 24px;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    height: 64px;
+    border-radius: 32px;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 150;
+    box-sizing: border-box;
+}
+
+.calling-recents-edit-btn {
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 12px;
+    user-select: none;
+}
+
+.calling-recents-btn-all {
+    color: #007aff;
+}
+
+.calling-recents-btn-delete {
+    color: #ff3b30;
+    opacity: 0.4;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.calling-recents-btn-delete.calling-can-delete {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.calling-section-title {
+    background-color: #ffffff;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8e8e93;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.calling-alphabet-index {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-45%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #007aff;
+    z-index: 20;
+}
+.calling-alphabet-index span { margin: 1px 0; }
+
+/* 拨号键盘整体下移与白色磨砂圆圈按键 */
+.calling-keypad-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 14vh;
+    width: 100%;
+}
+.calling-number-display {
+    font-size: 36px;
+    font-weight: 500;
+    height: 50px;
+    margin-bottom: 24px;
+    text-align: center;
+    letter-spacing: 1px;
+    width: 100%;
+}
+.calling-keypad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 76px);
+    gap: 16px 28px;
+    justify-content: center;
+}
+.calling-key-btn {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+.calling-key-btn:active {
+    background-color: rgba(230, 230, 230, 0.85);
+    transform: scale(0.96);
+}
+.calling-key-num { font-size: 34px; font-weight: 500; line-height: 1.1; color: #000; }
+.calling-key-letters { font-size: 10px; font-weight: 600; color: #8e8e93; letter-spacing: 1.5px; }
+
+.calling-call-action-row {
+    display: grid;
+    grid-template-columns: repeat(3, 76px);
+    gap: 16px 28px;
+    justify-content: center;
+    margin-top: 20px;
+}
+.calling-call-btn {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background-color: #34c759;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 2;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+}
+.calling-call-btn:active { transform: scale(0.96); }
+.calling-delete-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #8e8e93;
+    grid-column: 3;
+    cursor: pointer;
+}
+
+/* 语音留言 */
+.calling-carrier-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px 14px 20px;
+    border-bottom: 0.5px solid #e5e5ea;
+    width: 100%;
+    box-sizing: border-box;
+}
+.calling-carrier-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+}
+.calling-call-carrier-btn {
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 16px;
+}
+
+/* ==========================================================================
+   方案 3-1：iOS 原生悬浮双白卡语音信箱呼叫抽屉
+   ========================================================================== */
+.calling-voicemail-compose-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10000000;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.calling-voicemail-compose-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.calling-voicemail-compose-sheet {
+    width: 100%;
+    height: 85%;
+    max-height: 85vh;
+    background-color: #F2F2F7;
+    border-radius: 28px 28px 0 0;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.25, 1);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.calling-voicemail-compose-overlay.show .calling-voicemail-compose-sheet {
+    transform: translateY(0);
+}
+
+/* 顶部拖拽把手 */
+.calling-vm-compose-drag-row {
+    width: 100%;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: 6px;
+}
+
+.calling-vm-compose-drag-pill {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: #d1d1d6;
+}
+
+/* 抽屉顶部导航栏 */
+.calling-vm-compose-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 20px 10px 20px;
+    flex-shrink: 0;
+}
+
+.calling-vm-compose-header-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.calling-vm-compose-done-btn {
+    font-size: 16px;
+    color: #007aff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* 顶部双白卡排版 */
+.calling-vm-mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 16px 14px 16px;
+    flex-shrink: 0;
+}
+
+.calling-vm-mode-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E5EA;
+    border-radius: 14px;
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.15s ease;
+}
+
+.calling-vm-mode-card.is-active {
+    background: #E5E5EA;
+    border-color: #D1D1D6;
+    box-shadow: none;
+}
+
+.calling-vm-mode-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calling-vm-mode-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.calling-vm-mode-card-desc {
+    font-size: 11px;
+    color: #8e8e93;
+    line-height: 1.35;
+}
+
+.calling-vm-section-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8e8e93;
+    padding: 0 20px 6px 20px;
+    flex-shrink: 0;
+}
+
+/* 列表滚动区域 */
+.calling-vm-compose-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 角色列表纯白卡片群组 */
+.calling-vm-white-group {
+    background: #FFFFFF;
+    border: 1px solid #E5E5EA;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.calling-vm-row-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 0.5px solid #E5E5EA;
+    cursor: pointer;
+    gap: 12px;
+    background: #FFFFFF;
+    transition: background-color 0.15s ease;
+}
+
+.calling-vm-row-item:last-child {
+    border-bottom: none;
+}
+
+.calling-vm-row-item:active {
+    background-color: #F8F8FA;
+}
+
+/* 圆圈 Checkbox */
+.calling-vm-check-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid #c7c7cc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.calling-vm-check-circle.checked {
+    background: #007aff;
+    border-color: #007aff;
+}
+
+.calling-vm-check-circle svg {
+    width: 12px;
+    height: 12px;
+    stroke: #ffffff;
+    display: none;
+}
+
+.calling-vm-check-circle.checked svg {
+    display: block;
+}
+
+.calling-vm-compose-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #a3b1c6;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+
+/* 用户留信独立纯白卡片 */
+.calling-vm-user-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E5EA;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.calling-vm-user-card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.calling-vm-textarea {
+    width: 100%;
+    height: 62px;
+    background: #f8f8fa;
+    border: 0.5px solid #e5e5ea;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #000000;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s, background-color 0.15s;
+    font-family: inherit;
+}
+
+.calling-vm-textarea:focus {
+    border-color: #007aff;
+    background: #ffffff;
+}
+
+/* 底部操作栏 */
+.calling-vm-bottom-bar {
+    padding: 12px 16px 28px 16px;
+    background: #ffffff;
+    border-top: 0.5px solid #e5e5ea;
+    flex-shrink: 0;
+}
+
+.calling-vm-exec-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 24px;
+    background: #007aff;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.calling-vm-exec-btn:active {
+    opacity: 0.8;
+}
+
+.calling-vm-exec-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.calling-vm-compose-empty {
+    padding: 40px 16px;
+    color: #8e8e93;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* 悬浮胶囊底栏 */
+.calling-floating-tab-bar {
+    position: absolute;
+    bottom: 24px;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    height: 64px;
+    border-radius: 32px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 6px;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.calling-tab-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #000000;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.calling-tab-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 4px;
+    border-radius: 24px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.calling-tab-item.calling-active .calling-tab-content {
+    background-color: #f0f0f2;
+    color: #007aff;
+    padding: 0 36px;
+}
+
+.calling-tab-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1px;
+}
+
+.calling-tab-label {
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.calling-tab-icon-wrapper svg { fill: currentColor; }
+.calling-tab-item.calling-hollow-icon svg { fill: none; stroke: currentColor; }
+
+/* 联系人详情卡片页样式（低饱和白灰色调） */
+.calling-detail-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 16px 120px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+}
+
+.calling-detail-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.calling-detail-avatar {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    background-color: #e5e5ea;
+    color: #8e8e93;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 38px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.calling-detail-sub {
+    font-size: 13px;
+    color: #8e8e93;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.calling-detail-name {
+    font-size: 25px;
+    font-weight: 700;
+    color: #1c1c1e;
+    text-align: center;
+    letter-spacing: -0.5px;
+    word-break: break-word;
+}
+
+.calling-detail-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: 100%;
+    max-width: 330px;
+    margin-bottom: 20px;
+}
+
+.calling-detail-action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.calling-detail-action-circle {
+    width: 100%;
+    height: 48px;
+    border-radius: 14px;
+    background-color: #f2f2f7;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.calling-detail-action-circle:active {
+    background-color: #e5e5ea;
+    transform: scale(0.96);
+}
+
+.calling-detail-card-group {
+    width: 100%;
+    margin-bottom: 14px;
+}
+
+.calling-detail-card-header {
+    font-size: 13px;
+    color: #8e8e93;
+    margin-bottom: 6px;
+    margin-left: 8px;
+    font-weight: 600;
+}
+
+.calling-detail-card {
+    background-color: #f2f2f7;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.calling-detail-card-label {
+    font-size: 13px;
+    color: #8e8e93;
+    margin-bottom: 4px;
+}
+
+.calling-detail-card-value {
+    font-size: 17px;
+    color: #1c1c1e;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.calling-detail-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.calling-detail-history-item:last-child {
+    border-bottom: none;
+    padding-bottom: 2px;
+}
+
+.calling-detail-history-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.calling-detail-history-title {
+    font-size: 15px;
+    color: #000000;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.calling-detail-history-sub {
+    font-size: 13px;
+    color: #8e8e93;
+}
+
+.calling-detail-history-time {
+    font-size: 14px;
+    color: #8e8e93;
+}
+
+/* ==========================================================================
+   通话全屏页面与悬浮小窗样式 (iOS 风格暗色渐变)
+   ========================================================================== */
+.calling-in-call-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 9999999;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: calc(44px + env(safe-area-inset-top, 0px)) 24px calc(36px + env(safe-area-inset-bottom, 0px)) 24px;
+}
+
+.calling-in-call-screen.calling-screen-active {
+    display: flex;
+}
+
+.calling-in-call-screen.calling-video-active {
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.calling-video-call-layer {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+    background: #000000;
+    z-index: auto;
+}
+
+.calling-video-call-layer.is-active {
+    display: block;
+}
+
+.calling-video-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    background: #0b0b0d;
+}
+
+.calling-video-character-stage { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffffff; background: #151519 center / cover no-repeat; isolation: isolate; }
+.calling-video-character-stage::before { display: none; }
+.calling-video-character-stage::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.12), transparent 38%, rgba(0,0,0,.12)); }
+.calling-video-character-stage.has-character-image > .calling-video-character-avatar,
+.calling-video-character-stage.has-character-image > .calling-video-character-name,
+.calling-video-character-stage.has-character-image > .calling-video-character-status { display: none; }
+.calling-video-character-avatar { width: min(48vw, 196px); aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #9fb2d8 center / cover no-repeat; border: 2px solid rgba(255, 255, 255, 0.42); box-shadow: 0 14px 40px rgba(0, 0, 0, 0.38); font-size: 64px; font-weight: 650; }
+.calling-video-character-name { margin-top: 16px; max-width: 78%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 22px; font-weight: 650; }
+.calling-video-character-status { margin-top: 5px; font-size: 13px; color: rgba(255, 255, 255, 0.78); }
+.calling-video-local-preview { position: absolute; top: calc(88px + env(safe-area-inset-top, 0px)); right: 18px; z-index: 4; width: 92px; height: 128px; padding: 0; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: #0b0b0d; box-shadow: 0 14px 30px rgba(0, 0, 0, 0.34); cursor: pointer; }
+.calling-video-local-preview .calling-video-main { display: block; }
+.calling-video-local-preview, .calling-video-call-layer.calling-video-swapped .calling-video-character-stage { touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+.calling-video-main { pointer-events: none; }
+.calling-in-call-screen.is-dragging-preview .calling-video-local-preview,
+.calling-in-call-screen.is-dragging-preview .calling-video-character-stage { cursor: grabbing; }
+.calling-video-local-label { position: absolute; left: 7px; bottom: 6px; color: #ffffff; font-size: 11px; font-weight: 650; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); }
+.calling-video-camera-switch { position: absolute; top: calc(234px + env(safe-area-inset-top, 0px)); right: 18px; z-index: 4; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 50%; background: rgba(28, 28, 30, 0.62); color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); cursor: pointer; }
+.calling-video-camera-switch:active { transform: scale(0.94); }
+.calling-video-call-layer.calling-video-swapped .calling-video-character-stage { inset: auto 18px auto auto; top: calc(88px + env(safe-area-inset-top, 0px)); z-index: 4; width: 92px; height: 128px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 14px 30px rgba(0, 0, 0, 0.34); cursor: pointer; }
+.calling-video-call-layer.calling-video-swapped .calling-video-character-avatar { width: 46px; font-size: 18px; }
+.calling-video-call-layer.calling-video-swapped .calling-video-character-name { margin-top: 6px; max-width: 76px; font-size: 12px; }
+.calling-video-call-layer.calling-video-swapped .calling-video-character-status { margin-top: 3px; font-size: 10px; }
+.calling-video-call-layer.calling-video-swapped .calling-video-local-preview { inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; border-radius: 0; box-shadow: none; }
+.calling-video-call-layer.calling-video-swapped .calling-video-local-label { display: none; }
+.calling-video-call-layer.calling-video-swapped .calling-video-local-preview { touch-action: auto; cursor: pointer; }
+.calling-video-call-layer.calling-video-swapped .calling-video-camera-switch { top: calc(238px + env(safe-area-inset-top, 0px)); }
+
+.calling-video-gradient {
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.calling-video-gradient.top {
+    top: 0;
+    height: 34%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0));
+}
+
+.calling-video-gradient.bottom {
+    bottom: 0;
+    height: 46%;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+}
+
+.calling-in-call-screen.calling-video-active .calling-screen-top-bar,
+.calling-in-call-screen.calling-video-active .calling-screen-info,
+.calling-in-call-screen.calling-video-active .calling-screen-dialog-wrapper,
+.calling-in-call-screen.calling-video-active .calling-screen-bottom-container {
+    position: relative;
+    z-index: 2;
+}
+
+.calling-in-call-screen.calling-video-active .calling-screen-info {
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 0;
+}
+
+.calling-in-call-screen.calling-video-active .calling-avatar-wrapper,
+.calling-in-call-screen.calling-video-active .calling-screen-sub-badge {
+    display: none;
+}
+
+.calling-in-call-screen.calling-video-active .calling-screen-dialog-wrapper {
+    opacity: 1;
+    padding-left: calc(2px + var(--calling-preview-clear-left, 0px));
+    padding-right: calc(2px + var(--calling-preview-clear-right, 0px));
+    gap: 10px;
+}
+.calling-in-call-screen.calling-video-active .calling-dialog-bubble { max-width: 100%; box-sizing: border-box; line-height: 1.6; box-shadow: 0 2px 10px rgba(0,0,0,.16); }
+.calling-in-call-screen.calling-video-active .calling-bubble-char { color: #fff; background: rgba(24,24,26,.94); }
+.calling-in-call-screen.calling-video-active .calling-bubble-user { color: #111; background: rgba(255,255,255,.97); }
+.calling-bubble-narration { align-self: center; max-width: 88%; background: transparent; color: #8e8e93; font-size: 13px; line-height: 1.65; text-align: center; padding: 6px 10px; border-radius: 0; box-shadow: none; white-space: pre-wrap; }
+.calling-in-call-screen.calling-video-active .calling-bubble-narration { background: rgba(24,24,26,.88); color: #fff; border-radius: 12px; text-align: left; padding: 8px 12px; }
+
+/* 顶部小窗控制栏 */
+.calling-screen-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+}
+
+.calling-pip-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.calling-pip-btn:active {
+    transform: scale(0.92);
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+/* 呼叫对象信息区域（含头像与号码） */
+.calling-screen-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 头像波纹环绕容器 */
+.calling-avatar-wrapper {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.calling-avatar-ripple-ring {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(52, 199, 89, 0.85);
+    opacity: 0;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.calling-avatar-wrapper.calling-speaking .calling-avatar-ripple-ring {
+    animation: callingWaveRipple 1.5s infinite ease-out;
+}
+
+@keyframes callingWaveRipple {
+    0% { transform: scale(0.98); opacity: 0.9; }
+    50% { transform: scale(1.22); opacity: 0.45; }
+    100% { transform: scale(1.42); opacity: 0; }
+}
+
+.calling-screen-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: #9fb2d8;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    border: 2.5px solid rgba(255, 255, 255, 0.25);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.calling-screen-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+    max-width: 90%;
+    word-break: break-word;
+    transition: all 0.3s ease;
+}
+
+.calling-screen-sub-badge {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+/* 拨号/呼叫中状态：中间大头像、大姓名、大号码、隐藏输入与消息框 */
+.calling-in-call-screen.calling-state-dialing .calling-screen-info {
+    margin-top: 10vh;
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-avatar-wrapper {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 14px;
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-screen-avatar {
+    width: 110px;
+    height: 110px;
+    font-size: 46px;
+    border-width: 3px;
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-screen-name {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-screen-sub-badge {
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-screen-status {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-screen-dialog-wrapper {
+    display: none;
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-screen-input-row {
+    display: none;
+}
+
+.calling-in-call-screen.calling-state-dialing .calling-screen-bottom-container {
+    padding-bottom: 30px;
+}
+
+/* 状态栏：通话时长与动态语音波形 */
+.calling-status-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+}
+
+.calling-screen-status {
+    font-size: 13px;
+    color: #34c759;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.calling-audio-waves {
+    display: none;
+    align-items: center;
+    gap: 3px;
+    height: 16px;
+}
+
+.calling-avatar-wrapper.calling-speaking ~ .calling-status-container .calling-audio-waves {
+    display: inline-flex;
+}
+
+.calling-avatar-wrapper.calling-speaking ~ .calling-status-container .calling-screen-status {
+    display: none;
+}
+
+.calling-wave-bar {
+    width: 3px;
+    background-color: #34c759;
+    border-radius: 2px;
+    animation: callingWaveBar 0.8s ease-in-out infinite alternate;
+}
+
+.calling-wave-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+.calling-wave-bar:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+.calling-wave-bar:nth-child(3) { height: 10px; animation-delay: 0.2s; }
+.calling-wave-bar:nth-child(4) { height: 16px; animation-delay: 0.45s; }
+.calling-wave-bar:nth-child(5) { height: 8px; animation-delay: 0.15s; }
+
+@keyframes callingWaveBar {
+    0% { transform: scaleY(0.4); }
+    100% { transform: scaleY(1.3); }
+}
+
+/* 中间对话消息预览区域 */
+.calling-screen-dialog-wrapper {
+    flex: 1;
+    min-height: 60px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 8px 0;
+    padding: 6px 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+.calling-screen-dialog-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.calling-dialog-bubble {
+    max-width: 82%;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: callingFadeIn 0.25s ease-out;
+}
+
+@keyframes callingFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.calling-dialog-bubble.calling-bubble-user {
+    align-self: flex-end;
+    background-color: #34c759;
+    color: #ffffff;
+    border-bottom-right-radius: 4px;
+}
+
+.calling-dialog-bubble.calling-bubble-char {
+    align-self: flex-start;
+    background-color: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #ffffff;
+    border-bottom-left-radius: 4px;
+}
+
+/* 底部操作整体容器 (防止溢出) */
+.calling-screen-bottom-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    padding-bottom: 6px;
+}
+
+/* 第一行：输入框及内部 ↑ 发送按键 */
+.calling-screen-input-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calling-msg-input {
+    width: 100%;
+    height: 42px;
+    border-radius: 21px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 0 44px 0 16px;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+}
+.calling-msg-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.calling-inner-send-btn {
+    position: absolute;
+    right: 6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #34c759;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.12s ease, background-color 0.15s ease;
+}
+.calling-inner-send-btn:active {
+    transform: scale(0.92);
+    background-color: #2da84e;
+}
+
+/* 第二行：通话控制栏（静音、挂断、视频通话） */
+.calling-screen-controls-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.calling-screen-ctrl-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.calling-screen-ctrl-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    margin-bottom: 4px;
+    transition: background-color 0.15s ease, transform 0.12s ease;
+}
+.calling-screen-ctrl-btn:active {
+    transform: scale(0.92);
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.calling-screen-ctrl-btn.calling-active-toggle {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* 大红色通话挂断键 */
+.calling-screen-ctrl-btn.calling-end-btn {
+    width: 64px;
+    height: 64px;
+    background-color: #eb3b30;
+    box-shadow: 0 4px 16px rgba(235, 59, 48, 0.45);
+}
+.calling-screen-ctrl-btn.calling-end-btn:active {
+    background-color: #d32f2f;
+    transform: scale(0.92);
+}
+
+.calling-screen-ctrl-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* 悬浮小窗 (低饱和白灰方块卡片，显示头像 + 绿色时长) */
+.calling-pip-widget {
+    position: absolute;
+    top: 70px;
+    right: 16px;
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    box-sizing: border-box;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    transition: transform 0.1s ease;
+}
+
+.calling-pip-widget:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+.calling-pip-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #34c759;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.calling-pip-timer {
+    font-size: 13px;
+    color: #34c759;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    white-space: nowrap;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+}
+/* ==========================================
+   通话记录详情半屏抽屉弹窗
+   ========================================== */
+.calling-record-drawer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.28s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.calling-record-drawer-overlay.show {
+    opacity: 1;
+}
+
+.calling-record-drawer-sheet {
+    width: 100%;
+    max-height: 75vh;
+    background: #ffffff;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.calling-record-drawer-overlay.show .calling-record-drawer-sheet {
+    transform: translateY(0);
+}
+
+.calling-record-drawer-header {
+    padding: 12px 18px 10px 18px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.calling-record-drawer-drag-pill {
+    width: 38px;
+    height: 5px;
+    border-radius: 3px;
+    background: #e0e0e0;
+    margin-bottom: 8px;
+}
+
+.calling-record-drawer-body {
+    padding: 16px 18px calc(24px + env(safe-area-inset-bottom, 16px)) 18px;
+    overflow-y: auto;
+    flex: 1;
+}
+/* ==========================================
+   气泡小喇叭重听按钮
+   ========================================== */
+.calling-bubble-replay-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    margin-left: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.calling-bubble-replay-btn:active {
+    transform: scale(0.88);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.calling-bubble-replay-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: #ffffff;
+}
+
+/* ==========================================
+   原生 iOS 风格来电呼入界面
+   ========================================== */
+.calling-incoming-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 999999;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: calc(60px + env(safe-area-inset-top, 0px)) 30px calc(50px + env(safe-area-inset-bottom, 0px)) 30px;
+}
+
+.calling-incoming-overlay.show {
+    display: flex;
+}
+
+.calling-incoming-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.calling-incoming-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #555;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 36px;
+    font-weight: 600;
+}
+
+.calling-incoming-name {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.calling-incoming-sub {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+}
+
+.calling-incoming-actions-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.calling-incoming-btn-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.calling-incoming-btn-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+}
+
+.calling-incoming-btn-circle:active {
+    transform: scale(0.9);
+}
+
+.calling-incoming-btn-circle.decline {
+    background: #ff3b30;
+}
+
+.calling-incoming-btn-circle.accept {
+    background: #34c759;
+}
+
+.calling-incoming-btn-circle svg {
+    width: 32px;
+    height: 32px;
+    fill: #ffffff;
+}
+
+.calling-incoming-btn-label {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 600;
+}
+/* ==========================================
+   输入框内部布局：左魔法棒 + 右发送
+   ========================================== */
+.calling-screen-input-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.calling-screen-input-row .calling-msg-input {
+    width: 100%;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    padding: 0 48px 0 48px; /* 左侧留出48px给魔法棒，右侧留出48px给发送 */
+    font-size: 15px;
+    color: #ffffff;
+    outline: none;
+    box-sizing: border-box;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.calling-screen-input-row .calling-msg-input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.calling-inner-ai-btn {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+    z-index: 2;
+}
+
+.calling-inner-ai-btn:active {
+    transform: translateY(-50%) scale(0.9);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.calling-inner-ai-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: #ffffff;
+}
+
+.calling-inner-send-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #007aff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+    z-index: 2;
+}
+
+.calling-inner-send-btn:active {
+    transform: translateY(-50%) scale(0.9);
+    background: #005ecb;
+}
+
+.calling-inner-send-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: #ffffff;
+}
+
+/* ==========================================
+   真实语音录音中全屏动态波纹遮罩
+   ========================================== */
+.calling-voice-recording-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 200px;
+    height: 200px;
+    background: rgba(30, 30, 30, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 28px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.calling-voice-recording-modal.show {
+    display: flex;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.calling-voice-record-waves {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 48px;
+    margin-bottom: 14px;
+}
+
+.calling-voice-record-wave {
+    width: 4px;
+    height: 12px;
+    background: #34c759;
+    border-radius: 2px;
+    animation: callingWaveAnim 0.8s infinite ease-in-out alternate;
+}
+
+.calling-voice-record-wave:nth-child(2) { animation-delay: 0.15s; }
+.calling-voice-record-wave:nth-child(3) { animation-delay: 0.3s; }
+.calling-voice-record-wave:nth-child(4) { animation-delay: 0.45s; }
+.calling-voice-record-wave:nth-child(5) { animation-delay: 0.6s; }
+
+@keyframes callingWaveAnim {
+    0% { height: 10px; }
+    100% { height: 42px; }
+}
+
+.calling-voice-record-hint {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+}
+
+/* ==========================================
+   气泡长按操作菜单与编辑弹窗
+   ========================================== */
+.calling-bubble-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.calling-bubble-menu-overlay.show {
+    opacity: 1;
+}
+
+.calling-bubble-menu-sheet {
+    background: #2c2c2e;
+    border-radius: 18px;
+    overflow: hidden;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    border: 0.5px solid rgba(255, 255, 255, 0.12);
+}
+
+.calling-bubble-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+}
+
+.calling-bubble-menu-item:last-child {
+    border-bottom: none;
+}
+
+.calling-bubble-menu-item:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.calling-bubble-menu-item.danger {
+    color: #ff453a;
+}
+/* ==========================================
+   iOS 原生风格语音留言列表
+   ========================================== */
+.calling-vm-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+}
+
+.calling-vm-item:active {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.calling-vm-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #8e9bb4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 12px;
+    overflow: hidden;
+}
+
+.calling-vm-avatar svg {
+    width: 28px;
+    height: 28px;
+    fill: #ffffff;
+}
+
+.calling-vm-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: 12px;
+}
+
+.calling-vm-main {
+    flex: 1;
+    min-width: 0;
+    padding-right: 12px;
+}
+
+.calling-vm-title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.calling-vm-unread-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #007aff;
+    flex-shrink: 0;
+}
+
+.calling-vm-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.calling-vm-desc-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.calling-vm-sim-tag {
+    font-size: 9px;
+    color: #8e8e93;
+    border: 1px solid #c7c7cc;
+    border-radius: 3px;
+    padding: 0 2px;
+    line-height: 1.1;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.calling-vm-text {
+    font-size: 14px;
+    color: #6e6e73;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+
+.calling-vm-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.calling-vm-meta-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.calling-vm-date {
+    font-size: 13px;
+    color: #8e8e93;
+    white-space: nowrap;
+}
+
+.calling-vm-duration {
+    font-size: 13px;
+    color: #8e8e93;
+    white-space: nowrap;
+}
+
+.calling-vm-info-btn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.calling-vm-info-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.calling-vm-info-btn svg path {
+    fill: #007aff !important;
+}
+
+/* ==========================================
+   语音留言详情页面（高度还原原生 iOS 风格）
+   ========================================== */
+.calling-vmd-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 24px 100px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.calling-vmd-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    padding-top: max(50px, calc(44px + env(safe-area-inset-top)));
+    box-sizing: border-box;
+}
+
+.calling-vmd-call-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #34c759;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+}
+
+.calling-vmd-call-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #ffffff;
+}
+
+.calling-vmd-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #9fb2d8;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 34px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.calling-vmd-number-row {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.calling-vmd-region {
+    font-size: 15px;
+    color: #8e8e93;
+    margin-top: 4px;
+}
+
+.calling-vmd-datetime {
+    font-size: 13px;
+    color: #8e8e93;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* 播放器进度条 */
+.calling-vmd-player {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.calling-vmd-time-text {
+    font-size: 14px;
+    color: #8e8e93;
+    width: 44px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.calling-vmd-progress-bg {
+    flex: 1;
+    height: 6px;
+    background-color: #e5e5ea;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+}
+
+.calling-vmd-progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    background-color: #000000;
+    border-radius: 3px;
+    transition: width 0.1s linear;
+}
+
+/* 进度条端点白色胶囊形滑块（平躺大胶囊） */
+.calling-vmd-progress-thumb {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 25px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.3);
+}
+
+/* 5联控制操作按钮 */
+.calling-vmd-controls-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    margin-bottom: 32px;
+    box-sizing: border-box;
+}
+
+.calling-vmd-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #000000;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+/* 扬声器/语音播放按钮颜色为灰色 */
+#calling-vmd-speaker-btn {
+    color: #8e8e93;
+}
+
+.calling-vmd-icon-btn:active {
+    transform: scale(0.9);
+    opacity: 0.6;
+}
+
+.calling-vmd-icon-btn svg {
+    width: 26px;
+    height: 26px;
+}
+
+.calling-vmd-play-btn svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* 两个操作胶囊按钮 */
+.calling-vmd-capsules-row {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 36px;
+}
+
+.calling-vmd-capsule {
+    flex: 1;
+    height: 44px;
+    border-radius: 22px;
+    background-color: #f2f2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.15s ease;
+}
+
+.calling-vmd-capsule:active {
+    background-color: #e5e5ea;
+}
+
+.calling-vmd-capsule-blue {
+    color: #007aff;
+}
+
+.calling-vmd-capsule-red {
+    color: #ff3b30;
+}
+
+.calling-vmd-capsule svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+/* 听写文本模块 */
+.calling-vmd-transcript-section {
+    width: 100%;
+    text-align: left;
+}
+
+.calling-vmd-transcript-title {
+    font-size: 15px;
+    color: #8e8e93;
+    margin-bottom: 8px;
+}
+
+.calling-vmd-transcript-body {
+    font-size: 17px;
+    color: #000000;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* ==========================================
+   个人收藏：空状态屏幕正中央居中
+   ========================================== */
+#calling-favorites-list-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.calling-favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 14px;
+    padding: 10px 16px 120px 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calling-favorites-empty {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.calling-favorites-empty-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #8e8e93;
+    margin-bottom: 6px;
+}
+
+.calling-favorites-empty-sub {
+    font-size: 13px;
+    color: #aeaeb2;
+}
+
+/* ==========================================
+   个人收藏：图2海报卡片风格 (iOS 原生圆角大卡 + 底部名称)
+   ========================================== */
+.calling-fav-poster-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.calling-fav-poster-card {
+    width: 100%;
+    aspect-ratio: 0.86 / 1; /* 高度略长于宽度的黄金比例海报大卡片 */
+    border-radius: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: transform 0.16s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.calling-fav-poster-card.has-avatar {
+    border: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.calling-fav-poster-item:active .calling-fav-poster-card {
+    transform: scale(0.95);
+}
+
+.calling-fav-poster-avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.calling-fav-poster-label {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+}
+
+
+.calling-fav-poster-phone-icon {
+    width: 13px;
+    height: 13px;
+    color: #8e8e93;
+    flex-shrink: 0;
+}
+
+.calling-fav-poster-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #636366;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+}
+
+/* ==========================================
+   添加收藏抽屉：纯白背景与无卡片原生列表
+   ========================================== */
+.calling-frosted-sheet {
+    background: #ffffff !important;
+    border-radius: 28px 28px 0 0 !important;
+    border: none !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+.calling-fav-drawer-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 4px 6px 2px 6px;
+    box-sizing: border-box;
+}
+
+.calling-fav-drawer-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: 0.2px;
+}
+
+.calling-fav-drawer-check-btn {
+    width: 36px !important;
+    height: 36px !important;
+    flex-shrink: 0;
+    color: #000000 !important;
+    background-color: rgba(242, 242, 247, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.12s ease, background-color 0.15s ease;
+}
+
+.calling-fav-drawer-check-btn:active {
+    transform: scale(0.92);
+    background-color: #e5e5ea !important;
+}
+
+.calling-fav-drawer-item {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background: #ffffff;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100%;
+    transition: background-color 0.15s ease;
+}
+
+.calling-fav-drawer-item:active {
+    background-color: #f2f2f7;
+}
+
+.calling-fav-drawer-item .calling-item-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 0.5px solid #e5e5ea;
+    box-sizing: border-box;
+}
+
+.calling-fav-drawer-item:last-child .calling-item-content {
+    border-bottom: none;
+}
+
+.calling-fav-drawer-action-btn {
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0;
+    color: #000000 !important;
+    background-color: rgba(242, 242, 247, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.12s ease, background-color 0.15s ease;
+}
+
+.calling-fav-drawer-action-btn:active {
+    transform: scale(0.92);
+    background-color: #e5e5ea !important;
+}
+
+.calling-fav-drawer-action-btn.is-added {
+    color: #8e8e93 !important;
+    opacity: 0.5;
+}
+
+/* ==========================================================================
+   两套 UI 布局切换控制 (经典 Classic vs 统一 Unified)
+   ========================================================================== */
+.calling-unified-center-title {
+    display: none;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+/* 底部整体容器 */
+.calling-bottom-dock-container {
+    position: absolute;
+    bottom: 24px;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.calling-bottom-dock-container .calling-floating-tab-bar {
+    position: static;
+    flex: 1;
+    margin: 0;
+}
+
+/* 独立小巧磨砂圆圈搜索按钮（缩小圆圈为56px，放大图标） */
+.calling-unified-standalone-search {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.calling-unified-standalone-search:active {
+    transform: scale(0.92);
+}
+
+.calling-unified-standalone-search svg {
+    stroke: #000000;
+    fill: none !important;
+    width: 28px !important;
+    height: 28px !important;
+}
+
+/* 经典模式默认展示 */
+.calling-app-container.calling-ui-classic .calling-classic-large-title {
+    display: block;
+}
+.calling-app-container.calling-ui-classic .calling-classic-search {
+    display: block;
+}
+.calling-app-container.calling-ui-classic #calling-recents-seg-control {
+    display: flex;
+}
+.calling-app-container.calling-ui-classic .calling-menu-classic-actions {
+    display: block;
+}
+.calling-app-container.calling-ui-classic .calling-unified-center-title,
+.calling-app-container.calling-ui-classic .calling-unified-favs-container,
+.calling-app-container.calling-ui-classic .calling-unified-section-title,
+.calling-app-container.calling-ui-classic .calling-unified-standalone-search,
+.calling-app-container.calling-ui-classic .calling-menu-unified-actions {
+    display: none !important;
+}
+
+/* 统一模式展示 */
+.calling-app-container.calling-ui-unified .calling-unified-center-title {
+    display: block;
+}
+/* 统一模式：隐藏最近通话和通讯录页面的搜索框 */
+.calling-app-container.calling-ui-unified .calling-search-container {
+    display: none !important;
+}
+/* 统一模式：去除左上角超大的“最近通话”四个大字 */
+.calling-app-container.calling-ui-unified .calling-classic-large-title {
+    display: none !important;
+}
+.calling-app-container.calling-ui-unified #calling-recents-seg-control,
+.calling-app-container.calling-ui-unified .calling-tab-item-classic-fav,
+.calling-app-container.calling-ui-unified .calling-tab-item-classic-vm,
+.calling-app-container.calling-ui-unified .calling-menu-classic-actions {
+    display: none !important;
+}
+.calling-app-container.calling-ui-unified .calling-unified-standalone-search {
+    display: flex !important;
+}
+.calling-app-container.calling-ui-unified .calling-unified-favs-container {
+    display: flex;
+}
+.calling-app-container.calling-ui-unified .calling-unified-section-title {
+    display: block;
+}
+.calling-app-container.calling-ui-unified .calling-menu-unified-actions {
+    display: block;
+}
+
+/* ==========================================================================
+   右上角弹出菜单样式 (高仿图片1)
+   ========================================================================== */
+.calling-menu-popover-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+.calling-menu-popover-overlay.show {
+    display: block;
+}
+
+.calling-menu-popover {
+    position: absolute;
+    top: 90px;
+    right: 16px;
+    width: 255px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    padding: 16px 14px 12px 14px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    animation: callingMenuScaleIn 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes callingMenuScaleIn {
+    from { opacity: 0; transform: scale(0.9) translateY(-10px); transform-origin: top right; }
+    to { opacity: 1; transform: scale(1) translateY(0); transform-origin: top right; }
+}
+
+.calling-menu-modes-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.calling-menu-mode-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    gap: 6px;
+    user-select: none;
+}
+
+.calling-mode-mockup {
+    width: 54px;
+    height: 94px;
+    border-radius: 12px;
+    border: 2px solid #007aff;
+    background: #ffffff;
+    padding: 3px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.calling-mode-mockup.calling-mockup-unified {
+    border-color: #8e8e93;
+}
+
+.calling-mode-mockup.calling-mockup-classic.is-selected {
+    border-color: #007aff;
+}
+.calling-mode-mockup.calling-mockup-unified.is-selected {
+    border-color: #007aff;
+}
+
+.calling-mockup-screen {
+    width: 100%;
+    height: 100%;
+    background: #f4f5f9;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3px 2px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.calling-mockup-island {
+    width: 16px;
+    height: 4px;
+    border-radius: 2px;
+    background: #000000;
+    margin-bottom: 4px;
+}
+
+.calling-mockup-line {
+    width: 88%;
+    height: 4px;
+    border-radius: 2px;
+    background: #e0e2ec;
+    margin-bottom: 3px;
+}
+
+.calling-mockup-favs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    width: 90%;
+    margin-bottom: 4px;
+}
+.calling-mockup-favs-grid span {
+    height: 9px;
+    border-radius: 2px;
+    background: #d8dbed;
+}
+
+.calling-mockup-dock-5,
+.calling-mockup-dock-4 {
+    position: absolute;
+    bottom: 3px;
+    width: 90%;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 2px;
+    box-sizing: border-box;
+}
+
+.calling-mockup-dock-5 span,
+.calling-mockup-dock-4 span {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #8e8e93;
+}
+
+.calling-mode-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.calling-mode-radio {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calling-radio-unselected {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid #8e8e93;
+    box-sizing: border-box;
+}
+
+.calling-menu-divider {
+    width: 100%;
+    height: 0.5px;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 8px 0;
+}
+
+.calling-menu-options-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.calling-menu-option-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 4px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.15s ease;
+}
+
+.calling-menu-option-row:active {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.calling-menu-check-slot {
+    width: 22px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.calling-menu-check-icon {
+    display: none;
+}
+
+.calling-menu-option-row.is-selected .calling-menu-check-icon {
+    display: block;
+}
+
+.calling-menu-opt-icon {
+    margin-right: 10px;
+    color: #000000;
+}
+
+.calling-menu-opt-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.calling-menu-footer-row {
+    padding: 8px 6px 2px 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   统一 UI 模式：顶部收藏角色卡片轮播 (高仿图片2)
+   ========================================================================== */
+.calling-unified-favs-container {
+    display: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 16px 12px 16px;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+.calling-unified-favs-container::-webkit-scrollbar {
+    display: none;
+}
+
+.calling-unified-fav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 74px;
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.calling-unified-fav-card {
+    width: 74px;
+    height: 98px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    transition: transform 0.15s ease;
+}
+
+.calling-unified-fav-item:active .calling-unified-fav-card {
+    transform: scale(0.95);
+}
+
+.calling-unified-fav-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.calling-unified-fav-name-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    color: #8e8e93;
+    max-width: 100%;
+}
+.calling-unified-fav-name-row span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.calling-unified-fav-add-card {
+    width: 74px;
+    height: 98px;
+    border-radius: 18px;
+    background: #f2f2f7;
+    border: 1.5px dashed #c7c7cc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+}
+.calling-unified-fav-add-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007aff;
+}
+.calling-unified-fav-add-text {
+    font-size: 11px;
+    color: #8e8e93;
+}
+
+.calling-unified-section-title {
+    display: none;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    padding: 8px 20px 4px 20px;
+}
+
+/* 统一模式下通话Tab红色角标 */
+.calling-tab-badge-unified {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    background-color: #ff3b30;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+
+/* 统一模式独立搜索全屏页面 */
+.calling-unified-search-section-heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    padding: 16px 20px 8px 20px;
+}
+
+.calling-unified-standalone-search.calling-active {
+    background-color: #f0f0f2 !important;
+}
+
+.calling-unified-standalone-search.calling-active svg {
+    stroke: #007aff !important;
+}
+/* ==========================================================================
+   Call APP 切换账号抽屉专属样式 (卡片化 + 磨砂✔️)
+   ========================================================================== */
+#callingUserMaskDrawerList {
+    background: #fff;
+    border-radius: 16px;
+    padding: 8px;
+    margin: 0 16px 16px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+#callingUserMaskDrawerList .calling-fav-drawer-item {
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 0;
+    background: transparent;
+}
+#callingUserMaskDrawerList .calling-fav-drawer-item .calling-item-content {
+    border-bottom: none;
+    padding: 0;
+}
+#callingUserMaskDrawerList .calling-fav-drawer-item.current-account {
+    background: #F2F2F7;
+}
+#callingUserMaskDrawerList .calling-fav-drawer-item.current-account::after {
+    content: '';
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-left: auto;
+}
+/* 统一 Call APP 切换账号抽屉的背景色与微信一致 */
+#callingAccountSwitchSheet {
+    background-color: #F2F2F7;
+}
+
+/* ==========================================================================
+   iOS 原生浅色模式应答语多重层叠卡片弹窗
+   ========================================================================== */
+.calling-greeting-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000001;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.28s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.calling-greeting-modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* 顶部层层叠卡片容器 */
+.calling-greeting-stack-container {
+    width: 100%;
+    height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+
+.calling-greeting-modal-overlay.show .calling-greeting-stack-container {
+    transform: translateY(0);
+}
+
+/* 顶部单张层叠底卡 */
+.calling-greeting-stack-card {
+    position: absolute;
+    top: 0;
+    width: 92%;
+    height: 20px;
+    background: rgba(230, 230, 235, 0.9);
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.08);
+    z-index: 1;
+}
+
+/* 最前主卡片抽屉 */
+.calling-greeting-modal-sheet {
+    width: 100%;
+    height: calc(100% - 10px);
+    background-color: #F2F2F7;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+/* 顶部卡片边缘高光 */
+.calling-greeting-modal-sheet::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}
+
+/* 顶部导航控制栏 */
+.calling-greeting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px 10px 20px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.calling-greeting-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.calling-greeting-circle-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000000;
+    cursor: pointer;
+    transition: transform 0.12s ease, background-color 0.15s ease;
+}
+
+.calling-greeting-circle-btn:active {
+    transform: scale(0.92);
+    background-color: rgba(230, 230, 235, 0.9);
+}
+
+.calling-greeting-circle-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: #000000;
+}
+
+/* 弹窗内容区 */
+.calling-greeting-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px 36px 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.calling-greeting-subtitle {
+    font-size: 14px;
+    color: #8E8E93;
+    text-align: center;
+    margin-bottom: 24px;
+    margin-top: 4px;
+}
+
+/* 选项卡片组 */
+.calling-greeting-card-group {
+    background: #FFFFFF;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.calling-greeting-option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 16px;
+    cursor: pointer;
+    background: #FFFFFF;
+    transition: background-color 0.15s ease;
+    border-bottom: 0.5px solid #E5E5EA;
+}
+
+.calling-greeting-option-row:last-child {
+    border-bottom: none;
+}
+
+.calling-greeting-option-row:active {
+    background-color: #F8F8FA;
+}
+
+.calling-greeting-option-label {
+    font-size: 17px;
+    color: #000000;
+    font-weight: 500;
+}
+
+.calling-greeting-check-icon {
+    width: 20px;
+    height: 20px;
+    color: #007AFF;
+    display: none;
+}
+
+.calling-greeting-option-row.is-selected .calling-greeting-check-icon {
+    display: block;
+}
+
+/* 自定义录音与播放控制卡片 */
+.calling-greeting-player-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 16px 18px 14px 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: opacity 0.2s ease;
+}
+
+.calling-greeting-player-card.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* 播放进度条 */
+.calling-greeting-progress-track {
+    width: 100%;
+    height: 4px;
+    background: #E5E5EA;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.calling-greeting-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #007AFF;
+    border-radius: 2px;
+    transition: width 0.1s linear;
+}
+
+/* 播放卡片底部操作行 */
+.calling-greeting-ctrl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-top: 4px;
+}
+
+.calling-greeting-play-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #007AFF;
+    cursor: pointer;
+    transition: transform 0.12s ease;
+}
+
+.calling-greeting-play-trigger:active {
+    transform: scale(0.9);
+}
+
+.calling-greeting-play-trigger svg {
+    width: 24px;
+    height: 24px;
+    fill: #007AFF;
+}
+
+.calling-greeting-record-btn {
+    font-size: 17px;
+    font-weight: 600;
+    color: #007AFF;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s ease;
+}
+
+.calling-greeting-record-btn:active {
+    opacity: 0.6;
+}
+
+.calling-greeting-record-btn.is-recording {
+    color: #FF3B30;
+    animation: callingBlink 1s infinite alternate;
+}
+
+@keyframes callingBlink {
+    0% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+.calling-greeting-record-hint {
+    font-size: 12px;
+    color: #8E8E93;
+    text-align: center;
+    margin-top: 4px;
+}
